@@ -1,15 +1,7 @@
 import { RegisterForm } from "@/components/register-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Download } from "lucide-react";
-
-const feeStructure = [
-    { level: 'Beginner', frequency: 'Twice a week', fee: '₹2,500 / month' },
-    { level: 'Intermediate', frequency: 'Thrice a week', fee: '₹3,500 / month' },
-    { level: 'Advanced', frequency: 'Twice a week (long sessions)', fee: '₹5,000 / month' },
-    { level: 'Online', frequency: 'Varies', fee: 'Contact us' },
-];
 
 export default function RegisterPage() {
   return (
@@ -31,28 +23,6 @@ export default function RegisterPage() {
               <p className="mb-8 text-muted-foreground">
                 To join our institute, please fill out the registration form with accurate details. Our team will review your application and contact you within 2-3 business days to discuss the next steps, including batch allocation and a potential introductory session.
               </p>
-
-              <h3 className="font-headline text-2xl font-bold mb-4">Fee Structure</h3>
-              <Card className="mb-8">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Level</TableHead>
-                            <TableHead>Class Frequency</TableHead>
-                            <TableHead className="text-right">Monthly Fee</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {feeStructure.map((item) => (
-                             <TableRow key={item.level}>
-                                <TableCell className="font-medium">{item.level}</TableCell>
-                                <TableCell>{item.frequency}</TableCell>
-                                <TableCell className="text-right">{item.fee}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-              </Card>
 
               <h3 className="font-headline text-2xl font-bold mb-4">Prospectus</h3>
               <p className="mb-4 text-muted-foreground">
