@@ -6,7 +6,7 @@ export default function ContactPage() {
   return (
     <div>
       {/* Page Header */}
-      <section className="py-16 text-center bg-secondary -mx-8 -mt-8">
+      <section className="py-16 text-center bg-background -mx-8 -mt-8">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold font-headline">Get in Touch</h1>
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
@@ -20,7 +20,7 @@ export default function ContactPage() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
-              <Card className="h-full">
+              <Card className="h-full transform transition-transform duration-300 hover:-translate-y-2">
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl">Contact Form</CardTitle>
                   <CardDescription>Send us a message directly.</CardDescription>

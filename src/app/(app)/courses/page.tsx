@@ -60,7 +60,7 @@ export default function CoursesPage() {
   return (
     <div>
       {/* Page Header */}
-      <section className="py-16 text-center bg-secondary -mx-8 -mt-8">
+      <section className="py-16 text-center bg-background -mx-8 -mt-8">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold font-headline">Our Curriculum</h1>
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
@@ -74,7 +74,7 @@ export default function CoursesPage() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-20">
             {courses.map((course, index) => (
-              <div key={index} className="grid md:grid-cols-2 gap-12 items-center">
+              <div key={index} className="grid md:grid-cols-2 gap-12 items-center transform transition-transform duration-300 hover:-translate-y-2">
                 <div className={cn("relative h-80 rounded-lg overflow-hidden shadow-2xl", index % 2 === 1 ? 'md:order-2' : '')}>
                     <Image
                       src={course.image.src}

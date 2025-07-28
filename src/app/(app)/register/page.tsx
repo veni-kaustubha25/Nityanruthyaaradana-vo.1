@@ -25,7 +25,7 @@ export default function RegisterPage() {
   return (
     <div>
       {/* Page Header */}
-      <section className="py-16 text-center bg-secondary -mx-8 -mt-8">
+      <section className="py-16 text-center bg-background -mx-8 -mt-8">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold font-headline">Join Our Academy</h1>
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
@@ -40,7 +40,7 @@ export default function RegisterPage() {
           <div className="grid lg:grid-cols-5 gap-12">
             {/* Left Column: Form */}
             <div className="lg:col-span-2">
-                <Card>
+                <Card className="transform transition-transform duration-300 hover:-translate-y-2">
                     <CardHeader>
                         <CardTitle className="font-headline text-2xl">Registration Form</CardTitle>
                         <CardDescription>Please provide accurate details.</CardDescription>

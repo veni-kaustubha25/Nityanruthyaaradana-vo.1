@@ -26,7 +26,7 @@ export default function GalleryPage() {
   return (
     <div>
       {/* Page Header */}
-      <section className="py-16 text-center bg-secondary -mx-8 -mt-8">
+      <section className="py-16 text-center bg-background -mx-8 -mt-8">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold font-headline">Moments in Motion</h1>
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
@@ -40,7 +40,7 @@ export default function GalleryPage() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {galleryItems.map((item, index) => (
-                    <div key={index} className={`relative overflow-hidden rounded-lg shadow-lg ${item.src.includes('x800') ? 'row-span-2' : ''}`}>
+                    <div key={index} className={`relative overflow-hidden rounded-lg shadow-lg ${item.src.includes('x800') ? 'row-span-2' : ''} transform transition-transform duration-300 hover:scale-105`}>
                         <Image
                             src={item.src}
                             alt={item.alt}
