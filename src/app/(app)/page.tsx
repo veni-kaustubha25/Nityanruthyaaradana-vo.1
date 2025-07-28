@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Image from "next/image";
@@ -34,6 +34,47 @@ const features = [
         description: "Showcase your talent on stage through our regular recitals, annual productions, and prestigious events."
     }
 ];
+
+const courseSnippets = [
+  {
+    level: "Beginner",
+    title: "Foundations of Bharatanatyam",
+    description: "An introductory course covering the fundamental postures, hand gestures, and basic steps.",
+    image: {
+      src: "https://placehold.co/600x400.png",
+      alt: "Young students learning basic dance postures.",
+      hint: "beginner dance class"
+    },
+  },
+  {
+    level: "Intermediate",
+    title: "Developing Artistry",
+    description: "Builds upon foundational skills, introducing more complex sequences and expressive elements.",
+    image: {
+      src: "https://placehold.co/600x400.png",
+      alt: "Dancer performing a complex sequence.",
+      hint: "expressive dance"
+    },
+  },
+  {
+    level: "Advanced",
+    title: "Mastery and Performance",
+    description: "Designed for dedicated students aiming for proficiency and performance skills.",
+    image: {
+      src: "https://placehold.co/600x400.png",
+      alt: "A senior dancer in full costume.",
+      hint: "professional classical dancer"
+    },
+  }
+];
+
+const gallerySnippets = [
+  { src: "https://placehold.co/600x800.png", alt: "Dancer in an expressive pose, close-up.", hint: "bharatanatyam expression" },
+  { src: "https://placehold.co/600x400.png", alt: "A group of students practicing in the studio.", hint: "dance practice studio" },
+  { src: "https://placehold.co/600x400.png", alt: "A live orchestra accompanying a dance performance.", hint: "live music dance" },
+  { src: "https://placehold.co/600x800.png", alt: "Portrait of a dancer with traditional makeup.", hint: "dancer portrait makeup" },
+];
+
 
 const testimonials = [
     {
@@ -152,6 +193,79 @@ export default function HomePage() {
         </div>
       </section>
 
+       {/* Courses Snippet Section */}
+      <section className="py-16 lg:py-24 bg-background">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold font-headline">Our Structured Curriculum</h2>
+                <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
+                From fundamental steps to advanced performance, our courses are designed for every stage of a dancer's journey.
+                </p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {courseSnippets.map((course) => (
+                    <Card key={course.title} className="overflow-hidden shadow-lg flex flex-col">
+                         <div className="relative h-48">
+                            <Image
+                            src={course.image.src}
+                            alt={course.image.alt}
+                            data-ai-hint={course.image.hint}
+                            fill
+                            className="object-cover"
+                            />
+                        </div>
+                        <CardHeader>
+                            <p className="text-sm font-semibold text-accent">{course.level}</p>
+                            <CardTitle className="text-xl font-headline">{course.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex-grow">
+                            <p className="text-muted-foreground">{course.description}</p>
+                        </CardContent>
+                        <CardFooter>
+                            <Button variant="link" asChild className="p-0">
+                                <Link href="/courses">Learn more <ArrowRight className="ml-2"/></Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                ))}
+            </div>
+             <div className="text-center mt-12">
+                <Button asChild size="lg">
+                    <Link href="/courses">View All Courses</Link>
+                </Button>
+            </div>
+        </div>
+      </section>
+
+      {/* Gallery Snippet Section */}
+      <section className="py-16 lg:py-24 bg-secondary">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold font-headline">Moments in Motion</h2>
+                <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">A glimpse into the vibrant life and culture at our academy.</p>
+            </div>
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {gallerySnippets.map((item, index) => (
+                    <div key={index} className={`relative overflow-hidden rounded-lg shadow-lg ${index === 0 || index === 3 ? 'row-span-2' : ''}`}>
+                        <Image
+                            src={item.src}
+                            alt={item.alt}
+                            data-ai-hint={item.hint}
+                            width={600}
+                            height={item.src.includes('x800') ? 800 : 400}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        />
+                    </div>
+                ))}
+            </div>
+             <div className="text-center mt-12">
+                <Button asChild size="lg" variant="outline">
+                    <Link href="/gallery">Explore Full Gallery</Link>
+                </Button>
+            </div>
+          </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -209,3 +323,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
