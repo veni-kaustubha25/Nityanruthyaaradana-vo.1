@@ -9,17 +9,14 @@ export default function AppLayout({
 }>) {
   return (
     <div 
-        className="flex min-h-screen flex-col bg-cover bg-fixed bg-center" 
-        style={{ backgroundImage: "url('/background.jpg')" }}
+        className="flex min-h-screen flex-col bg-background" 
     >
-      <div className="flex min-h-screen flex-col bg-black/70">
         <Header />
         <main className="flex-grow container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>
         <Footer />
         <Toaster />
-      </div>
     </div>
   );
 }
