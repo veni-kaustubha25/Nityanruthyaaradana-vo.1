@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star, Award, Users, Theater } from "lucide-react";
 
 const heroContent = {
   headline: "Experience the Divine Art of Bharatanatyam",
@@ -16,6 +16,24 @@ const heroContent = {
     hint: "bharatanatyam dance performance"
   }
 };
+
+const features = [
+    {
+        icon: Award,
+        title: "Authentic Training",
+        description: "Learn from gurus dedicated to preserving the traditional guru-shishya parampara and the purity of the art form."
+    },
+    {
+        icon: Users,
+        title: "Vibrant Community",
+        description: "Become part of a supportive family of artists who share a passion for dance, culture, and personal growth."
+    },
+    {
+        icon: Theater,
+        title: "Performance Opportunities",
+        description: "Showcase your talent on stage through our regular recitals, annual productions, and prestigious events."
+    }
+];
 
 const testimonials = [
     {
@@ -107,8 +125,35 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Features Section */}
       <section className="py-16 lg:py-24 bg-secondary">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold font-headline">Why Choose Us?</h2>
+            <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
+              Discover the unique qualities that make our academy the perfect place to nurture your passion for dance.
+            </p>
+          </div>
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="text-center">
+                <CardHeader>
+                    <div className="mx-auto bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center">
+                        <feature.icon className="h-8 w-8" />
+                    </div>
+                </CardHeader>
+                <CardContent>
+                  <CardTitle className="text-xl font-headline mb-2">{feature.title}</CardTitle>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center font-headline mb-12">What Our Community Says</h2>
           <Carousel
@@ -146,7 +191,7 @@ export default function HomePage() {
       </section>
 
        {/* FAQ Section */}
-      <section className="py-16 lg:py-24 bg-background">
+      <section className="py-16 lg:py-24 bg-secondary">
         <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold font-headline text-center mb-8">Frequently Asked Questions</h2>
           <Accordion type="single" collapsible className="w-full">
