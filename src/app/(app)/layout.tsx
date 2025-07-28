@@ -1,6 +1,7 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
+import { PageTransition } from '@/components/page-transition';
 
 export default function AppLayout({
   children,
@@ -13,7 +14,9 @@ export default function AppLayout({
     >
         <Header />
         <main className="flex-grow container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </main>
         <Footer />
         <Toaster />
