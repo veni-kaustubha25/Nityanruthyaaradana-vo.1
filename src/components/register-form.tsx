@@ -149,7 +149,7 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={isSubmitting}>
+        <Button type="submit" className="w-full" variant="secondary" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Application"}
         </Button>
       </form>

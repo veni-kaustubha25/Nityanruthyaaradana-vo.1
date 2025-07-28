@@ -130,7 +130,7 @@ export default function HomePage() {
         <div className="relative z-20 container max-w-4xl mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg">{heroContent.headline}</h1>
           <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md">{heroContent.subheadline}</p>
-          <Button asChild size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90 transform transition-transform duration-300 hover:scale-105">
+          <Button asChild size="lg" className="mt-8 transform transition-transform duration-300 hover:scale-105">
             <Link href="/register">{heroContent.cta} <ArrowRight className="ml-2"/></Link>
           </Button>
         </div>

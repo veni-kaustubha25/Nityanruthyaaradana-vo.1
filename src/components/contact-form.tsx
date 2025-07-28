@@ -113,7 +113,7 @@ export function ContactForm() {
                     </FormItem>
                 )}
                 />
-                <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={isSubmitting}>
+                <Button type="submit" className="w-full" variant="secondary" disabled={isSubmitting}>
                     {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
             </form>
