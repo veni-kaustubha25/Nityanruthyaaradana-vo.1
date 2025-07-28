@@ -22,7 +22,7 @@ export function Logo(props: HTMLAttributes<HTMLDivElement>) {
             />
         </svg>
         <span className="font-headline text-2xl font-bold text-foreground">
-            Nritya Darpan
+            Nithyanruthyaaradana
         </span>
     </div>
   );

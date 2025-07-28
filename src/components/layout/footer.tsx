@@ -32,7 +32,7 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-muted-foreground">
               <li className="flex items-start gap-3">
                 <Mail className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                <a href="mailto:info@nrityadarpan.art" className="hover:text-primary transition-colors">info@nrityadarpan.art</a>
+                <a href="mailto:info@nithyanruthyaaradana.art" className="hover:text-primary transition-colors">info@nithyanruthyaaradana.art</a>
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="mt-1 h-5 w-5 shrink-0 text-primary" />
@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Nritya Darpan. All rights reserved. Site by NITHYANRUTHYAARADANA.ART</p>
+          <p>&copy; {new Date().getFullYear()} Nithyanruthyaaradana. All rights reserved. Site by nithyanruthyaaradana.art</p>
         </div>
       </div>
     </footer>

@@ -38,7 +38,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-lg">Email Us</h3>
-                                        <a href="mailto:info@nrityadarpan.art" className="text-muted-foreground hover:text-primary transition-colors">info@nrityadarpan.art</a>
+                                        <a href="mailto:info@nithyanruthyaaradana.art" className="text-muted-foreground hover:text-primary transition-colors">info@nithyanruthyaaradana.art</a>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">

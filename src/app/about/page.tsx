@@ -20,7 +20,7 @@ const instructors = [
   {
     name: "Priya Singh",
     title: "Junior Instructor",
-    bio: "A passionate dancer and a graduate of Nritya Darpan. Priya brings youthful energy and a nurturing approach to teaching beginner batches.",
+    bio: "A passionate dancer and a graduate of Nithyanruthyaaradana. Priya brings youthful energy and a nurturing approach to teaching beginner batches.",
     image: "https://placehold.co/400x400.png",
     dataAiHint: "young indian woman"
   },
@@ -54,7 +54,7 @@ export default function AboutPage() {
             <div>
               <h2 className="font-headline text-3xl font-bold">A Legacy of Grace</h2>
               <p className="mt-4 text-muted-foreground">
-                Founded in 1995 by the visionary dancer Dr. Anjali Sharma, NITHYANRUTHYAARADANA started as a small studio with a handful of students. The goal was simple yet profound: to create an environment where the purity of traditional Bharatanatyam could flourish, unhindered by commercialism. Over the decades, our institute has grown into a premier center for dance education, nurturing hundreds of dancers who have graced stages worldwide.
+                Founded in 1995 by the visionary dancer Dr. Anjali Sharma, Nithyanruthyaaradana started as a small studio with a handful of students. The goal was simple yet profound: to create an environment where the purity of traditional Bharatanatyam could flourish, unhindered by commercialism. Over the decades, our institute has grown into a premier center for dance education, nurturing hundreds of dancers who have graced stages worldwide.
               </p>
             </div>
           </div>

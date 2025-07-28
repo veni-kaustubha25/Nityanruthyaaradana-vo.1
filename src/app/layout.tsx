@@ -5,8 +5,8 @@ import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Nritya Darpan',
-  description: 'A showcase for a classical dance institute, NITHYANRUTHYAARADANA.ART',
+  title: 'Nithyanruthyaaradana',
+  description: 'A showcase for a classical dance institute, nithyanruthyaaradana.art',
 };
 
 export default function RootLayout({

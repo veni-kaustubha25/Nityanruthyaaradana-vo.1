@@ -18,7 +18,7 @@ export default function Home() {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
           <h1 className="font-headline text-4xl md:text-7xl font-bold leading-tight drop-shadow-lg">
-            Nritya Darpan
+            Nithyanruthyaaradana
           </h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-primary-foreground/90 drop-shadow-md">
             Experience the soul of Indian classical dance. A journey of grace, tradition, and self-discovery.
@@ -46,7 +46,7 @@ export default function Home() {
             </div>
             <div>
               <h2 className="font-headline text-3xl md:text-4xl font-bold text-foreground">
-                Welcome to NITHYANRUTHYAARADANA
+                Welcome to Nithyanruthyaaradana
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
                 Our institute is a sanctuary for classical dance, dedicated to nurturing talent and preserving the rich heritage of Indian performing arts. Founded on principles of discipline, devotion, and artistic excellence, we offer a holistic learning experience that transcends mere technique.
