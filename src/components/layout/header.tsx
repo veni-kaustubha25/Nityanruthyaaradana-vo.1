@@ -16,6 +16,7 @@ const navLinks = [
   { href: "/gallery", label: "Gallery" },
   { href: "/register", label: "Admissions" },
   { href: "/contact", label: "Contact" },
+  { href: "/admin", label: "Admin" },
 ];
 
 export function Header() {
@@ -35,7 +36,7 @@ export function Header() {
               href={link.href}
               className={cn(
                 "transition-colors hover:text-primary",
-                pathname === link.href ? "text-primary font-semibold" : "text-muted-foreground"
+                pathname.startsWith(link.href) && link.href !== "/" || pathname === link.href ? "text-primary font-semibold" : "text-muted-foreground"
               )}
             >
               {link.label}
@@ -64,7 +65,7 @@ export function Header() {
                       href={link.href}
                       className={cn(
                           "text-xl font-medium transition-colors hover:text-primary",
-                          pathname === link.href ? "text-primary" : "text-foreground"
+                          pathname.startsWith(link.href) && link.href !== "/" || pathname === link.href ? "text-primary" : "text-foreground"
                       )}
                     >
                       {link.label}
