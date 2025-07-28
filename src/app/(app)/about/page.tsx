@@ -71,7 +71,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Philosophy Section */}
-      <section className="pb-16 lg:pb-24">
+      <section className="pb-16 lg:pb-24 bg-secondary/80">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-headline">Our Guiding Principles</h2>
@@ -79,12 +79,14 @@ export default function AboutPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {aboutContent.philosophy.map((item, index) => (
-              <div key={index} className="flex items-start gap-4">
-                <CheckCircle className="h-8 w-8 text-accent flex-shrink-0 mt-1" />
-                <div>
-                  <p className="font-semibold text-lg">{item}</p>
-                </div>
-              </div>
+               <Card key={index} className="text-center bg-card/80">
+                <CardContent className="p-6 flex flex-col items-center">
+                    <div className="mx-auto bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center mb-4 flex-shrink-0">
+                        <CheckCircle className="h-8 w-8" />
+                    </div>
+                    <p className="font-semibold text-lg">{item}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
