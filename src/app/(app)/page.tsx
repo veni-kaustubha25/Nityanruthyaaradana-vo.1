@@ -137,7 +137,7 @@ export default function HomePage() {
       </section>
 
       {/* About Us Snippet */}
-      <section className="py-16 lg:py-24 bg-background/80">
+      <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="order-2 md:order-1">
@@ -167,7 +167,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 lg:py-24 bg-secondary/80">
+      <section className="py-16 lg:py-24 bg-secondary">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">Why Choose Us?</h2>
@@ -194,7 +194,7 @@ export default function HomePage() {
       </section>
 
        {/* Courses Snippet Section */}
-      <section className="py-16 lg:py-24 bg-background/80">
+      <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold font-headline">Our Structured Curriculum</h2>
@@ -238,7 +238,7 @@ export default function HomePage() {
       </section>
 
       {/* Gallery Snippet Section */}
-      <section className="py-16 lg:py-24 bg-secondary/80">
+      <section className="py-16 lg:py-24 bg-secondary">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold font-headline">Moments in Motion</h2>
@@ -267,7 +267,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 lg:py-24 bg-background/80">
+      <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center font-headline mb-12">What Our Community Says</h2>
           <Carousel
@@ -305,7 +305,7 @@ export default function HomePage() {
       </section>
 
        {/* FAQ Section */}
-      <section className="py-16 lg:py-24 bg-secondary/80">
+      <section className="py-16 lg:py-24 bg-secondary">
         <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold font-headline text-center mb-8">Frequently Asked Questions</h2>
           <Accordion type="single" collapsible className="w-full">
@@ -323,5 +323,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
