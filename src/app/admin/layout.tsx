@@ -14,6 +14,8 @@ import { Home, NotebookText, Users, GalleryHorizontal, LogOut } from "lucide-rea
 import { Logo } from "@/components/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
+
 
 export default function AdminLayout({
   children,
@@ -72,13 +74,14 @@ export default function AdminLayout({
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-            <header className="p-4 border-b flex items-center gap-4">
+            <header className="p-4 border-b flex items-center gap-4 sticky top-0 bg-background z-10">
                 <SidebarTrigger className="md:hidden"/>
                 <h1 className="text-xl font-semibold">Admin Dashboard</h1>
             </header>
             <main className="p-4">{children}</main>
         </SidebarInset>
       </div>
+      <Toaster />
     </SidebarProvider>
   );
 }
