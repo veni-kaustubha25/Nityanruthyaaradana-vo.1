@@ -40,6 +40,7 @@ export function RegisterForm() {
       guardianName: "",
       email: "",
       phone: "",
+      level: undefined,
     },
   });
 
@@ -81,7 +82,7 @@ export function RegisterForm() {
             <FormItem>
               <FormLabel>Student's Age</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="e.g., 14" {...field} />
+                <Input type="number" placeholder="e.g., 14" {...field} value={field.value ?? ""} onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))} />
               </FormControl>
               <FormMessage />
             </FormItem>
