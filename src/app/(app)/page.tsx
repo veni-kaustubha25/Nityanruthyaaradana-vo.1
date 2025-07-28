@@ -130,7 +130,7 @@ export default function HomePage() {
         <div className="relative z-20 container max-w-4xl mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg">{heroContent.headline}</h1>
           <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md">{heroContent.subheadline}</p>
-          <Button asChild size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90">
+          <Button asChild size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90 transform transition-transform duration-300 hover:scale-105">
             <Link href="/register">{heroContent.cta} <ArrowRight className="ml-2"/></Link>
           </Button>
         </div>
@@ -148,7 +148,7 @@ export default function HomePage() {
                     <p className="text-muted-foreground mb-6">
                         Founded by renowned artists, our academy offers a nurturing environment where students of all ages can embark on a journey of artistic discovery, discipline, and self-expression.
                     </p>
-                    <Button asChild variant="outline">
+                    <Button asChild variant="outline" className="transform transition-transform duration-300 hover:scale-105">
                         <Link href="/about">Learn More About Us</Link>
                     </Button>
                 </div>
@@ -159,7 +159,7 @@ export default function HomePage() {
                         data-ai-hint="indian woman dancer"
                         width={600}
                         height={400}
-                        className="rounded-lg shadow-lg"
+                        className="rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105"
                     />
                 </div>
             </div>
@@ -177,7 +177,7 @@ export default function HomePage() {
           </div>
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="text-center bg-card/80">
+              <Card key={index} className="text-center bg-card/80 transform transition-transform duration-300 hover:-translate-y-2">
                 <CardHeader>
                     <div className="mx-auto bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center">
                         <feature.icon className="h-8 w-8" />
@@ -204,7 +204,7 @@ export default function HomePage() {
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {courseSnippets.map((course) => (
-                    <Card key={course.title} className="overflow-hidden shadow-lg flex flex-col bg-card/80">
+                    <Card key={course.title} className="overflow-hidden shadow-lg flex flex-col bg-card/80 transform transition-transform duration-300 hover:-translate-y-2">
                          <div className="relative h-48">
                             <Image
                             src={course.image.src}
@@ -230,7 +230,7 @@ export default function HomePage() {
                 ))}
             </div>
              <div className="text-center mt-12">
-                <Button asChild size="lg">
+                <Button asChild size="lg" className="transform transition-transform duration-300 hover:scale-105">
                     <Link href="/courses">View All Courses</Link>
                 </Button>
             </div>
@@ -259,7 +259,7 @@ export default function HomePage() {
                 ))}
             </div>
              <div className="text-center mt-12">
-                <Button asChild size="lg" variant="outline">
+                <Button asChild size="lg" variant="outline" className="transform transition-transform duration-300 hover:scale-105">
                     <Link href="/gallery">Explore Full Gallery</Link>
                 </Button>
             </div>
@@ -281,7 +281,7 @@ export default function HomePage() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1 h-full">
-                    <Card className="h-full flex flex-col bg-card/80">
+                    <Card className="h-full flex flex-col bg-card/80 transform transition-transform duration-300 hover:-translate-y-2">
                       <CardContent className="pt-6 flex-grow flex flex-col justify-between">
                         <p className="text-muted-foreground italic mb-4">"{testimonial.quote}"</p>
                         <div>
