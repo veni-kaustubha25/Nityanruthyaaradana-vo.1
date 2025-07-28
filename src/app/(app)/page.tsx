@@ -167,7 +167,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 lg:py-24 bg-secondary">
+      <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">Why Choose Us?</h2>
@@ -238,7 +238,7 @@ export default function HomePage() {
       </section>
 
       {/* Gallery Snippet Section */}
-      <section className="py-16 lg:py-24 bg-secondary">
+      <section className="py-16 lg:py-24 bg-background">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold font-headline">Moments in Motion</h2>
@@ -305,7 +305,7 @@ export default function HomePage() {
       </section>
 
        {/* FAQ Section */}
-      <section className="py-16 lg:py-24 bg-secondary">
+      <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold font-headline text-center mb-8">Frequently Asked Questions</h2>
           <Accordion type="single" collapsible className="w-full">
