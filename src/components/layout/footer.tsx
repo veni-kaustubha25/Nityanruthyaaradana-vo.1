@@ -49,7 +49,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Nithyanruthyaaradana. All rights reserved. Site by <Button asChild variant="link" className="p-0 h-auto text-sm text-muted-foreground"><Link href="/admin">nithyanruthyaaradana.art</Link></Button></p>
+          <p>&copy; {new Date().getFullYear()} Nithyanruthyaaradana. All rights reserved. Site by <Button asChild variant="link" className="p-0 h-auto text-sm text-primary font-bold underline"><Link href="/admin">nithyanruthyaaradana.art</Link></Button></p>
         </div>
       </div>
     </footer>
