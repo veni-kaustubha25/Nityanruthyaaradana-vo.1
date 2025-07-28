@@ -2,13 +2,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const courses = [
   {
     level: "Beginner",
     title: "Foundations of Bharatanatyam",
-    description: "An introductory course covering the fundamental postures (aramandi), hand gestures (mudras), and basic steps (adavus) of Bharatanatyam.",
+    description: "An introductory course covering the fundamental postures (aramandi), hand gestures (mudras), and basic steps (adavus) of Bharatanatyam. Perfect for those starting their journey.",
     image: {
       src: "https://placehold.co/600x400.png",
       alt: "Young students learning basic dance postures.",
@@ -40,7 +41,7 @@ const courses = [
   {
     level: "Advanced",
     title: "Mastery and Performance",
-    description: "Designed for dedicated students aiming for proficiency and performance skills. This level involves learning the complete Margam (traditional repertoire).",
+    description: "Designed for dedicated students aiming for proficiency and performance skills. This level involves learning the complete Margam (traditional repertoire) and preparing for the stage.",
     image: {
       src: "https://placehold.co/600x400.png",
       alt: "A senior dancer in full costume during a stage performance.",
@@ -71,11 +72,10 @@ export default function CoursesPage() {
       {/* Courses Section */}
       <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="space-y-16">
+          <div className="space-y-20">
             {courses.map((course, index) => (
-              <Card key={index} className="overflow-hidden shadow-lg border-border/50">
-                <div className="grid md:grid-cols-2">
-                  <div className="relative h-64 md:h-auto">
+              <div key={index} className="grid md:grid-cols-2 gap-12 items-center">
+                <div className={cn("relative h-80 rounded-lg overflow-hidden shadow-2xl", index % 2 === 1 ? 'md:order-2' : '')}>
                     <Image
                       src={course.image.src}
                       alt={course.image.alt}
@@ -83,31 +83,28 @@ export default function CoursesPage() {
                       fill
                       className="object-cover"
                     />
-                  </div>
-                  <div>
-                    <CardHeader>
-                      <p className="text-sm font-semibold text-accent">{course.level}</p>
-                      <CardTitle className="text-2xl font-headline">{course.title}</CardTitle>
-                      <CardDescription>{course.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2 text-muted-foreground">
+                </div>
+                <div className={cn("flex flex-col", index % 2 === 1 ? 'md:order-1' : '')}>
+                    <p className="text-sm font-bold text-accent tracking-widest uppercase">{course.level}</p>
+                    <h2 className="text-3xl font-bold font-headline mt-2 mb-4">{course.title}</h2>
+                    <p className="text-muted-foreground mb-6">{course.description}</p>
+                    
+                    <ul className="space-y-3 text-muted-foreground mb-8">
                         {course.details.map((detail, i) => (
                           <li key={i} className="flex items-start">
-                            <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary flex-shrink-0" />
+                            <CheckCircle className="h-5 w-5 mr-3 mt-1 text-primary flex-shrink-0" />
                             <span>{detail}</span>
                           </li>
                         ))}
-                      </ul>
-                    </CardContent>
-                    <CardFooter>
-                         <Button asChild>
-                            <Link href="/register">Enroll Now</Link>
+                    </ul>
+
+                    <div className="mt-auto">
+                         <Button asChild size="lg">
+                            <Link href="/register">Enroll Now <ArrowRight className="ml-2"/></Link>
                          </Button>
-                    </CardFooter>
-                  </div>
+                    </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
