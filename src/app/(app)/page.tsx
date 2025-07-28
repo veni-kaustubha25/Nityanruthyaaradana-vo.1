@@ -137,7 +137,7 @@ export default function HomePage() {
       </section>
 
       {/* About Us Snippet */}
-      <section className="py-16 lg:py-24 bg-background">
+      <section className="py-16 lg:py-24 bg-background/80">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="order-2 md:order-1">
@@ -167,7 +167,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 lg:py-24 bg-secondary">
+      <section className="py-16 lg:py-24 bg-secondary/80">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">Why Choose Us?</h2>
@@ -177,7 +177,7 @@ export default function HomePage() {
           </div>
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="text-center">
+              <Card key={index} className="text-center bg-card/80">
                 <CardHeader>
                     <div className="mx-auto bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center">
                         <feature.icon className="h-8 w-8" />
@@ -194,7 +194,7 @@ export default function HomePage() {
       </section>
 
        {/* Courses Snippet Section */}
-      <section className="py-16 lg:py-24 bg-background">
+      <section className="py-16 lg:py-24 bg-background/80">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold font-headline">Our Structured Curriculum</h2>
@@ -204,7 +204,7 @@ export default function HomePage() {
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {courseSnippets.map((course) => (
-                    <Card key={course.title} className="overflow-hidden shadow-lg flex flex-col">
+                    <Card key={course.title} className="overflow-hidden shadow-lg flex flex-col bg-card/80">
                          <div className="relative h-48">
                             <Image
                             src={course.image.src}
@@ -238,7 +238,7 @@ export default function HomePage() {
       </section>
 
       {/* Gallery Snippet Section */}
-      <section className="py-16 lg:py-24 bg-secondary">
+      <section className="py-16 lg:py-24 bg-secondary/80">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold font-headline">Moments in Motion</h2>
@@ -267,7 +267,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 lg:py-24 bg-background">
+      <section className="py-16 lg:py-24 bg-background/80">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center font-headline mb-12">What Our Community Says</h2>
           <Carousel
@@ -281,7 +281,7 @@ export default function HomePage() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1 h-full">
-                    <Card className="h-full flex flex-col">
+                    <Card className="h-full flex flex-col bg-card/80">
                       <CardContent className="pt-6 flex-grow flex flex-col justify-between">
                         <p className="text-muted-foreground italic mb-4">"{testimonial.quote}"</p>
                         <div>
@@ -305,7 +305,7 @@ export default function HomePage() {
       </section>
 
        {/* FAQ Section */}
-      <section className="py-16 lg:py-24 bg-secondary">
+      <section className="py-16 lg:py-24 bg-secondary/80">
         <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold font-headline text-center mb-8">Frequently Asked Questions</h2>
           <Accordion type="single" collapsible className="w-full">

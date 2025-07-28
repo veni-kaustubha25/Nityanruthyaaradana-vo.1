@@ -8,13 +8,18 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Header />
-      <main className="flex-grow container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
-      <Footer />
-      <Toaster />
+    <div 
+        className="flex min-h-screen flex-col bg-cover bg-fixed bg-center" 
+        style={{ backgroundImage: "url('/background.jpg')" }}
+    >
+      <div className="flex min-h-screen flex-col bg-black/70">
+        <Header />
+        <main className="flex-grow container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          {children}
+        </main>
+        <Footer />
+        <Toaster />
+      </div>
     </div>
   );
 }
