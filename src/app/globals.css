@@ -72,7 +72,6 @@
   body {
     @apply bg-background text-foreground;
   }
-<<<<<<< HEAD
   
   /* Custom Text Selection Styling */
   ::selection {
@@ -95,6 +94,4 @@
     background-color: hsl(var(--accent));
     color: hsl(var(--accent-foreground));
   }
-=======
->>>>>>> 2af189ca3908537e4112c6573ff40731890077f6
 }

@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
@@ -23,9 +22,6 @@ const registerSchema = z.object({
   guardianName: z.string().min(2, "Guardian's name is required."),
   email: z.string().email("Please enter a valid email address."),
   phone: z.string().min(10, "Please enter a valid phone number."),
-  level: z.enum(["beginner", "intermediate", "advanced"], {
-    required_error: "Please select a preferred level.",
-  }),
 });
 
 export function RegisterForm() {
@@ -40,7 +36,6 @@ export function RegisterForm() {
       guardianName: "",
       email: "",
       phone: "",
-      level: undefined,
     },
   });
 
@@ -123,28 +118,6 @@ export function RegisterForm() {
               <FormControl>
                 <Input type="tel" placeholder="e.g., 9876543210" {...field} />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="level"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Preferred Level</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a level" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="beginner">Beginner</SelectItem>
-                  <SelectItem value="intermediate">Intermediate</SelectItem>
-                  <SelectItem value="advanced">Advanced</SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

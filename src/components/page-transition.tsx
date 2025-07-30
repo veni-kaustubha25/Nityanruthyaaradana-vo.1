@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { PropsWithChildren } from "react";
 
 interface PageTransitionProps extends PropsWithChildren {
@@ -9,36 +8,18 @@ interface PageTransitionProps extends PropsWithChildren {
 }
 
 export function PageTransition({ children, className = "" }: PageTransitionProps) {
-  const pathname = usePathname();
-
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        className={className}
-        initial="initialState"
-        animate="animateState"
-        exit="exitState"
-        transition={{
-          duration: 0.5,
-        }}
-        variants={{
-          initialState: {
-            opacity: 0,
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
-          },
-          animateState: {
-            opacity: 1,
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
-          },
-          exitState: {
-            opacity: 0,
-            clipPath: "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)",
-          },
-        }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
+    >
+      {children}
+    </motion.div>
   );
 }

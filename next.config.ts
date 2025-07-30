@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -97,27 +96,6 @@ const nextConfig: NextConfig = {
     });
 
     return config;
-=======
-import type {NextConfig} from 'next';
-
-const nextConfig: NextConfig = {
-  /* config options here */
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
-      },
-    ],
->>>>>>> 2af189ca3908537e4112c6573ff40731890077f6
   },
 };
 

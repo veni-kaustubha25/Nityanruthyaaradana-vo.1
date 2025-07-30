@@ -2,25 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
 import { AnimatedLogo } from "@/components/animated-logo";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
-  { name: "Courses", href: "/courses" },
   { name: "Gallery", href: "/gallery" },
   { name: "Contact", href: "/contact" },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
 
   return (
     <motion.header 
@@ -70,10 +66,7 @@ export function Header() {
               >
                 <Link
                   href={item.href}
-                  className={cn(
-                    "text-sm xl:text-base font-medium transition-colors hover:text-primary relative group",
-                    pathname.startsWith(item.href) && item.href !== "/" || pathname === item.href ? "text-primary font-semibold" : "text-muted-foreground"
-                  )}
+                  className="text-sm xl:text-base font-medium transition-colors hover:text-primary relative group"
                 >
                   {item.name}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
@@ -111,10 +104,7 @@ export function Header() {
               >
                 <Link
                   href={item.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary relative group",
-                    pathname.startsWith(item.href) && item.href !== "/" || pathname === item.href ? "text-primary font-semibold" : "text-muted-foreground"
-                  )}
+                  className="text-sm font-medium transition-colors hover:text-primary relative group"
                 >
                   {item.name}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
@@ -174,10 +164,7 @@ export function Header() {
                         <Link
                           key={item.name}
                           href={item.href}
-                          className={cn(
-                            "text-lg font-medium transition-colors hover:text-primary py-2",
-                            pathname.startsWith(item.href) && item.href !== "/" || pathname === item.href ? "text-primary font-semibold" : "text-foreground"
-                          )}
+                          className="text-lg font-medium transition-colors hover:text-primary py-2"
                           onClick={() => setIsOpen(false)}
                         >
                           {item.name}

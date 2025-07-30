@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Nithyanruthyaaradana - Classical Dance Academy Website
 
 A modern, responsive website for Nithyanruthyaaradana, a premier Bharatanatyam classical dance academy. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring a comprehensive image gallery, student registration system, and professional admin panel.
@@ -318,14 +317,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Built with ❤️ for the classical dance community ("Nithyanruthyaaradana")
+Built with ❤️ for the classical dance community
 
 *Last updated: December 2024*
-=======
-# Firebase Studio
-
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
-hi
->>>>>>> 2af189ca3908537e4112c6573ff40731890077f6
+Thank you
