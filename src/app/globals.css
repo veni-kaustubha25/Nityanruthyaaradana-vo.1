@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 352 75% 12%; /* Very Dark Maroon */
+    --foreground: 30 20% 90%;
+    --card: 350 15% 10%;
+    --card-foreground: 30 20% 90%;
+    --popover: 350 15% 10%;
+    --popover-foreground: 30 20% 90%;
+    --primary: 352 75% 44%; /* Main Maroon */
+    --primary-foreground: 30 20% 95%;
+    --secondary: 352 75% 18%; /* Darker Maroon for secondary elements */
+    --secondary-foreground: 30 20% 90%;
+    --muted: 352 20% 25%;
+    --muted-foreground: 30 15% 65%;
+    --accent: 352 85% 65%; /* Lighter, more vibrant red for accents */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 352 20% 25%;
+    --input: 352 20% 25%;
+    --ring: 352 85% 65%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 352 75% 12%; /* Very Dark Maroon */
+    --foreground: 30 20% 90%;
+    --card: 350 15% 10%;
+    --card-foreground: 30 20% 90%;
+    --popover: 350 15% 10%;
+    --popover-foreground: 30 20% 90%;
+    --primary: 352 75% 44%; /* Main Maroon */
+    --primary-foreground: 30 20% 95%;
+    --secondary: 352 75% 18%; /* Darker Maroon for secondary elements */
+    --secondary-foreground: 30 20% 90%;
+    --muted: 352 20% 25%;
+    --muted-foreground: 30 15% 65%;
+    --accent: 352 85% 65%; /* Lighter, more vibrant red for accents */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 352 20% 25%;
+    --input: 352 20% 25%;
+    --ring: 352 85% 65%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Custom Text Selection Styling */
+  ::selection {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  
+  ::-moz-selection {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  
+  /* Enhanced selection for better visibility */
+  *::selection {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+  
+  *::-moz-selection {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+}
