@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import {
   User,
   Zap,
@@ -21,6 +24,14 @@ import {
 } from '@/components/ui/professional-animations';
 import { FallbackImage } from '@/components/ui/fallback-image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LoadingAnimation } from '@/components/ui/loading-animation';
+
+interface GalleryImage {
+  id: string;
+  src: string;
+  alt: string;
+  'data-ai-hint': string;
+}
 
 const founder = {
   name: 'Guru Smt. Nithya',
@@ -97,10 +108,29 @@ const journey = [
   },
 ];
 
-const galleryImages: Array<{ src: string; alt: string; 'data-ai-hint': string }> = [];
-
 
 export default function AboutPage() {
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'gallery'), orderBy('alt', 'desc'), limit(4));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const imagesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        'data-ai-hint': doc.data().hint || 'dance'
+      })) as GalleryImage[];
+      setGalleryImages(imagesData);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching gallery images: ", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
@@ -110,6 +140,8 @@ export default function AboutPage() {
          <FallbackImage
             src="https://placehold.co/1200x800.png"
             alt="Nithyanruthyaaradana academy background"
+            width={1200}
+            height={800}
             className="w-full h-full object-cover"
             data-ai-hint="dance studio"
           />
@@ -205,14 +237,14 @@ export default function AboutPage() {
             </h2>
           </FadeIn>
           <div className="relative">
-            <div className="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-border"></div>
+            <div className="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-border hidden sm:block"></div>
             <StaggerContainer className="space-y-16">
               {journey.map((item, index) => (
                 <StaggerItem key={index}>
-                  <div className="flex items-center w-full">
+                  <div className="flex sm:items-center w-full flex-col sm:flex-row">
                     <div
-                      className={`w-1/2 ${
-                        index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'
+                      className={`w-full sm:w-1/2 ${
+                        index % 2 === 0 ? 'sm:pr-8 sm:text-right' : 'sm:pl-8 text-left'
                       }`}
                     >
                       <p className="text-xl font-headline font-bold text-primary">
@@ -225,11 +257,11 @@ export default function AboutPage() {
                         {item.description}
                       </p>
                     </div>
-                    <div className="relative w-12 h-12 flex-shrink-0 bg-background border-4 border-primary rounded-full flex items-center justify-center z-10">
+                    <div className="relative w-12 h-12 flex-shrink-0 bg-background border-4 border-primary rounded-full flex items-center justify-center z-10 my-4 sm:my-0 mx-auto sm:mx-0">
                       {item.icon}
                     </div>
                     <div
-                      className={`w-1/2 ${
+                      className={`hidden sm:block w-1/2 ${
                         index % 2 === 0 ? 'pl-8 text-left' : 'pr-8 text-right'
                       }`}
                     >
@@ -251,22 +283,30 @@ export default function AboutPage() {
               A Glimpse Into Our World
             </h2>
           </FadeIn>
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {galleryImages.map((image, index) => (
-              <StaggerItem key={index}>
-                <Scale>
-                  <div className="overflow-hidden rounded-lg shadow-lg aspect-w-1 aspect-h-1">
-                     <FallbackImage
-                        {...image}
-                        width={600}
-                        height={600}
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                      />
-                  </div>
-                </Scale>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          {loading ? (
+            <div className="flex justify-center">
+              <LoadingAnimation />
+            </div>
+          ) : galleryImages.length > 0 ? (
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {galleryImages.map((image) => (
+                <StaggerItem key={image.id}>
+                  <Scale>
+                    <div className="overflow-hidden rounded-lg shadow-lg aspect-w-1 aspect-h-1">
+                       <FallbackImage
+                          {...image}
+                          width={600}
+                          height={600}
+                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        />
+                    </div>
+                  </Scale>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          ) : (
+             <p className="text-center text-muted-foreground">The gallery is currently empty.</p>
+          )}
         </div>
       </section>
     </div>
