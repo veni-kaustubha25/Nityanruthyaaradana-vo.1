@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -7,6 +8,10 @@ import {
   Award,
   Heart,
   MessageCircle,
+  Feather,
+  Star,
+  TrendingUp,
+  Image as ImageIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -37,6 +42,17 @@ import {
   Slide,
 } from '@/components/ui/professional-animations';
 import { FallbackImage } from '@/components/ui/fallback-image';
+import { useEffect, useState } from 'react';
+import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { LoadingAnimation } from '@/components/ui/loading-animation';
+
+interface GalleryImage {
+  id: string;
+  src: string;
+  alt: string;
+  hint: string;
+}
 
 const features = [
   {
@@ -65,6 +81,27 @@ const features = [
   },
 ];
 
+const classLevels = [
+    {
+        icon: <Feather className="h-10 w-10 text-primary" />,
+        title: 'Beginner Level (Ages 5+)',
+        description: 'Introduction to the fundamental adavus (steps), mudras (hand gestures), and basic theories of Bharatanatyam.',
+        features: ['Strong Foundation', 'Rhythm & Posture', 'Cultural Stories']
+    },
+    {
+        icon: <Star className="h-10 w-10 text-primary" />,
+        title: 'Intermediate Level',
+        description: 'Focus on more complex items, refining technique, and developing Abhinaya (expressional dance).',
+        features: ['Advanced Adavus', 'Expressional Nuances', 'Solo Item Training']
+    },
+    {
+        icon: <TrendingUp className="h-10 w-10 text-primary" />,
+        title: 'Advanced & Pre-Arangetram',
+        description: 'Intensive training for senior students, focusing on performance quality, stamina, and preparing for the debut performance (Arangetram).',
+        features: ['Full Margam Repertoire', 'Choreography Skills', 'Performance Mastery']
+    }
+];
+
 const testimonials: Array<{name: string, role: string, quote: string, avatar: string}> = [];
 
 const faqs = [
@@ -91,6 +128,27 @@ const faqs = [
 ];
 
 export default function HomePage() {
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'gallery'), orderBy('alt', 'desc'), limit(4));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const imagesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        'data-ai-hint': doc.data().hint || 'dance'
+      })) as GalleryImage[];
+      setGalleryImages(imagesData);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching gallery images: ", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
@@ -165,6 +223,96 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Our Classes Section */}
+        <section id="classes" className="py-20 sm:py-24">
+            <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <FadeIn>
+                    <h2 className="text-3xl sm:text-4xl font-headline font-bold text-center">
+                        Explore Our Classes
+                    </h2>
+                    <p className="mt-4 max-w-2xl mx-auto text-center text-muted-foreground">
+                        Structured learning paths for every stage of your dance journey, from the first step to the grand performance.
+                    </p>
+                </FadeIn>
+                <StaggerContainer className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {classLevels.map((level, index) => (
+                        <StaggerItem key={index}>
+                            <Card className="h-full bg-card/50 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                                <CardHeader className="items-center text-center">
+                                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit">
+                                        {level.icon}
+                                    </div>
+                                    <CardTitle className="mt-4 font-headline text-xl">{level.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex-grow">
+                                    <p className="text-muted-foreground text-center">{level.description}</p>
+                                    <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
+                                        {level.features.map((feature, i) => (
+                                            <li key={i} className="flex items-center gap-3">
+                                                <Star className="h-4 w-4 text-primary/70" />
+                                                <span>{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button asChild variant="outline" className="w-full">
+                                        <Link href="/register">Join this Class</Link>
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        </StaggerItem>
+                    ))}
+                </StaggerContainer>
+            </div>
+        </section>
+
+      {/* A Glimpse of Our World Section */}
+      <section className="py-20 sm:py-24 bg-secondary/20">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <FadeIn>
+            <h2 className="text-3xl sm:text-4xl font-headline font-bold text-center">A Glimpse of Our World</h2>
+            <p className="mt-4 max-w-2xl mx-auto text-center text-muted-foreground">
+              Moments of grace, dedication, and joy from our classes and performances.
+            </p>
+          </FadeIn>
+          <div className="mt-16">
+            {loading ? (
+              <div className="flex justify-center">
+                <LoadingAnimation />
+              </div>
+            ) : galleryImages.length > 0 ? (
+              <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {galleryImages.map((image) => (
+                  <StaggerItem key={image.id}>
+                    <div className="overflow-hidden rounded-lg shadow-lg aspect-w-1 aspect-h-1 group">
+                      <FallbackImage
+                        src={image.src}
+                        alt={image.alt}
+                        width={600}
+                        height={600}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        data-ai-hint={image.hint}
+                      />
+                    </div>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            ) : (
+              <p className="text-center text-muted-foreground">The gallery is currently empty.</p>
+            )}
+          </div>
+          <div className="mt-12 text-center">
+            <Button asChild size="lg" variant="outline">
+              <Link href="/gallery" className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5" />
+                View Full Gallery
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <section className="py-20 sm:py-24">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -215,6 +363,11 @@ export default function HomePage() {
               <CarouselPrevious className="hidden sm:flex" />
               <CarouselNext className="hidden sm:flex" />
             </Carousel>
+             {testimonials.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground">
+                Testimonials from our community will be featured here soon.
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -279,3 +432,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
