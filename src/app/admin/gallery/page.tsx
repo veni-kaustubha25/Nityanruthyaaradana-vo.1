@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -16,6 +17,27 @@ import { LoadingAnimation } from '@/components/ui/loading-animation';
 import { useToast } from '@/hooks/use-toast';
 import { db, app } from '@/lib/firebase';
 import { FallbackImage } from '@/components/ui/fallback-image';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog"
+
 
 interface GalleryImage {
   id: string;
@@ -36,6 +58,10 @@ export default function ManageGalleryPage() {
   
   const [newImage, setNewImage] = useState({ src: '', alt: '', hint: '', category: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
@@ -94,6 +120,58 @@ export default function ManageGalleryPage() {
     } catch (error: any) {
       toast({
         title: 'Error Adding Image',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    try {
+      await deleteDoc(doc(db, 'gallery', imageId));
+      toast({
+        title: 'Image Deleted',
+        description: 'The image has been successfully removed from the gallery.',
+        variant: 'default',
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error Deleting Image',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const openEditModal = (image: GalleryImage) => {
+    setEditingImage(image);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateImage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingImage) return;
+
+    setIsSubmitting(true);
+    try {
+      const imageRef = doc(db, 'gallery', editingImage.id);
+      await updateDoc(imageRef, {
+        src: editingImage.src,
+        alt: editingImage.alt,
+        hint: editingImage.hint,
+        category: editingImage.category,
+      });
+      toast({
+        title: 'Image Updated',
+        description: 'The image details have been successfully updated.',
+      });
+      setIsEditModalOpen(false);
+      setEditingImage(null);
+    } catch (error: any) {
+      toast({
+        title: 'Error Updating Image',
         description: error.message,
         variant: 'destructive',
       });
@@ -231,17 +309,95 @@ export default function ManageGalleryPage() {
                   <p className="text-sm text-muted-foreground">{image.category}</p>
                 </div>
                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button size="icon" variant="outline" className="h-8 w-8">
+                  <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => openEditModal(image)}>
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button size="icon" variant="destructive" className="h-8 w-8">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button size="icon" variant="destructive" className="h-8 w-8">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete the image
+                          from the gallery.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteImage(image.id)}>
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
+
+        {/* Edit Image Modal */}
+        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Image</DialogTitle>
+              <DialogDescription>
+                Make changes to the image details below. Click save when you're done.
+              </DialogDescription>
+            </DialogHeader>
+            {editingImage && (
+              <form onSubmit={handleUpdateImage} className="space-y-4 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-src">Image URL</Label>
+                    <Input 
+                      id="edit-src" 
+                      value={editingImage.src} 
+                      onChange={(e) => setEditingImage({ ...editingImage, src: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-category">Category</Label>
+                    <Input 
+                      id="edit-category" 
+                      value={editingImage.category} 
+                      onChange={(e) => setEditingImage({ ...editingImage, category: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="edit-alt">Alt Text</Label>
+                  <Textarea 
+                    id="edit-alt" 
+                    value={editingImage.alt} 
+                    onChange={(e) => setEditingImage({ ...editingImage, alt: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-hint">Hint</Label>
+                  <Input 
+                    id="edit-hint" 
+                    value={editingImage.hint} 
+                    onChange={(e) => setEditingImage({ ...editingImage, hint: e.target.value })}
+                  />
+                </div>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="button" variant="ghost">Cancel</Button>
+                  </DialogClose>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? <LoadingAnimation size="sm" /> : 'Save Changes'}
+                  </Button>
+                </DialogFooter>
+              </form>
+            )}
+          </DialogContent>
+        </Dialog>
+
       </main>
     </div>
   );
