@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { PageTransition } from "@/components/page-transition";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -69,14 +70,12 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#7c3aed" />
+        <meta name="theme-color" content="#8B1A1A" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         
         {/* Preload critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://picsum.photos" />
-        <link rel="dns-prefetch" href="https://via.placeholder.com" />
         
         {/* Structured Data */}
         <script
@@ -86,7 +85,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "DanceSchool",
               "name": "Nithyanruthyaaradana",
-              "description": "Classical Dance Academy offering Bharatanatyam, Kathak, and other traditional dance forms",
+              "description": "Classical Dance Academy offering Bharatanatyam, and other traditional dance forms",
               "url": "https://nithyanruthyaaradana.com",
               "logo": "https://nithyanruthyaaradana.com/logo.png",
               "image": "https://nithyanruthyaaradana.com/images/academy.jpg",
@@ -107,12 +106,14 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1">
+        <div className="min-h-screen flex flex-col bg-background text-foreground">
+          <Header />
+          <main className="flex-1">
+            <PageTransition>
               {children}
-            </main>
-            <Footer />
+            </PageTransition>
+          </main>
+          <Footer />
         </div>
         <Toaster />
       </body>
