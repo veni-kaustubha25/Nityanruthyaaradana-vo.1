@@ -25,7 +25,6 @@ import {
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -107,41 +106,47 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const collections = {
-        gallery: (data: any) => ({ ...data, 'data-ai-hint': data.hint || 'dance' } as GalleryImage),
-        features: (data: any) => data as Feature,
-        classLevels: (data: any) => data as ClassLevel,
-        testimonials: (data: any) => data as Testimonial,
-        faqs: (data: any) => data as Faq,
+    const handleError = (collectionName: string) => (error: Error) => {
+        console.error(`Error fetching ${collectionName}: `, error);
+        setLoading(false);
     };
 
-    const unsubscribes = Object.entries(collections).map(([col, formatter]) => {
-        const q = query(collection(db, col), orderBy('title', 'asc'));
-        return onSnapshot(q, (snapshot) => {
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...formatter(doc.data()) }));
-            switch(col) {
-                case 'gallery': setGalleryImages(data as GalleryImage[]); break;
-                case 'features': setFeatures(data as Feature[]); break;
-                case 'classLevels': setClassLevels(data as ClassLevel[]); break;
-                case 'testimonials': setTestimonials(data as Testimonial[]); break;
-                case 'faqs': 
-                    // FAQs are ordered by question, not title
-                    const faqQuery = query(collection(db, col), orderBy('question', 'asc'));
-                    return onSnapshot(faqQuery, (faqSnapshot) => {
-                         const faqData = faqSnapshot.docs.map(doc => ({ id: doc.id, ...formatter(doc.data()) }));
-                         setFaqs(faqData as Faq[]);
-                    });
-            }
-        }, (error) => {
-            console.error(`Error fetching ${col}: `, error);
-        });
-    });
+    const qGallery = query(collection(db, 'gallery'), orderBy('alt', 'desc'), limit(4));
+    const unsubGallery = onSnapshot(qGallery, (snapshot) => {
+        setGalleryImages(snapshot.docs.map(doc => ({ id: doc.id, 'data-ai-hint': doc.data().hint || 'dance', ...doc.data() } as GalleryImage)));
+    }, handleError('gallery'));
 
+    const qFeatures = query(collection(db, 'features'), orderBy('title', 'asc'));
+    const unsubFeatures = onSnapshot(qFeatures, (snapshot) => {
+        setFeatures(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Feature)));
+    }, handleError('features'));
+
+    const qClassLevels = query(collection(db, 'classLevels'), orderBy('title', 'asc'));
+    const unsubClassLevels = onSnapshot(qClassLevels, (snapshot) => {
+        setClassLevels(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ClassLevel)));
+    }, handleError('classLevels'));
+    
+    const qTestimonials = query(collection(db, 'testimonials'), orderBy('name', 'asc'));
+    const unsubTestimonials = onSnapshot(qTestimonials, (snapshot) => {
+        setTestimonials(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial)));
+    }, handleError('testimonials'));
+
+    const qFaqs = query(collection(db, 'faqs'), orderBy('question', 'asc'));
+    const unsubFaqs = onSnapshot(qFaqs, (snapshot) => {
+        setFaqs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Faq)));
+    }, handleError('faqs'));
+    
     // A bit of a hack to set loading to false after a short delay
     // to ensure all snapshots have a chance to load.
     setTimeout(() => setLoading(false), 1500);
 
-    return () => unsubscribes.forEach(unsub => unsub());
+    return () => {
+        unsubGallery();
+        unsubFeatures();
+        unsubClassLevels();
+        unsubTestimonials();
+        unsubFaqs();
+    };
   }, []);
 
   return (
@@ -282,7 +287,7 @@ export default function HomePage() {
               </div>
             ) : galleryImages.length > 0 ? (
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {galleryImages.slice(0, 4).map((image) => (
+                {galleryImages.map((image) => (
                   <StaggerItem key={image.id}>
                     <div className="overflow-hidden rounded-lg shadow-lg aspect-w-1 aspect-h-1 group">
                       <FallbackImage
