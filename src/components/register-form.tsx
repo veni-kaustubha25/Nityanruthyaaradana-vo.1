@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const registerSchema = z.object({
   studentName: z.string().min(2, "Name must be at least 2 characters."),
@@ -41,17 +44,27 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setIsSubmitting(true);
-    // Simulate server action
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    console.log(values);
-    setIsSubmitting(false);
-
-    toast({
-      title: "Registration Submitted!",
-      description: "Thank you for your interest. We will contact you shortly with further details.",
-      variant: "default",
-    });
-    form.reset();
+    try {
+      await addDoc(collection(db, "students"), {
+        ...values,
+        createdAt: serverTimestamp(),
+      });
+      toast({
+        title: "Registration Submitted!",
+        description: "Thank you for your interest. We will contact you shortly with further details.",
+        variant: "default",
+      });
+      form.reset();
+    } catch (error: any) {
+        console.error("Error adding document: ", error);
+        toast({
+            title: "Submission Failed",
+            description: "There was an error submitting your registration. Please try again later.",
+            variant: "destructive",
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   }
 
   return (

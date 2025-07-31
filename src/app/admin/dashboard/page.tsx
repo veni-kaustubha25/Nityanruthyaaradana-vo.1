@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -63,9 +64,11 @@ export default function DashboardPage() {
               Manage Gallery
             </Link>
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-left" disabled>
-            <Users className="mr-2 h-4 w-4" />
-            Manage Students
+          <Button variant="ghost" className="w-full justify-start text-left" asChild>
+            <Link href="/admin/students">
+              <Users className="mr-2 h-4 w-4" />
+              Manage Students
+            </Link>
           </Button>
         </nav>
         <div className="mt-auto">
@@ -110,7 +113,9 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <p>View and manage student registrations and information.</p>
-              <Button className="mt-4" disabled>Go to Students</Button>
+              <Button asChild className="mt-4">
+                <Link href="/admin/students">Go to Students</Link>
+              </Button>
             </CardContent>
           </Card>
           <Card>
