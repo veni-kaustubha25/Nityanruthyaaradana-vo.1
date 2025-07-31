@@ -12,12 +12,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <div className="min-h-screen bg-background text-foreground">
-          {children}
-        </div>
-      </body>
-    </html>
+    <div className="min-h-screen bg-background text-foreground">
+      {children}
+    </div>
   );
 }
