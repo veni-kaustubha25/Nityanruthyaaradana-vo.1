@@ -11,7 +11,8 @@ import {
   Feather,
   Star,
   TrendingUp,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Check
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -54,99 +55,87 @@ interface GalleryImage {
   hint: string;
 }
 
-const features = [
-  {
-    icon: <BookOpen className="h-10 w-10 text-primary" />,
-    title: 'Authentic Curriculum',
-    description:
-      'Learn the traditional Pandanallur style of Bharatanatyam, preserved in its purest form.',
-  },
-  {
-    icon: <Users className="h-10 w-10 text-primary" />,
-    title: 'Experienced Gurus',
-    description:
-      'Receive personalized instruction from acclaimed artists with decades of performance and teaching experience.',
-  },
-  {
-    icon: <Award className="h-10 w-10 text-primary" />,
-    title: 'Performance Opportunities',
-    description:
-      'Showcase your talent at our annual productions, prestigious festivals, and cultural events.',
-  },
-  {
-    icon: <Zap className="h-10 w-10 text-primary" />,
-    title: 'Holistic Development',
-    description:
-      'Our training goes beyond dance to instill discipline, confidence, and a deep appreciation for culture.',
-  },
-];
+interface Feature {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
 
-const classLevels = [
-    {
-        icon: <Feather className="h-10 w-10 text-primary" />,
-        title: 'Beginner Level (Ages 5+)',
-        description: 'Introduction to the fundamental adavus (steps), mudras (hand gestures), and basic theories of Bharatanatyam.',
-        features: ['Strong Foundation', 'Rhythm & Posture', 'Cultural Stories']
-    },
-    {
-        icon: <Star className="h-10 w-10 text-primary" />,
-        title: 'Intermediate Level',
-        description: 'Focus on more complex items, refining technique, and developing Abhinaya (expressional dance).',
-        features: ['Advanced Adavus', 'Expressional Nuances', 'Solo Item Training']
-    },
-    {
-        icon: <TrendingUp className="h-10 w-10 text-primary" />,
-        title: 'Advanced & Pre-Arangetram',
-        description: 'Intensive training for senior students, focusing on performance quality, stamina, and preparing for the debut performance (Arangetram).',
-        features: ['Full Margam Repertoire', 'Choreography Skills', 'Performance Mastery']
-    }
-];
+interface ClassLevel {
+    id: string;
+    icon: string;
+    title: string;
+    description: string;
+    features: string[];
+}
 
-const testimonials: Array<{name: string, role: string, quote: string, avatar: string}> = [];
+interface Testimonial {
+    id: string;
+    name: string;
+    role: string;
+    quote: string;
+    avatar: string;
+}
 
-const faqs = [
-  {
-    question: 'What is the minimum age to enroll?',
-    answer:
-      'We welcome students from the age of 5. We believe in nurturing talent from a young age, providing a strong foundation in classical dance.',
-  },
-  {
-    question: 'What is the fee structure?',
-    answer:
-      'Our fees vary based on the level of the class (beginner, intermediate, advanced). Please contact us for detailed information on our fee structure and payment options.',
-  },
-  {
-    question: 'Are there classes for adults?',
-    answer:
-      'Yes, we offer classes for adults of all ages and skill levels. It\'s never too late to start your journey in classical dance!',
-  },
-  {
-    question: 'What should students wear to class?',
-    answer:
-      'Students are required to wear a traditional practice saree or a comfortable salwar kameez with a dupatta. This ensures comfort and adherence to the decorum of a classical dance class.',
-  },
-];
+interface Faq {
+    id: string;
+    question: string;
+    answer: string;
+}
+
+const ICONS: { [key: string]: React.ReactNode } = {
+    Zap: <Zap className="h-10 w-10 text-primary" />,
+    BookOpen: <BookOpen className="h-10 w-10 text-primary" />,
+    Users: <Users className="h-10 w-10 text-primary" />,
+    Award: <Award className="h-10 w-10 text-primary" />,
+    Feather: <Feather className="h-10 w-10 text-primary" />,
+    Star: <Star className="h-10 w-10 text-primary" />,
+    TrendingUp: <TrendingUp className="h-10 w-10 text-primary" />,
+    Default: <Star className="h-10 w-10 text-primary" />,
+};
+
+const getIcon = (name: string) => ICONS[name] || ICONS.Default;
 
 export default function HomePage() {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [classLevels, setClassLevels] = useState<ClassLevel[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [faqs, setFaqs] = useState<Faq[]>([]);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, 'gallery'), orderBy('alt', 'desc'), limit(4));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const imagesData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        'data-ai-hint': doc.data().hint || 'dance'
-      })) as GalleryImage[];
-      setGalleryImages(imagesData);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching gallery images: ", error);
-      setLoading(false);
+    const collections = {
+        gallery: (data: any) => ({ ...data, 'data-ai-hint': data.hint || 'dance' } as GalleryImage),
+        features: (data: any) => data as Feature,
+        classLevels: (data: any) => data as ClassLevel,
+        testimonials: (data: any) => data as Testimonial,
+        faqs: (data: any) => data as Faq,
+    };
+
+    const unsubscribes = Object.entries(collections).map(([col, formatter]) => {
+        const q = query(collection(db, col), orderBy('title', 'asc'));
+        return onSnapshot(q, (snapshot) => {
+            const data = snapshot.docs.map(doc => ({ id: doc.id, ...formatter(doc.data()) }));
+            switch(col) {
+                case 'gallery': setGalleryImages(data as GalleryImage[]); break;
+                case 'features': setFeatures(data as Feature[]); break;
+                case 'classLevels': setClassLevels(data as ClassLevel[]); break;
+                case 'testimonials': setTestimonials(data as Testimonial[]); break;
+                case 'faqs': setFaqs(data as Faq[]); break;
+            }
+        }, (error) => {
+            console.error(`Error fetching ${col}: `, error);
+        });
     });
 
-    return () => unsubscribe();
+    // A bit of a hack to set loading to false after a short delay
+    // to ensure all snapshots have a chance to load.
+    setTimeout(() => setLoading(false), 1500);
+
+    return () => unsubscribes.forEach(unsub => unsub());
   }, []);
 
   return (
@@ -203,13 +192,14 @@ export default function HomePage() {
               We provide an enriching environment that nurtures talent and fosters a deep love for classical Indian dance.
             </p>
           </FadeIn>
+          {loading ? <div className="flex justify-center mt-16"><LoadingAnimation /></div> : (
           <StaggerContainer className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <StaggerItem key={index}>
+            {features.map((feature) => (
+              <StaggerItem key={feature.id}>
                 <Card className="text-center h-full bg-card/50 hover:shadow-xl transition-shadow duration-300">
                   <CardHeader>
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit">
-                      {feature.icon}
+                      {getIcon(feature.icon)}
                     </div>
                     <CardTitle className="mt-4 font-headline text-xl">{feature.title}</CardTitle>
                   </CardHeader>
@@ -220,6 +210,7 @@ export default function HomePage() {
               </StaggerItem>
             ))}
           </StaggerContainer>
+          )}
         </div>
       </section>
 
@@ -234,13 +225,14 @@ export default function HomePage() {
                         Structured learning paths for every stage of your dance journey, from the first step to the grand performance.
                     </p>
                 </FadeIn>
+                 {loading ? <div className="flex justify-center mt-16"><LoadingAnimation /></div> : (
                 <StaggerContainer className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {classLevels.map((level, index) => (
-                        <StaggerItem key={index}>
+                    {classLevels.map((level) => (
+                        <StaggerItem key={level.id}>
                             <Card className="h-full bg-card/50 hover:shadow-xl transition-shadow duration-300 flex flex-col">
                                 <CardHeader className="items-center text-center">
                                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit">
-                                        {level.icon}
+                                        {getIcon(level.icon)}
                                     </div>
                                     <CardTitle className="mt-4 font-headline text-xl">{level.title}</CardTitle>
                                 </CardHeader>
@@ -249,7 +241,7 @@ export default function HomePage() {
                                     <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
                                         {level.features.map((feature, i) => (
                                             <li key={i} className="flex items-center gap-3">
-                                                <Star className="h-4 w-4 text-primary/70" />
+                                                <Check className="h-4 w-4 text-primary/70" />
                                                 <span>{feature}</span>
                                             </li>
                                         ))}
@@ -264,6 +256,7 @@ export default function HomePage() {
                         </StaggerItem>
                     ))}
                 </StaggerContainer>
+                 )}
             </div>
         </section>
 
@@ -283,7 +276,7 @@ export default function HomePage() {
               </div>
             ) : galleryImages.length > 0 ? (
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {galleryImages.map((image) => (
+                {galleryImages.slice(0, 4).map((image) => (
                   <StaggerItem key={image.id}>
                     <div className="overflow-hidden rounded-lg shadow-lg aspect-w-1 aspect-h-1 group">
                       <FallbackImage
@@ -299,7 +292,7 @@ export default function HomePage() {
                 ))}
               </StaggerContainer>
             ) : (
-              <p className="text-center text-muted-foreground">The gallery is currently empty.</p>
+              <p className="text-center text-muted-foreground">The gallery is currently being curated.</p>
             )}
           </div>
           <div className="mt-12 text-center">
@@ -325,6 +318,7 @@ export default function HomePage() {
             </p>
           </FadeIn>
           <div className="mt-16">
+             {loading ? <div className="flex justify-center"><LoadingAnimation /></div> : testimonials.length > 0 ? (
             <Carousel
               opts={{
                 align: 'start',
@@ -333,8 +327,8 @@ export default function HomePage() {
               className="w-full"
             >
               <CarouselContent>
-                {testimonials.map((testimonial, index) => (
-                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                {testimonials.map((testimonial) => (
+                  <CarouselItem key={testimonial.id} className="md:basis-1/2 lg:basis-1/3">
                     <div className="p-1 h-full">
                       <Card className="flex flex-col h-full bg-card/50">
                         <CardContent className="flex-grow p-6">
@@ -363,7 +357,7 @@ export default function HomePage() {
               <CarouselPrevious className="hidden sm:flex" />
               <CarouselNext className="hidden sm:flex" />
             </Carousel>
-             {testimonials.length === 0 && (
+             ) : (
               <div className="text-center py-12 text-muted-foreground">
                 Testimonials from our community will be featured here soon.
               </div>
@@ -384,14 +378,16 @@ export default function HomePage() {
                 <p className="mt-4 text-muted-foreground max-w-xl">
                   Have questions? We've got answers. If you can't find what you're looking for, feel free to contact us.
                 </p>
+                {loading ? <div className="flex justify-center mt-8"><LoadingAnimation /></div> : (
                 <Accordion type="single" collapsible className="w-full mt-8">
-                  {faqs.map((faq, index) => (
-                    <AccordionItem value={`item-${index}`} key={index}>
+                  {faqs.map((faq) => (
+                    <AccordionItem value={faq.id} key={faq.id}>
                       <AccordionTrigger className="text-left font-semibold">{faq.question}</AccordionTrigger>
                       <AccordionContent className="text-muted-foreground">{faq.answer}</AccordionContent>
                     </AccordionItem>
                   ))}
                 </Accordion>
+                )}
               </div>
             </Slide>
             <Slide direction="left">
@@ -432,5 +428,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    

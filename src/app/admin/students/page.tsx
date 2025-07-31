@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, Trash2, ArrowUpDown } from 'lucide-react';
+import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, Trash2, ArrowUpDown, FileText } from 'lucide-react';
 import { AnimatedLogo } from '@/components/animated-logo';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
 import { useToast } from '@/hooks/use-toast';
@@ -141,6 +141,12 @@ export default function ManageStudentsPage() {
               Dashboard
             </Link>
           </Button>
+           <Button variant="ghost" className="w-full justify-start text-left" asChild>
+            <Link href="/admin/content">
+              <FileText className="mr-2 h-4 w-4" />
+              Manage Content
+            </Link>
+          </Button>
           <Button variant="ghost" className="w-full justify-start text-left" asChild>
             <Link href="/admin/gallery">
               <GalleryHorizontal className="mr-2 h-4 w-4" />
@@ -259,4 +265,3 @@ export default function ManageStudentsPage() {
     </div>
   );
 }
-

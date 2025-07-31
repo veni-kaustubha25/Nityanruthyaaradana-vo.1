@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings } from 'lucide-react';
+import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, FileText } from 'lucide-react';
 import { AnimatedLogo } from '@/components/animated-logo';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
 import { app } from '@/lib/firebase'; // Ensure app is initialized
@@ -58,6 +58,12 @@ export default function DashboardPage() {
               Dashboard
             </Link>
           </Button>
+           <Button variant="ghost" className="w-full justify-start text-left" asChild>
+            <Link href="/admin/content">
+              <FileText className="mr-2 h-4 w-4" />
+              Manage Content
+            </Link>
+          </Button>
           <Button variant="ghost" className="w-full justify-start text-left" asChild>
             <Link href="/admin/gallery">
               <GalleryHorizontal className="mr-2 h-4 w-4" />
@@ -98,6 +104,17 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card>
             <CardHeader>
+              <CardTitle>Manage Content</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Edit homepage sections like features, FAQs, and testimonials.</p>
+              <Button asChild className="mt-4">
+                <Link href="/admin/content">Go to Content</Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
               <CardTitle>Manage Gallery</CardTitle>
             </CardHeader>
             <CardContent>
@@ -116,15 +133,6 @@ export default function DashboardPage() {
               <Button asChild className="mt-4">
                 <Link href="/admin/students">Go to Students</Link>
               </Button>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Website Settings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Update general website settings and contact information.</p>
-              <Button className="mt-4" disabled>Go to Settings</Button>
             </CardContent>
           </Card>
         </div>

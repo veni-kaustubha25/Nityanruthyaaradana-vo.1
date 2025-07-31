@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, PlusCircle, Trash2, Edit } from 'lucide-react';
+import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, PlusCircle, Trash2, Edit, FileText } from 'lucide-react';
 import { AnimatedLogo } from '@/components/animated-logo';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
 import { useToast } from '@/hooks/use-toast';
@@ -199,6 +199,12 @@ export default function ManageGalleryPage() {
               Dashboard
             </Link>
           </Button>
+           <Button variant="ghost" className="w-full justify-start text-left" asChild>
+            <Link href="/admin/content">
+              <FileText className="mr-2 h-4 w-4" />
+              Manage Content
+            </Link>
+          </Button>
           <Button variant="secondary" className="w-full justify-start text-left" asChild>
             <Link href="/admin/gallery">
               <GalleryHorizontal className="mr-2 h-4 w-4" />
@@ -252,7 +258,7 @@ export default function ManageGalleryPage() {
                   id="src" 
                   value={newImage.src} 
                   onChange={(e) => setNewImage({ ...newImage, src: e.target.value })} 
-                  placeholder="https://example.com/image.jpg or /images/local.jpg"
+                  placeholder="https://example.com/image.jpg"
                 />
               </div>
               <div>
@@ -265,7 +271,7 @@ export default function ManageGalleryPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="hint">Hint (AI Hint)</Label>
+                <Label htmlFor="hint">Hint (for AI Image Search)</Label>
                 <Input 
                   id="hint" 
                   value={newImage.hint} 
@@ -295,7 +301,7 @@ export default function ManageGalleryPage() {
                 />
                 <div className="p-4">
                   <p className="font-semibold truncate" title={image.alt}>{image.alt}</p>
-                  <p className="text-sm text-muted-foreground truncate" title={image.hint}>{image.hint}</p>
+                  <p className="text-sm text-muted-foreground truncate" title={image.src}>{image.src}</p>
                 </div>
                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => openEditModal(image)}>
