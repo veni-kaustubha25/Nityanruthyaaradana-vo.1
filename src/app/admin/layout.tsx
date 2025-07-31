@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,8 +12,12 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {children}
-    </div>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <div className="min-h-screen bg-background text-foreground">
+          {children}
+        </div>
+      </body>
+    </html>
   );
 }
