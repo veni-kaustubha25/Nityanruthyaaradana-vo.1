@@ -16,47 +16,29 @@ interface FallbackImageProps {
   onLoad?: () => void;
   onError?: () => void;
   style?: React.CSSProperties;
+  'data-ai-hint'?: string;
 }
 
-// Function to get deterministic fallback URLs using local images
-function getFallbackUrls(originalSrc: string): string[] {
-  // Create a hash from the original source to ensure consistency
-  let hash = 0;
-  for (let i = 0; i < originalSrc.length; i++) {
-    const char = originalSrc.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  
-  const seed1 = Math.abs(hash) % 12;
-  const seed2 = Math.abs(hash + 1) % 12;
-  const seed3 = Math.abs(hash + 2) % 12;
-  
-  const imageFiles = [
-    '/images/1.jpg',
-    '/images/2.JPG', 
-    '/images/3.jpg',
-    '/images/4.jpg',
-    '/images/5.jpg',
-    '/images/6.jpg',
-    '/images/7.jpg',
-    '/images/8.jpg',
-    '/images/9.jpg',
-    '/images/10.jpg',
-    '/images/11.JPG',
-    '/images/12.JPG',
-  ];
-  
-  return [
-    imageFiles[seed1] || '/images/1.jpg',
-    imageFiles[seed2] || '/images/2.JPG',
-    imageFiles[seed3] || '/images/3.jpg',
-    '/images/4.jpg',
-    '/images/5.jpg',
-    '/images/6.jpg',
-    '/images/7.jpg',
-  ];
+// Function to get deterministic fallback URLs from placehold.co
+function getFallbackUrls(originalSrc: string, width: number, height: number): string[] {
+    let hash = 0;
+    for (let i = 0; i < originalSrc.length; i++) {
+        const char = originalSrc.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+    }
+
+    const seed1 = Math.abs(hash);
+    const seed2 = Math.abs(hash + 1);
+    const seed3 = Math.abs(hash + 2);
+
+    return [
+        `https://placehold.co/${width}x${height}/8B1A1A/FFFFFF.png?text=Image+${seed1}`,
+        `https://placehold.co/${width}x${height}/6A1A1A/FFFFFF.png?text=Image+${seed2}`,
+        `https://placehold.co/${width}x${height}/4A1A1A/FFFFFF.png?text=Image+${seed3}`,
+    ];
 }
+
 
 export function FallbackImage({
   src,
@@ -66,32 +48,27 @@ export function FallbackImage({
   className = '',
   priority = false,
   fallbackSrcs,
-  placeholder,
   onLoad,
   onError,
-  style,
+  ...props
 }: FallbackImageProps) {
-  // Use deterministic fallback URLs if none provided
-  const finalFallbackSrcs = fallbackSrcs || getFallbackUrls(src);
-  // Ensure we never start with an empty src
-  const safeInitialSrc = src || finalFallbackSrcs[0] || '/images/1.jpg';
+  const finalFallbackSrcs = fallbackSrcs || getFallbackUrls(src, width, height);
+  const safeInitialSrc = src || finalFallbackSrcs[0] || `https://placehold.co/${width}x${height}.png`;
+  
   const [currentSrc, setCurrentSrc] = useState(safeInitialSrc);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
 
-  // Reset state when src changes
   useEffect(() => {
-    const safeSrc = src || finalFallbackSrcs[0] || '/images/1.jpg';
+    const safeSrc = src || finalFallbackSrcs[0] || `https://placehold.co/${width}x${height}.png`;
     setCurrentSrc(safeSrc);
     setCurrentIndex(0);
     setHasError(false);
     setRetryCount(0);
-  }, [src, finalFallbackSrcs]);
+  }, [src, width, height, finalFallbackSrcs]);
 
   const handleError = useCallback(() => {
-    console.log(`Image failed to load: ${currentSrc}, trying fallback ${currentIndex + 1}/${finalFallbackSrcs.length}`);
-    
     if (currentIndex < finalFallbackSrcs.length - 1) {
       setCurrentSrc(finalFallbackSrcs[currentIndex + 1]);
       setCurrentIndex(currentIndex + 1);
@@ -100,7 +77,7 @@ export function FallbackImage({
       setHasError(true);
       onError?.();
     }
-  }, [currentSrc, currentIndex, finalFallbackSrcs, onError]);
+  }, [currentIndex, finalFallbackSrcs, onError]);
 
   const handleLoad = useCallback(() => {
     setHasError(false);
@@ -111,7 +88,6 @@ export function FallbackImage({
     if (retryCount < 3) {
       setRetryCount(prev => prev + 1);
       setHasError(false);
-      // Force re-render by changing src slightly
       setCurrentSrc(`${finalFallbackSrcs[0]}?retry=${retryCount + 1}`);
     }
   }, [retryCount, finalFallbackSrcs]);
@@ -120,7 +96,7 @@ export function FallbackImage({
     return (
       <div 
         className={`flex items-center justify-center bg-muted/50 border-2 border-dashed border-muted-foreground/20 rounded-lg ${className}`}
-        style={{ width: width, height: height }}
+        style={{ width, height }}
       >
         <div className="text-center p-4">
           <ImageIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-2" />
@@ -138,8 +114,7 @@ export function FallbackImage({
     );
   }
 
-  // Ensure we never pass an empty string to the Image component
-  const safeSrc = currentSrc || finalFallbackSrcs[0] || '/images/1.jpg';
+  const safeSrc = currentSrc || finalFallbackSrcs[0] || `https://placehold.co/${width}x${height}.png`;
 
   return (
     <Image
@@ -155,8 +130,8 @@ export function FallbackImage({
       quality={85}
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       placeholder="blur"
-      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-      style={style}
+      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
+      {...props}
     />
   );
-} 
+}
