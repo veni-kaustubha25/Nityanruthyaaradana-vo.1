@@ -51,7 +51,7 @@ export default function DashboardPage() {
           <AnimatedLogo />
         </div>
         <nav className="flex-1 space-y-2">
-          <Button variant="ghost" className="w-full justify-start text-left" asChild>
+          <Button variant="secondary" className="w-full justify-start text-left" asChild>
             <Link href="/admin/dashboard">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               Dashboard
@@ -63,13 +63,13 @@ export default function DashboardPage() {
               Manage Gallery
             </Link>
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-left">
+          <Button variant="ghost" className="w-full justify-start text-left" disabled>
             <Users className="mr-2 h-4 w-4" />
             Manage Students
           </Button>
         </nav>
         <div className="mt-auto">
-          <Button variant="ghost" className="w-full justify-start text-left">
+          <Button variant="ghost" className="w-full justify-start text-left" disabled>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <p>View and manage student registrations and information.</p>
-              <Button className="mt-4">Go to Students</Button>
+              <Button className="mt-4" disabled>Go to Students</Button>
             </CardContent>
           </Card>
           <Card>
@@ -119,7 +119,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <p>Update general website settings and contact information.</p>
-              <Button className="mt-4">Go to Settings</Button>
+              <Button className="mt-4" disabled>Go to Settings</Button>
             </CardContent>
           </Card>
         </div>

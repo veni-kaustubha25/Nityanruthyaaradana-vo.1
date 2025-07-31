@@ -13,8 +13,8 @@ import { useRouter } from 'next/navigation';
 import { app } from '@/lib/firebase'; // Ensure app is initialized
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('demo@gmail.com');
+  const [password, setPassword] = useState('demo123');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function LoginPage() {
       console.error("Login failed:", error);
       toast({
         title: 'Login Failed',
-        description: error.message || 'Please check your credentials and try again.',
+        description: 'Please ensure "demo@gmail.com" exists in your Firebase Authentication users.',
         variant: 'destructive',
       });
     } finally {
@@ -65,7 +65,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={isLoading}
+                  disabled={true}
                 />
               </div>
               <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  disabled={isLoading}
+                  disabled={true}
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>

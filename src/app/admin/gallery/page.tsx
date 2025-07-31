@@ -130,13 +130,13 @@ export default function ManageGalleryPage() {
               Manage Gallery
             </Link>
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-left">
+          <Button variant="ghost" className="w-full justify-start text-left" disabled>
             <Users className="mr-2 h-4 w-4" />
             Manage Students
           </Button>
         </nav>
         <div className="mt-auto">
-          <Button variant="ghost" className="w-full justify-start text-left">
+          <Button variant="ghost" className="w-full justify-start text-left" disabled>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
