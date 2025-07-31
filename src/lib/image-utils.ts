@@ -1,19 +1,9 @@
+
 // This file is kept for utility functions but no longer holds static image lists.
 
-// Function to get placeholder image dimensions based on category
-export function getImageDimensions(category: string): { width: number; height: number } {
-  const dimensions: { [key: string]: { width: number; height: number } } = {
-    performance: { width: 600, height: 800 },
-    groupPractice: { width: 600, height: 400 },
-    training: { width: 600, height: 400 },
-    events: { width: 600, height: 400 },
-    teacher: { width: 600, height: 400 },
-    studio: { width: 600, height: 400 },
-    studentLife: { width: 600, height: 400 },
-    cultural: { width: 600, height: 400 },
-  };
-  
-  return dimensions[category] || { width: 600, height: 400 };
+// Function to get placeholder image dimensions
+export function getImageDimensions(): { width: number; height: number } {
+  return { width: 600, height: 400 };
 }
 
 // Function to validate image URL

@@ -44,7 +44,6 @@ interface GalleryImage {
   src: string;
   alt: string;
   hint: string;
-  category: string;
 }
 
 export default function ManageGalleryPage() {
@@ -56,7 +55,7 @@ export default function ManageGalleryPage() {
   const [loading, setLoading] = useState(true);
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   
-  const [newImage, setNewImage] = useState({ src: '', alt: '', hint: '', category: '' });
+  const [newImage, setNewImage] = useState({ src: '', alt: '', hint: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
@@ -95,10 +94,10 @@ export default function ManageGalleryPage() {
 
   const handleAddImage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newImage.src || !newImage.alt || !newImage.category) {
+    if (!newImage.src || !newImage.alt) {
       toast({
         title: 'Missing Fields',
-        description: 'Please fill out all required fields.',
+        description: 'Image URL and Alt Text are required.',
         variant: 'destructive',
       });
       return;
@@ -109,14 +108,13 @@ export default function ManageGalleryPage() {
         src: newImage.src,
         alt: newImage.alt,
         hint: newImage.hint,
-        category: newImage.category,
         featured: false,
       });
       toast({
         title: 'Image Added',
         description: 'The new image has been added to the gallery.',
       });
-      setNewImage({ src: '', alt: '', hint: '', category: '' });
+      setNewImage({ src: '', alt: '', hint: '' });
     } catch (error: any) {
       toast({
         title: 'Error Adding Image',
@@ -161,7 +159,6 @@ export default function ManageGalleryPage() {
         src: editingImage.src,
         alt: editingImage.alt,
         hint: editingImage.hint,
-        category: editingImage.category,
       });
       toast({
         title: 'Image Updated',
@@ -247,25 +244,14 @@ export default function ManageGalleryPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleAddImage} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="src">Image URL</Label>
-                  <Input 
-                    id="src" 
-                    value={newImage.src} 
-                    onChange={(e) => setNewImage({ ...newImage, src: e.target.value })} 
-                    placeholder="https://example.com/image.jpg or /images/local.jpg"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="category">Category</Label>
-                  <Input 
-                    id="category" 
-                    value={newImage.category} 
-                    onChange={(e) => setNewImage({ ...newImage, category: e.target.value })}
-                    placeholder="e.g., Performance, Training"
-                  />
-                </div>
+              <div>
+                <Label htmlFor="src">Image URL</Label>
+                <Input 
+                  id="src" 
+                  value={newImage.src} 
+                  onChange={(e) => setNewImage({ ...newImage, src: e.target.value })} 
+                  placeholder="https://example.com/image.jpg or /images/local.jpg"
+                />
               </div>
               <div>
                 <Label htmlFor="alt">Alt Text (Description)</Label>
@@ -277,12 +263,12 @@ export default function ManageGalleryPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="hint">Hint (Short Caption)</Label>
+                <Label htmlFor="hint">Hint (AI Hint)</Label>
                 <Input 
                   id="hint" 
                   value={newImage.hint} 
                   onChange={(e) => setNewImage({ ...newImage, hint: e.target.value })}
-                  placeholder="e.g., Annual show, backstage"
+                  placeholder="e.g., dance performance"
                 />
               </div>
               <Button type="submit" disabled={isSubmitting}>
@@ -303,10 +289,11 @@ export default function ManageGalleryPage() {
                   width={300}
                   height={300}
                   className="w-full h-48 object-cover rounded-t-lg"
+                  data-ai-hint={image.hint}
                 />
                 <div className="p-4">
                   <p className="font-semibold truncate" title={image.alt}>{image.alt}</p>
-                  <p className="text-sm text-muted-foreground">{image.category}</p>
+                  <p className="text-sm text-muted-foreground truncate" title={image.hint}>{image.hint}</p>
                 </div>
                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => openEditModal(image)}>
@@ -351,23 +338,13 @@ export default function ManageGalleryPage() {
             </DialogHeader>
             {editingImage && (
               <form onSubmit={handleUpdateImage} className="space-y-4 pt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="edit-src">Image URL</Label>
-                    <Input 
-                      id="edit-src" 
-                      value={editingImage.src} 
-                      onChange={(e) => setEditingImage({ ...editingImage, src: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="edit-category">Category</Label>
-                    <Input 
-                      id="edit-category" 
-                      value={editingImage.category} 
-                      onChange={(e) => setEditingImage({ ...editingImage, category: e.target.value })}
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="edit-src">Image URL</Label>
+                  <Input 
+                    id="edit-src" 
+                    value={editingImage.src} 
+                    onChange={(e) => setEditingImage({ ...editingImage, src: e.target.value })}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="edit-alt">Alt Text</Label>
@@ -378,7 +355,7 @@ export default function ManageGalleryPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="edit-hint">Hint</Label>
+                  <Label htmlFor="edit-hint">AI Hint</Label>
                   <Input 
                     id="edit-hint" 
                     value={editingImage.hint} 
