@@ -124,7 +124,13 @@ export default function HomePage() {
                 case 'features': setFeatures(data as Feature[]); break;
                 case 'classLevels': setClassLevels(data as ClassLevel[]); break;
                 case 'testimonials': setTestimonials(data as Testimonial[]); break;
-                case 'faqs': setFaqs(data as Faq[]); break;
+                case 'faqs': 
+                    // FAQs are ordered by question, not title
+                    const faqQuery = query(collection(db, col), orderBy('question', 'asc'));
+                    return onSnapshot(faqQuery, (faqSnapshot) => {
+                         const faqData = faqSnapshot.docs.map(doc => ({ id: doc.id, ...formatter(doc.data()) }));
+                         setFaqs(faqData as Faq[]);
+                    });
             }
         }, (error) => {
             console.error(`Error fetching ${col}: `, error);
@@ -428,3 +434,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
