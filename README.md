@@ -1,6 +1,6 @@
 # Nithyanruthyaaradana - Classical Dance Academy Website
 
-A modern, responsive website for Nithyanruthyaaradana, a premier Bharatanatyam classical dance academy. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring a comprehensive image gallery and student registration system.
+A modern, responsive website for Nithyanruthyaaradana, a premier Bharatanatyam classical dance academy. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring a comprehensive image gallery, student registration system, and elegant animations.
 
 ![Nithyanruthyaaradana](https://placehold.co/1200x600/8B1A1A/FFFFFF?text=Nithyanruthyaaradana)
 
@@ -189,8 +189,8 @@ Edit `src/app/globals.css` to modify the color scheme:
 :root {
   --primary: 352 75% 44%; /* Main Maroon */
   --accent: 352 85% 65%; /* Lighter Red */
-  --background: 0 0% 100%; /* White background */
-  --foreground: 0 0% 3.9%; /* Dark text */
+  --background: 352 75% 12%; /* Very Dark Maroon */
+  --foreground: 30 20% 90%; /* Light text */
   /* ... other colors */
 }
 ```
@@ -305,19 +305,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Next.js** team for the amazing framework
 - **Lucide React** for beautiful icons
 
-## 🆕 Recent Updates
-
-### Version 2.0 - Enhanced Image Experience
-- ✅ **Local Image Integration**: All images now served from local `/public/images/` folder
-- ✅ **Enhanced Image Viewer**: Full-screen modal with zoom, pan, rotate, and navigation
-- ✅ **Responsive Design**: Complete mobile-first responsive design
-- ✅ **Performance Optimization**: Removed external image dependencies
-- ✅ **Error Handling**: Robust fallback system for failed images
-- ✅ **Touch Support**: Mobile-friendly gestures and interactions
-
 ---
 
 Built with ❤️ for the classical dance community
-
-*Last updated: December 2024*
-Thank you
+*This README is auto-generated and reflects the current state of the project.*
