@@ -106,17 +106,17 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen bg-[#8B0000]">
       {/* Hero Section */}
       <motion.section 
-        className="relative py-20 px-4 sm:px-6 lg:px-8"
+        className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8"
         variants={heroVariants}
         initial="hidden"
         animate="visible"
       >
         <div className="max-w-7xl mx-auto text-center">
           <motion.h1 
-            className="text-4xl md:text-6xl font-bold text-foreground mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -124,7 +124,7 @@ export default function GalleryPage() {
             Dance Gallery
           </motion.h1>
           <motion.p 
-            className="text-xl text-muted-foreground max-w-3xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed px-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -136,14 +136,14 @@ export default function GalleryPage() {
 
       {/* Gallery Grid */}
       <motion.section 
-        className="py-12 px-4 sm:px-6 lg:px-8"
+        className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         <div className="max-w-7xl mx-auto">
           <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -162,7 +162,7 @@ export default function GalleryPage() {
                 }}
               >
                 <Card 
-                  className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg"
+                  className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 border-0 shadow-lg"
                   onClick={() => handleImageClick(index)}
                 >
                   <CardContent className="p-0">
@@ -172,7 +172,7 @@ export default function GalleryPage() {
                         alt={image.alt}
                         width={300}
                         height={300}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-500"
                       />
                       <motion.div 
                         className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100"
@@ -181,15 +181,15 @@ export default function GalleryPage() {
                         transition={{ duration: 0.3 }}
                       />
                       <motion.div 
-                        className="absolute bottom-3 left-3 right-3 text-white opacity-0 group-hover:opacity-100"
+                        className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 right-2 sm:right-3 text-white opacity-0 group-hover:opacity-100"
                         initial={{ opacity: 0, y: 10 }}
                         whileHover={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.1 }}
                       >
-                        <Badge variant="secondary" className="mb-1 text-xs">
+                        <Badge variant="secondary" className="mb-1 text-xs px-2 py-1">
                           {image.category}
                         </Badge>
-                        <p className="text-xs font-medium">{image.hint}</p>
+                        <p className="text-xs font-medium leading-tight">{image.hint}</p>
                       </motion.div>
                     </div>
                   </CardContent>

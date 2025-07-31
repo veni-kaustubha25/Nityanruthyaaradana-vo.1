@@ -43,13 +43,13 @@ export default function ContactPage() {
     <PageTransition>
       <div>
         {/* Page Header */}
-        <section className="py-12 sm:py-16 text-center bg-background">
+        <section className="py-10 sm:py-12 md:py-16 text-center bg-[#8B0000]">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <TextAnimation type="slide" direction="up" delay={0.2}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline">Contact Us</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-headline text-white">Contact Us</h1>
             </TextAnimation>
             <TextAnimation type="fade" delay={0.4}>
-              <p className="mt-4 sm:mt-6 max-w-2xl mx-auto text-muted-foreground text-sm sm:text-base leading-relaxed">
+              <p className="mt-3 sm:mt-4 md:mt-6 max-w-2xl mx-auto text-gray-200 text-sm sm:text-base leading-relaxed px-2">
                 Get in touch with us to learn more about our programs or to schedule a visit to our academy.
               </p>
             </TextAnimation>
@@ -57,22 +57,22 @@ export default function ContactPage() {
         </section>
 
         {/* Contact Content */}
-        <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-background">
+        <section className="py-10 sm:py-12 md:py-16 lg:py-20 bg-[#8B0000]">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-8 sm:gap-12">
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
               {/* Contact Form */}
               <div>
                 <TextAnimation type="slide" direction="left" delay={0.2}>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4 sm:mb-6">Send us a Message</h2>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-headline mb-3 sm:mb-4 md:mb-6 text-white">Send us a Message</h2>
                 </TextAnimation>
                 <TextAnimation type="fade" delay={0.4}>
-                  <p className="text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-200 mb-4 sm:mb-6 md:mb-8 text-sm sm:text-base leading-relaxed">
                     Have questions about our programs or want to schedule a visit? Fill out the form below and we'll get back to you as soon as possible.
                   </p>
                 </TextAnimation>
                 <HoverAnimation effect="lift" tapEffect="scale">
                   <Card className="bg-card/80">
-                    <CardContent className="p-4 sm:p-6">
+                    <CardContent className="p-3 sm:p-4 md:p-6">
                       <ContactForm />
                     </CardContent>
                   </Card>
@@ -82,35 +82,35 @@ export default function ContactPage() {
               {/* Contact Information */}
               <div>
                 <TextAnimation type="slide" direction="right" delay={0.2}>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4 sm:mb-6">Get in Touch</h2>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-headline mb-3 sm:mb-4 md:mb-6 text-white">Get in Touch</h2>
                 </TextAnimation>
                 <TextAnimation type="fade" delay={0.4}>
-                  <p className="text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-200 mb-4 sm:mb-6 md:mb-8 text-sm sm:text-base leading-relaxed">
                     We're here to help you on your dance journey. Reach out to us through any of the following channels.
                   </p>
                 </TextAnimation>
 
-                <StaggerContainer className="space-y-4 sm:space-y-6" delay={0.6}>
+                <StaggerContainer className="space-y-3 sm:space-y-4 md:space-y-6" delay={0.6}>
                   {contactInfo.map((info, index) => (
                     <StaggerItem key={index} animation="slide" direction="up">
                       <HoverAnimation effect="lift" tapEffect="scale">
                         <Card className="bg-card/80">
-                          <CardContent className="p-4 sm:p-6">
-                            <div className="flex items-start gap-4">
-                              <div className="bg-primary text-primary-foreground rounded-full h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center flex-shrink-0">
-                                <info.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                          <CardContent className="p-3 sm:p-4 md:p-6">
+                            <div className="flex items-start gap-3 sm:gap-4">
+                              <div className="bg-[#8B0000] text-white rounded-full h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 flex items-center justify-center flex-shrink-0">
+                                <info.icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
                               </div>
-                              <div className="flex-1">
-                                <h3 className="font-semibold text-base sm:text-lg mb-1">{info.title}</h3>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold text-sm sm:text-base md:text-lg mb-1 text-white">{info.title}</h3>
                                 {info.link ? (
                                   <a 
                                     href={info.link} 
-                                    className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base leading-relaxed"
+                                    className="text-gray-200 hover:text-yellow-300 transition-colors text-xs sm:text-sm md:text-base leading-relaxed break-all"
                                   >
                                     {info.content}
                                   </a>
                                 ) : (
-                                  <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{info.content}</p>
+                                  <p className="text-gray-200 text-xs sm:text-sm md:text-base leading-relaxed">{info.content}</p>
                                 )}
                               </div>
                             </div>

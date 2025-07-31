@@ -21,12 +21,12 @@ export function AnimatedLogo({ className, children, ...props }: AnimatedLogoProp
       }}
     >
       <motion.svg
-        width="32"
-        height="32"
+        width="28"
+        height="28"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-primary shrink-0"
+        className="text-primary shrink-0 sm:w-8 sm:h-8"
         whileHover={{ rotate: 5 }}
         transition={{
           duration: 0.3,
@@ -51,7 +51,7 @@ export function AnimatedLogo({ className, children, ...props }: AnimatedLogoProp
         />
       </motion.svg>
       <motion.span 
-        className="font-headline text-xl lg:text-2xl font-bold text-foreground break-words"
+        className="font-headline text-lg sm:text-xl lg:text-2xl font-bold text-foreground break-words"
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{
@@ -60,7 +60,8 @@ export function AnimatedLogo({ className, children, ...props }: AnimatedLogoProp
           ease: [0.25, 0.46, 0.45, 0.94],
         }}
       >
-        Nithyanruthyaaradana
+        <span className="hidden sm:inline">Nithyanruthyaaradana</span>
+        <span className="sm:hidden">Nithyanruthya</span>
       </motion.span>
     </motion.div>
   );

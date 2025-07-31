@@ -194,27 +194,34 @@ export function ImageModal({ isOpen, onClose, images, initialIndex = 0 }: ImageM
   // Touch handlers for mobile
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (e.touches.length === 1) {
-      setIsDragging(true);
+      const touch = e.touches[0];
       setDragStart({
-        x: e.touches[0].clientX - position.x,
-        y: e.touches[0].clientY - position.y,
+        x: touch.clientX - position.x,
+        y: touch.clientY - position.y,
       });
+      // Don't set isDragging immediately to allow for double tap detection
     }
   }, [position]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (e.touches.length === 1 && isDragging && scale > 1) {
-      e.preventDefault();
-      setPosition({
-        x: e.touches[0].clientX - dragStart.x,
-        y: e.touches[0].clientY - dragStart.y,
-      });
+    if (e.touches.length === 1 && scale > 1) {
+      const touch = e.touches[0];
+      const deltaX = Math.abs(touch.clientX - (dragStart.x + position.x));
+      const deltaY = Math.abs(touch.clientY - (dragStart.y + position.y));
+      
+      // Start dragging if movement exceeds threshold
+      if (deltaX > 5 || deltaY > 5) {
+        setIsDragging(true);
+        e.preventDefault();
+        setPosition({
+          x: touch.clientX - dragStart.x,
+          y: touch.clientY - dragStart.y,
+        });
+      }
     }
-  }, [isDragging, scale, dragStart]);
+  }, [scale, dragStart, position]);
 
-  const handleTouchEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+
 
   // Double tap to zoom
   const handleDoubleClick = useCallback(() => {
@@ -231,6 +238,24 @@ export function ImageModal({ isOpen, onClose, images, initialIndex = 0 }: ImageM
     
     lastTouchTime.current = now;
   }, [scale, resetView]);
+
+  // Touch double tap handler for mobile
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const now = Date.now();
+    const timeDiff = now - lastTouchTime.current;
+    
+    // Only trigger double tap if we haven't been dragging
+    if (timeDiff < 300 && e.touches.length === 0 && !isDragging) {
+      if (scale > 1) {
+        resetView();
+      } else {
+        setScale(2);
+      }
+    }
+    
+    lastTouchTime.current = now;
+    setIsDragging(false);
+  }, [scale, resetView, isDragging]);
 
   if (!isOpen) return null;
 
@@ -252,10 +277,10 @@ export function ImageModal({ isOpen, onClose, images, initialIndex = 0 }: ImageM
         variant="ghost"
         size="icon"
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 bg-black/50 text-white hover:bg-black/70 border border-white/20 backdrop-blur-sm"
+        className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 bg-black/50 text-white hover:bg-black/70 border border-white/20 backdrop-blur-sm h-8 w-8 sm:h-10 sm:w-10"
         aria-label="Close image viewer"
       >
-        <X className="h-6 w-6" />
+        <X className="h-4 w-4 sm:h-6 sm:w-6" />
       </Button>
 
       {/* Navigation buttons */}
@@ -265,26 +290,26 @@ export function ImageModal({ isOpen, onClose, images, initialIndex = 0 }: ImageM
             variant="ghost"
             size="icon"
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white hover:bg-black/70 border border-white/20 backdrop-blur-sm"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white hover:bg-black/70 border border-white/20 backdrop-blur-sm h-8 w-8 sm:h-10 sm:w-10"
             aria-label="Previous image"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-4 w-4 sm:h-6 sm:w-6" />
           </Button>
 
           <Button
             variant="ghost"
             size="icon"
             onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white hover:bg-black/70 border border-white/20 backdrop-blur-sm"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white hover:bg-black/70 border border-white/20 backdrop-blur-sm h-8 w-8 sm:h-10 sm:w-10"
             aria-label="Next image"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-4 w-4 sm:h-6 sm:w-6" />
           </Button>
         </>
       )}
 
       {/* Image container */}
-      <div className="relative w-full h-full flex items-center justify-center p-4 md:p-8">
+      <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-8">
         <div 
           ref={imageRef}
           className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
@@ -320,7 +345,7 @@ export function ImageModal({ isOpen, onClose, images, initialIndex = 0 }: ImageM
       </div>
 
       {/* Controls */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-lg p-2 border border-white/20">
+      <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 bg-black/50 backdrop-blur-sm rounded-lg p-1 sm:p-2 border border-white/20">
         <Button
           variant="ghost"
           size="sm"
@@ -403,8 +428,8 @@ export function ImageModal({ isOpen, onClose, images, initialIndex = 0 }: ImageM
 
       {/* Image info */}
       {showInfo && (
-        <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm rounded-lg p-3 border border-white/20 max-w-md">
-          <p className="text-white font-medium text-sm mb-1">
+        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black/50 backdrop-blur-sm rounded-lg p-2 sm:p-3 border border-white/20 max-w-xs sm:max-w-md">
+          <p className="text-white font-medium text-xs sm:text-sm mb-1">
             {currentImage.alt}
           </p>
           {currentImage.hint && (
@@ -412,14 +437,14 @@ export function ImageModal({ isOpen, onClose, images, initialIndex = 0 }: ImageM
               {currentImage.hint}
             </p>
           )}
-          <p className="text-white/50 text-xs mt-2">
+          <p className="text-white/50 text-xs mt-1 sm:mt-2">
             {currentIndex + 1} of {images.length}
           </p>
         </div>
       )}
 
       {/* Keyboard shortcuts hint */}
-      <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-lg p-2 border border-white/20 max-w-xs">
+      <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-black/50 backdrop-blur-sm rounded-lg p-1 sm:p-2 border border-white/20 max-w-[200px] sm:max-w-xs">
         <p className="text-white/70 text-xs">
           <span className="block">← → Navigate</span>
           <span className="block">+ - Zoom</span>

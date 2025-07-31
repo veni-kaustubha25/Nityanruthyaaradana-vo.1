@@ -54,16 +54,16 @@ export function ContactForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Your Name</FormLabel>
+                        <FormLabel className="text-sm sm:text-base">Your Name</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., John Doe" {...field} />
+                            <Input placeholder="e.g., John Doe" {...field} className="text-sm sm:text-base" />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -74,9 +74,9 @@ export function ContactForm() {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Your Email</FormLabel>
+                        <FormLabel className="text-sm sm:text-base">Your Email</FormLabel>
                         <FormControl>
-                            <Input type="email" placeholder="e.g., john.doe@example.com" {...field} />
+                            <Input type="email" placeholder="e.g., john.doe@example.com" {...field} className="text-sm sm:text-base" />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -88,9 +88,9 @@ export function ContactForm() {
                 name="subject"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Subject</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">Subject</FormLabel>
                     <FormControl>
-                        <Input placeholder="e.g., Inquiry about beginner classes" {...field} />
+                        <Input placeholder="e.g., Inquiry about beginner classes" {...field} className="text-sm sm:text-base" />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -101,11 +101,11 @@ export function ContactForm() {
                 name="message"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Message</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">Message</FormLabel>
                     <FormControl>
                         <Textarea
                         placeholder="Please type your message here..."
-                        className="min-h-[120px]"
+                        className="min-h-[100px] sm:min-h-[120px] text-sm sm:text-base"
                         {...field}
                         />
                     </FormControl>
@@ -113,7 +113,7 @@ export function ContactForm() {
                     </FormItem>
                 )}
                 />
-                <Button type="submit" className="w-full" variant="secondary" disabled={isSubmitting}>
+                <Button type="submit" className="w-full text-sm sm:text-base py-2 sm:py-3" variant="secondary" disabled={isSubmitting}>
                     {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
             </form>

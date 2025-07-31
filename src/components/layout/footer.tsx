@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Phone, Instagram, Facebook, Youtube } from "lucide-react";
+import { Mail, Phone, Instagram, Facebook, Youtube, MapPin, Clock, ArrowRight } from "lucide-react";
 import { AnimatedLogo } from "@/components/animated-logo";
 import { Button } from "@/components/ui/button";
 
 export function Footer() {
   return (
-    <footer className="bg-background border-t border-border">
-      <div className="container mx-auto max-w-7xl px-4 py-8 sm:py-12 lg:px-8">
+    <footer className="bg-[#8B0000] text-white">
+      {/* Main Footer */}
+      <div className="container mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:px-8 border-t border-gray-400">
         <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-2 lg:grid-cols-4">
-          <div className="md:col-span-2">
+          {/* Company Info */}
+          <div className="lg:col-span-2">
             <Link 
               href="/" 
               aria-label="Back to homepage"
@@ -20,50 +22,136 @@ export function Footer() {
             >
               <AnimatedLogo />
             </Link>
-            <p className="mt-4 max-w-md text-muted-foreground text-sm sm:text-base leading-relaxed">
-              Preserving and promoting the timeless art of Indian classical dance for future generations.
+            <p className="mt-4 sm:mt-6 max-w-md text-gray-300 leading-relaxed text-sm sm:text-base">
+              Preserving and promoting the timeless art of Indian classical dance for future generations. 
+              Join our vibrant community and discover the transformative power of Bharatanatyam.
             </p>
-          </div>
-
-          <div>
-            <h3 className="font-headline text-base sm:text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 sm:space-y-3">
-              <li><Link href="/about" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">About Us</Link></li>
-              <li><Link href="/gallery" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Gallery</Link></li>
-              <li><Link href="/register" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Admissions</Link></li>
-              <li><Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Contact</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-headline text-base sm:text-lg font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-3 text-muted-foreground">
-              <li className="flex items-start gap-3">
-                <Mail className="mt-1 h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary" />
-                <a href="mailto:info@nithyanruthyaaradana.art" className="hover:text-primary transition-colors text-sm sm:text-base">info@nithyanruthyaaradana.art</a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="mt-1 h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary" />
-                <a href="tel:+911234567890" className="hover:text-primary transition-colors text-sm sm:text-base">+91 123 456 7890</a>
-              </li>
-            </ul>
-            <div className="mt-4 sm:mt-6 flex gap-4">
-              <Link href="#" aria-label="Instagram" className="text-muted-foreground hover:text-primary transition-colors">
-                <Instagram className="h-5 w-5 sm:h-6 sm:w-6" />
+            <div className="mt-4 sm:mt-6 flex gap-3 sm:gap-4">
+              <Link href="#" aria-label="Instagram" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
+                <Instagram className="h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
-              <Link href="#" aria-label="Facebook" className="text-muted-foreground hover:text-primary transition-colors">
-                <Facebook className="h-5 w-5 sm:h-6 sm:w-6" />
+              <Link href="#" aria-label="Facebook" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
+                <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
-              <Link href="#" aria-label="YouTube" className="text-muted-foreground hover:text-primary transition-colors">
-                <Youtube className="h-5 w-5 sm:h-6 sm:w-6" />
+              <Link href="#" aria-label="YouTube" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
+                <Youtube className="h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </div>
           </div>
-        </div>
 
-        <div className="mt-6 sm:mt-8 border-t border-border pt-4 sm:pt-6 text-center text-xs sm:text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Nithyanruthyaaradana. All rights reserved.</p>
-          <p className="mt-1">Site Developed by <Button asChild variant="link" className="p-0 h-auto text-xs sm:text-sm text-primary font-bold underline"><Link href="https://anandverse.space" target="_blank" rel="noopener noreferrer">AnandVerse Web Services</Link></Button></p>
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-yellow-300">
+              Quick Links
+            </h3>
+            <ul className="space-y-3 sm:space-y-4">
+              <li>
+                <Link href="/about" className="text-gray-200 hover:text-yellow-300 transition-colors flex items-center gap-2 group text-sm sm:text-base">
+                  <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/gallery" className="text-gray-200 hover:text-yellow-300 transition-colors flex items-center gap-2 group text-sm sm:text-base">
+                  <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
+                  Gallery
+                </Link>
+              </li>
+              <li>
+                <Link href="/register" className="text-gray-200 hover:text-yellow-300 transition-colors flex items-center gap-2 group text-sm sm:text-base">
+                  <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
+                  Admissions
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-gray-200 hover:text-yellow-300 transition-colors flex items-center gap-2 group text-sm sm:text-base">
+                  <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-yellow-300">
+              Contact Info
+            </h3>
+            <ul className="space-y-3 sm:space-y-4">
+              <li className="flex items-start gap-2 sm:gap-3">
+                <div className="bg-white text-[#8B0000] p-1.5 sm:p-2 rounded-full mt-1 flex-shrink-0">
+                  <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="font-medium text-gray-200 text-sm sm:text-base">Email</div>
+                  <a href="mailto:info@nithyanruthyaaradana.art" className="text-gray-200 hover:text-yellow-300 transition-colors text-xs sm:text-sm break-all">
+                    info@nithyanruthyaaradana.art
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 sm:gap-3">
+                <div className="bg-white text-[#8B0000] p-1.5 sm:p-2 rounded-full mt-1 flex-shrink-0">
+                  <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="font-medium text-gray-200 text-sm sm:text-base">Phone</div>
+                  <a href="tel:+911234567890" className="text-gray-200 hover:text-yellow-300 transition-colors text-xs sm:text-sm">
+                    +91 123 456 7890
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 sm:gap-3">
+                <div className="bg-white text-[#8B0000] p-1.5 sm:p-2 rounded-full mt-1 flex-shrink-0">
+                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="font-medium text-gray-200 text-sm sm:text-base">Address</div>
+                  <div className="text-gray-200 text-xs sm:text-sm">
+                    123 Dance Street,<br />
+                    Cultural District,<br />
+                    Mumbai, Maharashtra 400001
+                  </div>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 sm:gap-3">
+                <div className="bg-white text-[#8B0000] p-1.5 sm:p-2 rounded-full mt-1 flex-shrink-0">
+                  <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="font-medium text-gray-200 text-sm sm:text-base">Hours</div>
+                  <div className="text-gray-200 text-xs sm:text-sm">
+                    Mon-Sat: 9:00 AM - 8:00 PM<br />
+                    Sunday: Closed
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-400 py-4 sm:py-6">
+        <div className="container mx-auto max-w-7xl px-4 lg:px-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <div className="text-center sm:text-left">
+              <p className="text-gray-300 text-xs sm:text-sm">
+                &copy; {new Date().getFullYear()} Nithyanruthyaaradana. All rights reserved.
+              </p>
+            </div>
+            <div className="text-center sm:text-right">
+              <p className="text-gray-300 text-xs sm:text-sm">
+                Site Developed by{" "}
+                <Button asChild variant="link" className="p-0 h-auto text-xs sm:text-sm text-yellow-300 font-bold underline">
+                  <Link href="https://anandverse.space" target="_blank" rel="noopener noreferrer">
+                    AnandVerse Web Services
+                  </Link>
+                </Button>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

@@ -43,13 +43,15 @@ export default function AboutPage() {
     <PageTransition>
       <div>
         {/* Page Header */}
-        <section className="py-12 sm:py-16 text-center bg-background">
+        <section className="py-16 sm:py-20 text-center bg-[#8B0000]">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <TextAnimation type="slide" direction="up" delay={0.2}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline">About Us</h1>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
+                About <span className="text-yellow-300">Us</span>
+              </h1>
             </TextAnimation>
             <TextAnimation type="fade" delay={0.4}>
-              <p className="mt-4 sm:mt-6 max-w-2xl mx-auto text-muted-foreground text-sm sm:text-base leading-relaxed">
+              <p className="mt-4 sm:mt-6 max-w-3xl mx-auto text-lg text-gray-200 leading-relaxed">
                 Discover the story behind our academy and our commitment to preserving the divine art of Bharatanatyam.
               </p>
             </TextAnimation>
@@ -57,20 +59,22 @@ export default function AboutPage() {
         </section>
 
         {/* Main Content */}
-        <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-background">
+        <section className="py-16 sm:py-20 bg-[#8B0000]">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center mb-16 sm:mb-20">
               <div>
                 <TextAnimation type="slide" direction="left" delay={0.2}>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4 sm:mb-6">Our Story</h2>
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-white">
+                    <span className="text-yellow-300">Our Story</span>
+                  </h2>
                 </TextAnimation>
                 <TextAnimation type="fade" delay={0.4}>
-                  <p className="text-muted-foreground mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-200 mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
                     Founded with a deep reverence for the ancient traditions of Bharatanatyam, our academy emerged from a vision to create a nurturing space where the divine art form could flourish. Our journey began with a simple yet profound mission: to preserve and promote the authentic essence of this classical dance form while making it accessible to passionate learners of all ages.
                   </p>
                 </TextAnimation>
                 <TextAnimation type="fade" delay={0.6}>
-                  <p className="text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-200 mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed">
                     Over the years, we have grown into a vibrant community of artists, students, and enthusiasts who share a common love for the rich cultural heritage of India. Our academy has become a beacon of artistic excellence, where traditional values meet contemporary learning approaches.
                   </p>
                 </TextAnimation>
@@ -113,28 +117,21 @@ export default function AboutPage() {
               </div>
               <div className="order-1 lg:order-2">
                 <TextAnimation type="slide" direction="right" delay={0.2}>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4 sm:mb-6">Our Founder & Principal Teacher</h2>
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-white">
+                    <span className="text-yellow-300">Our Founder & Principal Teacher</span>
+                  </h2>
                 </TextAnimation>
                 <TextAnimation type="fade" delay={0.4}>
-                  <p className="text-muted-foreground mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-200 mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
                     <strong>Guru Smt. Priya Sharma</strong> is a distinguished Bharatanatyam exponent and dedicated teacher with over two decades of experience in classical dance. A disciple of renowned gurus, she has dedicated her life to preserving and propagating the authentic traditions of Bharatanatyam.
                   </p>
                 </TextAnimation>
                 <TextAnimation type="fade" delay={0.6}>
-                  <p className="text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-200 mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed">
                     With a Master's degree in Performing Arts and numerous accolades to her credit, Guru Priya has performed extensively across India and internationally. Her teaching methodology combines traditional rigor with modern pedagogical approaches, making classical dance accessible to students of all ages and backgrounds.
                   </p>
                 </TextAnimation>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5 text-primary" />
-                    <span className="text-sm font-medium">20+ Years Experience</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Music className="h-5 w-5 text-primary" />
-                    <span className="text-sm font-medium">500+ Students Trained</span>
-                  </div>
-                </div>
+
                 <Scale delay={0.8}>
                   <Button asChild variant="outline" className="text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3">
                     <Link href="/contact">Meet Our Teacher</Link>
@@ -144,53 +141,80 @@ export default function AboutPage() {
             </div>
 
             {/* Philosophy Section */}
-            <div className="text-center mb-12 sm:mb-16">
-              <TextAnimation type="slide" direction="up" delay={0.2}>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4 sm:mb-6">Our Philosophy</h2>
-              </TextAnimation>
-              <TextAnimation type="fade" delay={0.4}>
-                <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-                  Our approach to teaching Bharatanatyam is rooted in four core principles that guide everything we do.
-                </p>
-              </TextAnimation>
-            </div>
+            <div className="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 lg:p-16 mb-12 sm:mb-16">
+              <div className="text-center mb-12 sm:mb-16">
+                <TextAnimation type="slide" direction="up" delay={0.2}>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-[#8B0000]">
+                    Our <span className="text-yellow-600">Philosophy</span>
+                  </h2>
+                </TextAnimation>
+                <TextAnimation type="fade" delay={0.4}>
+                  <p className="text-gray-600 max-w-3xl mx-auto text-lg sm:text-xl leading-relaxed">
+                    Our approach to teaching Bharatanatyam is rooted in four core principles that guide everything we do, 
+                    ensuring authentic learning and cultural preservation.
+                  </p>
+                </TextAnimation>
+              </div>
 
-            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" delay={0.6}>
-              {philosophy.map((item, index) => (
-                <StaggerItem key={index} animation="slide" direction="up">
-                  <HoverAnimation effect="lift" tapEffect="scale">
-                    <Card className="text-center bg-card/80 h-full p-4 sm:p-6">
-                      <CardHeader className="pb-4">
-                        <div className="mx-auto bg-primary text-primary-foreground rounded-full h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center">
-                          <item.icon className="h-6 w-6 sm:h-8 sm:w-8" />
+              <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10" delay={0.6}>
+                {philosophy.map((item, index) => (
+                  <StaggerItem key={index} animation="slide" direction="up">
+                    <HoverAnimation effect="lift" tapEffect="scale">
+                      <div className="group relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 sm:p-8 border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                        {/* Background Pattern */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#8B0000]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        {/* Icon Container */}
+                        <div className="relative z-10 flex items-start gap-4 sm:gap-6">
+                          <div className="bg-gradient-to-br from-[#8B0000] to-[#6B0000] text-white rounded-2xl p-3 sm:p-4 shadow-lg flex-shrink-0">
+                            <item.icon className="h-6 w-6 sm:h-8 sm:w-8" />
+                          </div>
+                          
+                          {/* Content */}
+                          <div className="flex-1">
+                            <h3 className="text-xl sm:text-2xl font-bold mb-3 text-[#8B0000] group-hover:text-[#6B0000] transition-colors">
+                              {item.title}
+                            </h3>
+                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                              {item.description}
+                            </p>
+                          </div>
                         </div>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <CardTitle className="text-lg sm:text-xl font-headline mb-2">{item.title}</CardTitle>
-                        <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{item.description}</p>
-                      </CardContent>
-                    </Card>
-                  </HoverAnimation>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
+                        
+                        {/* Decorative Element */}
+                        <div className="absolute top-4 right-4 w-2 h-2 bg-yellow-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    </HoverAnimation>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+              
+              {/* Bottom Decoration */}
+              <div className="mt-12 sm:mt-16 text-center">
+                <div className="inline-flex items-center gap-2 text-[#8B0000] text-sm font-medium">
+                  <div className="w-8 h-0.5 bg-gradient-to-r from-[#8B0000] to-yellow-600"></div>
+                  <span>Guiding Principles</span>
+                  <div className="w-8 h-0.5 bg-gradient-to-r from-yellow-600 to-[#8B0000]"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Call to Action */}
-        <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-background">
+        <section className="py-16 sm:py-20 bg-[#8B0000]">
           <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <TextAnimation type="slide" direction="up" delay={0.2}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4 sm:mb-6">Join Our Community</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">Join Our Community</h2>
             </TextAnimation>
             <TextAnimation type="fade" delay={0.4}>
-              <p className="text-muted-foreground mb-8 sm:mb-12 text-sm sm:text-base leading-relaxed">
+              <p className="text-xl text-gray-200 mb-8 leading-relaxed">
                 Ready to begin your journey with Bharatanatyam? Join our vibrant community of learners and discover the transformative power of classical dance.
               </p>
             </TextAnimation>
             <Scale delay={0.6}>
-              <Button asChild size="lg" className="text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4">
-                <Link href="/register">Start Your Journey <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5"/></Link>
+              <Button asChild size="lg" className="text-lg px-8 py-4 bg-white text-[#8B0000] hover:bg-gray-100">
+                <Link href="/register">Start Your Journey <ArrowRight className="ml-2 h-5 w-5"/></Link>
               </Button>
             </Scale>
           </div>

@@ -56,15 +56,15 @@ export function RegisterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
         <FormField
           control={form.control}
           name="studentName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Student's Full Name</FormLabel>
+              <FormLabel className="text-sm sm:text-base">Student's Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Ananya Sharma" {...field} />
+                <Input placeholder="e.g., Ananya Sharma" {...field} className="text-sm sm:text-base" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,9 +75,9 @@ export function RegisterForm() {
           name="age"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Student's Age</FormLabel>
+              <FormLabel className="text-sm sm:text-base">Student's Age</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="e.g., 14" {...field} value={field.value ?? ""} onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))} />
+                <Input type="number" placeholder="e.g., 14" {...field} value={field.value ?? ""} onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))} className="text-sm sm:text-base" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,9 +88,9 @@ export function RegisterForm() {
           name="guardianName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Parent/Guardian's Name</FormLabel>
+              <FormLabel className="text-sm sm:text-base">Parent/Guardian's Name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Rajan Sharma" {...field} />
+                <Input placeholder="e.g., Rajan Sharma" {...field} className="text-sm sm:text-base" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,9 +101,9 @@ export function RegisterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contact Email</FormLabel>
+              <FormLabel className="text-sm sm:text-base">Contact Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="e.g., contact@example.com" {...field} />
+                <Input type="email" placeholder="e.g., contact@example.com" {...field} className="text-sm sm:text-base" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,15 +114,15 @@ export function RegisterForm() {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contact Phone</FormLabel>
+              <FormLabel className="text-sm sm:text-base">Contact Phone</FormLabel>
               <FormControl>
-                <Input type="tel" placeholder="e.g., 9876543210" {...field} />
+                <Input type="tel" placeholder="e.g., 9876543210" {...field} className="text-sm sm:text-base" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" variant="secondary" disabled={isSubmitting}>
+        <Button type="submit" className="w-full text-sm sm:text-base py-2 sm:py-3" variant="secondary" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Application"}
         </Button>
       </form>
