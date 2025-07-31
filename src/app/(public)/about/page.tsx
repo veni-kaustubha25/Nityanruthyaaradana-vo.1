@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -229,44 +230,42 @@ export default function AboutPage() {
       </section>
 
       {/* Our Journey Timeline */}
-      <section className="py-20 sm:py-24">
+      <section className="py-20 sm:py-24 bg-gradient-to-b from-background to-secondary/10">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-3xl sm:text-4xl font-headline font-bold text-center mb-16">
               Our Journey Through Time
             </h2>
           </FadeIn>
-          <div className="relative">
-            <div className="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-border hidden sm:block"></div>
-            <StaggerContainer className="space-y-16">
+          <div className="relative max-w-5xl mx-auto">
+            <div className="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-primary/20 via-primary/50 to-primary/20 hidden sm:block" />
+            <StaggerContainer className="space-y-4">
               {journey.map((item, index) => (
                 <StaggerItem key={index}>
-                  <div className="flex sm:items-center w-full flex-col sm:flex-row">
-                    <div
-                      className={`w-full sm:w-1/2 ${
-                        index % 2 === 0 ? 'sm:pr-8 sm:text-right' : 'sm:pl-8 text-left'
-                      }`}
-                    >
-                      <p className="text-xl font-headline font-bold text-primary">
-                        {item.year}
-                      </p>
-                      <h3 className="mt-1 text-lg font-semibold">
-                        {item.event}
-                      </h3>
-                      <p className="mt-2 text-muted-foreground">
-                        {item.description}
-                      </p>
+                  <div className="flex sm:items-center w-full group">
+                     {/* Timeline Content - Left */}
+                    <div className={`w-full sm:w-1/2 sm:pr-8 ${index % 2 === 0 ? 'sm:text-right' : 'sm:order-2 sm:pl-8 sm:text-left'}`}>
+                       <Card className="p-6 bg-card/50 border-border/50 backdrop-blur-sm group-hover:border-primary/50 transition-colors duration-300">
+                        <p className="text-xl font-headline font-bold text-primary mb-2">
+                          {item.year}
+                        </p>
+                        <h3 className="text-lg font-semibold text-foreground">
+                          {item.event}
+                        </h3>
+                        <p className="mt-2 text-muted-foreground text-sm">
+                          {item.description}
+                        </p>
+                      </Card>
                     </div>
-                    <div className="relative w-12 h-12 flex-shrink-0 bg-background border-4 border-primary rounded-full flex items-center justify-center z-10 my-4 sm:my-0 mx-auto sm:mx-0">
+
+                    {/* Timeline Icon */}
+                    <div className={`relative w-12 h-12 flex-shrink-0 bg-background border-4 border-primary rounded-full flex items-center justify-center z-10 my-4 sm:my-0 mx-auto sm:mx-0 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30 transition-all duration-300 ${index % 2 === 0 ? '' : 'sm:order-1'}`}>
+                      <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping group-hover:animate-none"/>
                       {item.icon}
                     </div>
-                    <div
-                      className={`hidden sm:block w-1/2 ${
-                        index % 2 === 0 ? 'pl-8 text-left' : 'pr-8 text-right'
-                      }`}
-                    >
-                      {/* This space is intentionally left blank for timeline alignment */}
-                    </div>
+
+                     {/* Empty div for spacing on the other side */}
+                    <div className={`hidden sm:block sm:w-1/2 ${index % 2 === 0 ? '' : 'sm:order-0'}`} />
                   </div>
                 </StaggerItem>
               ))}
@@ -312,3 +311,5 @@ export default function AboutPage() {
     </div>
   );
 }
+
+    
