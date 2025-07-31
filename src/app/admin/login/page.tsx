@@ -25,6 +25,15 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
+    // This is a placeholder for the actual login logic.
+    // The user needs to create the demo user in Firebase Console first.
+    toast({
+        title: 'Action Required',
+        description: 'Please go to your Firebase Console > Authentication and create a user with email "demo@gmail.com" and password "demo123".',
+        variant: 'destructive',
+        duration: 9000,
+      });
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast({
