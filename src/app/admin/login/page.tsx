@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -32,11 +33,12 @@ export default function LoginPage() {
       });
       router.push('/admin/dashboard');
     } catch (error: any) {
-      console.error("Login failed:", error);
+      console.error("Login failed. Please ensure the demo user exists in your Firebase project with the correct credentials.", error);
       toast({
         title: 'Login Failed',
-        description: 'Please ensure "demo@gmail.com" exists in your Firebase Authentication users.',
+        description: 'Invalid credentials. Please go to your Firebase Console > Authentication and create a user with email "demo@gmail.com" and password "demo123".',
         variant: 'destructive',
+        duration: 9000,
       });
     } finally {
       setIsLoading(false);
