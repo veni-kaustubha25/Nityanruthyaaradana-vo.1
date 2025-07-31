@@ -1,12 +1,12 @@
 # Nithyanruthyaaradana - Classical Dance Academy Website
 
-A modern, responsive website for Nithyanruthyaaradana, a premier Bharatanatyam classical dance academy. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring a comprehensive image gallery, student registration system, and professional admin panel.
+A modern, responsive website for Nithyanruthyaaradana, a premier Bharatanatyam classical dance academy. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring a comprehensive image gallery and student registration system.
 
 ![Nithyanruthyaaradana](https://placehold.co/1200x600/8B1A1A/FFFFFF?text=Nithyanruthyaaradana)
 
 ## 🎭 About
 
-Nithyanruthyaaradana is a classical Indian dance academy dedicated to preserving and promoting the art of Bharatanatyam. This website serves as a digital showcase for the academy, featuring course information, gallery, student registration, and an admin panel for content management.
+Nithyanruthyaaradana is a classical Indian dance academy dedicated to preserving and promoting the art of Bharatanatyam. This website serves as a digital showcase for the academy, featuring course information, gallery, and student registration.
 
 ## ✨ Features
 
