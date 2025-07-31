@@ -10,6 +10,7 @@ import { AnimatedLogo } from '@/components/animated-logo';
 import { Scale } from '@/components/ui/professional-animations';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import { app } from '@/lib/firebase'; // Ensure app is initialized
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-  const auth = getAuth();
+  const auth = getAuth(app);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

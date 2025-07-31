@@ -3,14 +3,16 @@
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings } from 'lucide-react';
 import { AnimatedLogo } from '@/components/animated-logo';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
+import { app } from '@/lib/firebase'; // Ensure app is initialized
 
 export default function DashboardPage() {
-  const auth = getAuth();
+  const auth = getAuth(app);
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,13 +51,17 @@ export default function DashboardPage() {
           <AnimatedLogo />
         </div>
         <nav className="flex-1 space-y-2">
-          <Button variant="ghost" className="w-full justify-start text-left">
-            <LayoutDashboard className="mr-2 h-4 w-4" />
-            Dashboard
+          <Button variant="ghost" className="w-full justify-start text-left" asChild>
+            <Link href="/admin/dashboard">
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              Dashboard
+            </Link>
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-left">
-            <GalleryHorizontal className="mr-2 h-4 w-4" />
-            Manage Gallery
+          <Button variant="ghost" className="w-full justify-start text-left" asChild>
+            <Link href="/admin/gallery">
+              <GalleryHorizontal className="mr-2 h-4 w-4" />
+              Manage Gallery
+            </Link>
           </Button>
           <Button variant="ghost" className="w-full justify-start text-left">
             <Users className="mr-2 h-4 w-4" />
@@ -93,7 +99,9 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <p>Add, edit, or remove images from the website gallery.</p>
-              <Button className="mt-4">Go to Gallery</Button>
+              <Button asChild className="mt-4">
+                <Link href="/admin/gallery">Go to Gallery</Link>
+              </Button>
             </CardContent>
           </Card>
           <Card>
