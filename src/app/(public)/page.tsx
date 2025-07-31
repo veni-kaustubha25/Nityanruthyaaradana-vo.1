@@ -12,7 +12,11 @@ import {
   Star,
   TrendingUp,
   Image as ImageIcon,
-  Check
+  Check,
+  Calendar,
+  Smile,
+  Brain,
+  Sprout
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -25,6 +29,7 @@ import {
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -46,6 +51,7 @@ import { useEffect, useState } from 'react';
 import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
+import { format } from 'date-fns';
 
 interface GalleryImage {
   id: string;
@@ -83,6 +89,22 @@ interface Faq {
     answer: string;
 }
 
+interface Event {
+    id: string;
+    title: string;
+    date: string;
+    description: string;
+    image: string;
+}
+
+interface WhyItem {
+    id: string;
+    icon: string;
+    title: string;
+    description: string;
+}
+
+
 const ICONS: { [key: string]: React.ReactNode } = {
     Zap: <Zap className="h-10 w-10 text-primary" />,
     BookOpen: <BookOpen className="h-10 w-10 text-primary" />,
@@ -91,6 +113,9 @@ const ICONS: { [key: string]: React.ReactNode } = {
     Feather: <Feather className="h-10 w-10 text-primary" />,
     Star: <Star className="h-10 w-10 text-primary" />,
     TrendingUp: <TrendingUp className="h-10 w-10 text-primary" />,
+    Smile: <Smile className="h-10 w-10 text-primary" />,
+    Brain: <Brain className="h-10 w-10 text-primary" />,
+    Sprout: <Sprout className="h-10 w-10 text-primary" />,
     Default: <Star className="h-10 w-10 text-primary" />,
 };
 
@@ -102,50 +127,52 @@ export default function HomePage() {
   const [classLevels, setClassLevels] = useState<ClassLevel[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [whyItems, setWhyItems] = useState<WhyItem[]>([]);
   
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleError = (collectionName: string) => (error: Error) => {
         console.error(`Error fetching ${collectionName}: `, error);
-        setLoading(false);
     };
 
-    const qGallery = query(collection(db, 'gallery'), orderBy('alt', 'desc'), limit(4));
-    const unsubGallery = onSnapshot(qGallery, (snapshot) => {
-        setGalleryImages(snapshot.docs.map(doc => ({ id: doc.id, 'data-ai-hint': doc.data().hint || 'dance', ...doc.data() } as GalleryImage)));
-    }, handleError('gallery'));
+    const unsubscribes = [
+        onSnapshot(query(collection(db, 'gallery'), orderBy('alt', 'desc'), limit(4)), (snapshot) => {
+            setGalleryImages(snapshot.docs.map(doc => ({ id: doc.id, 'data-ai-hint': doc.data().hint || 'dance', ...doc.data() } as GalleryImage)));
+        }, handleError('gallery')),
 
-    const qFeatures = query(collection(db, 'features'), orderBy('title', 'asc'));
-    const unsubFeatures = onSnapshot(qFeatures, (snapshot) => {
-        setFeatures(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Feature)));
-    }, handleError('features'));
+        onSnapshot(query(collection(db, 'features'), orderBy('title', 'asc')), (snapshot) => {
+            setFeatures(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Feature)));
+        }, handleError('features')),
 
-    const qClassLevels = query(collection(db, 'classLevels'), orderBy('title', 'asc'));
-    const unsubClassLevels = onSnapshot(qClassLevels, (snapshot) => {
-        setClassLevels(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ClassLevel)));
-    }, handleError('classLevels'));
-    
-    const qTestimonials = query(collection(db, 'testimonials'), orderBy('name', 'asc'));
-    const unsubTestimonials = onSnapshot(qTestimonials, (snapshot) => {
-        setTestimonials(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial)));
-    }, handleError('testimonials'));
+        onSnapshot(query(collection(db, 'classLevels'), orderBy('title', 'asc')), (snapshot) => {
+            setClassLevels(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ClassLevel)));
+        }, handleError('classLevels')),
+        
+        onSnapshot(query(collection(db, 'testimonials'), orderBy('name', 'asc')), (snapshot) => {
+            setTestimonials(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial)));
+        }, handleError('testimonials')),
 
-    const qFaqs = query(collection(db, 'faqs'), orderBy('question', 'asc'));
-    const unsubFaqs = onSnapshot(qFaqs, (snapshot) => {
-        setFaqs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Faq)));
-    }, handleError('faqs'));
+        onSnapshot(query(collection(db, 'faqs'), orderBy('question', 'asc')), (snapshot) => {
+            setFaqs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Faq)));
+        }, handleError('faqs')),
+
+        onSnapshot(query(collection(db, 'events'), orderBy('date', 'desc')), (snapshot) => {
+            setEvents(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event)));
+        }, handleError('events')),
+
+        onSnapshot(query(collection(db, 'whyBharatanatyam'), orderBy('title', 'asc')), (snapshot) => {
+            setWhyItems(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as WhyItem)));
+        }, handleError('whyBharatanatyam')),
+    ];
     
     // A bit of a hack to set loading to false after a short delay
     // to ensure all snapshots have a chance to load.
     setTimeout(() => setLoading(false), 1500);
 
     return () => {
-        unsubGallery();
-        unsubFeatures();
-        unsubClassLevels();
-        unsubTestimonials();
-        unsubFaqs();
+        unsubscribes.forEach(unsub => unsub());
     };
   }, []);
 
@@ -271,8 +298,53 @@ export default function HomePage() {
             </div>
         </section>
 
+    {/* Why Bharatanatyam? Section */}
+    <section className="py-20 sm:py-24 bg-secondary/20">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <Slide direction="right">
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-2xl">
+                    <FallbackImage
+                    src="https://placehold.co/600x800.png"
+                    alt="Graceful dance pose"
+                    width={600}
+                    height={800}
+                    className="w-full h-full object-cover"
+                    data-ai-hint="graceful dance"
+                    />
+                </div>
+            </Slide>
+            <Slide direction="left">
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-headline font-bold">
+                  The Art and Soul of Bharatanatyam
+                </h2>
+                <p className="mt-4 text-muted-foreground max-w-xl">
+                    More than just a dance form, Bharatanatyam is a holistic discipline that enriches the mind, body, and spirit.
+                </p>
+                {loading ? <div className="flex mt-8"><LoadingAnimation /></div> : (
+                <div className="mt-8 space-y-6">
+                  {whyItems.map((item) => (
+                      <div key={item.id} className="flex items-start gap-4">
+                          <div className="bg-primary/10 p-3 rounded-full mt-1">
+                              {getIcon(item.icon)}
+                          </div>
+                          <div>
+                              <h3 className="font-semibold text-lg">{item.title}</h3>
+                              <p className="text-muted-foreground">{item.description}</p>
+                          </div>
+                      </div>
+                  ))}
+                </div>
+                )}
+              </div>
+            </Slide>
+          </div>
+        </div>
+      </section>
+
       {/* A Glimpse of Our World Section */}
-      <section className="py-20 sm:py-24 bg-secondary/20">
+      <section className="py-20 sm:py-24">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-3xl sm:text-4xl font-headline font-bold text-center">A Glimpse of Our World</h2>
@@ -315,6 +387,43 @@ export default function HomePage() {
             </Button>
           </div>
         </div>
+      </section>
+
+      {/* Upcoming Events Section */}
+      <section id="events" className="py-20 sm:py-24 bg-secondary/20">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <FadeIn>
+                  <h2 className="text-3xl sm:text-4xl font-headline font-bold text-center">Upcoming Events</h2>
+                  <p className="mt-4 max-w-2xl mx-auto text-center text-muted-foreground">
+                      Join us for our upcoming performances and workshops. Witness the magic of classical dance unfold.
+                  </p>
+              </FadeIn>
+              <div className="mt-16">
+                  {loading ? <div className="flex justify-center"><LoadingAnimation /></div> : events.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {events.map((event) => (
+                          <Card key={event.id} className="overflow-hidden bg-card/50 hover:shadow-xl transition-shadow duration-300">
+                              <FallbackImage src={event.image} alt={event.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint="stage performance" />
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-headline">{event.title}</CardTitle>
+                                  <p className="text-sm text-muted-foreground flex items-center gap-2 pt-1">
+                                      <Calendar className="h-4 w-4" />
+                                      {format(new Date(event.date), "PPP")}
+                                  </p>
+                              </CardHeader>
+                              <CardContent>
+                                  <p className="text-muted-foreground text-sm">{event.description}</p>
+                              </CardContent>
+                          </Card>
+                      ))}
+                  </div>
+                  ) : (
+                      <div className="text-center py-12 text-muted-foreground">
+                          <p>No upcoming events at the moment. Please check back soon!</p>
+                      </div>
+                  )}
+              </div>
+          </div>
       </section>
 
       {/* Testimonials Section */}

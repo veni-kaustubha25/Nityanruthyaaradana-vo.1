@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, Trash2, Edit, PlusCircle, Check, Zap, BookOpen, Award, Feather, Star, TrendingUp, FileText } from 'lucide-react';
+import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, Trash2, Edit, PlusCircle, Check, Zap, BookOpen, Award, Feather, Star, TrendingUp, FileText, Calendar, Smile, Brain, Sprout } from 'lucide-react';
 import { AnimatedLogo } from '@/components/animated-logo';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
 import { useToast } from '@/hooks/use-toast';
@@ -45,10 +45,12 @@ interface Feature { id: string; icon: string; title: string; description: string
 interface ClassLevel { id: string; icon: string; title: string; description: string; features: string[]; }
 interface Testimonial { id: string; name: string; role: string; quote: string; avatar: string; }
 interface Faq { id: string; question: string; answer: string; }
+interface Event { id: string; title: string; date: string; description: string; image: string; }
+interface WhyItem { id: string; icon: string; title: string; description: string; }
 
 // Available Icons
 const ICONS: { [key: string]: ReactNode } = {
-    Zap: <Zap />, BookOpen: <BookOpen />, Users: <Users />, Award: <Award />, Feather: <Feather />, Star: <Star />, TrendingUp: <TrendingUp />, Default: <Star />,
+    Zap: <Zap />, BookOpen: <BookOpen />, Users: <Users />, Award: <Award />, Feather: <Feather />, Star: <Star />, TrendingUp: <TrendingUp />, Calendar: <Calendar />, Smile: <Smile />, Brain: <Brain />, Sprout: <Sprout />, Default: <Star />,
 };
 const getIcon = (name: string) => {
     const IconComponent = ICONS[name] || ICONS.Default;
@@ -68,6 +70,8 @@ export default function ManageContentPage() {
   const [classLevels, setClassLevels] = useState<ClassLevel[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [whyItems, setWhyItems] = useState<WhyItem[]>([]);
 
   // Modal & Form State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -89,6 +93,8 @@ export default function ManageContentPage() {
       onSnapshot(query(collection(db, 'classLevels'), orderBy('title')), (snapshot) => setClassLevels(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ClassLevel)))),
       onSnapshot(query(collection(db, 'testimonials'), orderBy('name')), (snapshot) => setTestimonials(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial)))),
       onSnapshot(query(collection(db, 'faqs'), orderBy('question')), (snapshot) => setFaqs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Faq)))),
+      onSnapshot(query(collection(db, 'events'), orderBy('date', 'desc')), (snapshot) => setEvents(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event)))),
+      onSnapshot(query(collection(db, 'whyBharatanatyam'), orderBy('title')), (snapshot) => setWhyItems(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as WhyItem)))),
     ];
 
     return () => {
@@ -123,12 +129,13 @@ export default function ManageContentPage() {
     setIsSubmitting(true);
 
     try {
+      const collectionName = currentTab === 'why' ? 'whyBharatanatyam' : currentTab;
       if (modalMode === 'add') {
-        await addDoc(collection(db, currentTab), currentItem);
+        await addDoc(collection(db, collectionName), currentItem);
         toast({ title: 'Success', description: 'New item added.' });
       } else {
         const { id, ...data } = currentItem;
-        await updateDoc(doc(db, currentTab, id), data);
+        await updateDoc(doc(db, collectionName, id), data);
         toast({ title: 'Success', description: 'Item updated.' });
       }
       closeModal();
@@ -141,7 +148,8 @@ export default function ManageContentPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteDoc(doc(db, currentTab, id));
+      const collectionName = currentTab === 'why' ? 'whyBharatanatyam' : currentTab;
+      await deleteDoc(doc(db, collectionName, id));
       toast({ title: 'Success', description: 'Item deleted.' });
     } catch (error: any) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
@@ -184,6 +192,23 @@ export default function ManageContentPage() {
             <FormItem label="Answer" name="answer" value={currentItem.answer} onChange={handleFormChange} type="textarea" />
           </>
         );
+       case 'events':
+        return (
+          <>
+            <FormItem label="Image URL" name="image" value={currentItem.image} onChange={handleFormChange} />
+            <FormItem label="Title" name="title" value={currentItem.title} onChange={handleFormChange} />
+            <FormItem label="Date" name="date" value={currentItem.date} onChange={handleFormChange} type="date" />
+            <FormItem label="Description" name="description" value={currentItem.description} onChange={handleFormChange} type="textarea" />
+          </>
+        );
+      case 'why':
+        return (
+          <>
+            <FormItem label="Icon" name="icon" value={currentItem.icon} onChange={handleFormChange} type="select" options={Object.keys(ICONS)} />
+            <FormItem label="Title" name="title" value={currentItem.title} onChange={handleFormChange} />
+            <FormItem label="Description" name="description" value={currentItem.description} onChange={handleFormChange} type="textarea" />
+          </>
+        );
       default: return null;
     }
   }
@@ -198,6 +223,10 @@ export default function ManageContentPage() {
         return <CrudTable columns={['Avatar', 'Name', 'Role', 'Quote']} data={testimonials} onEdit={(item) => openModal('edit', item)} onDelete={handleDelete} />
       case 'faqs':
         return <CrudTable columns={['Question', 'Answer']} data={faqs} onEdit={(item) => openModal('edit', item)} onDelete={handleDelete} />
+      case 'events':
+        return <CrudTable columns={['Image', 'Title', 'Date', 'Description']} data={events} onEdit={(item) => openModal('edit', item)} onDelete={handleDelete} />
+      case 'why':
+        return <CrudTable columns={['Icon', 'Title', 'Description']} data={whyItems} onEdit={(item) => openModal('edit', item)} onDelete={handleDelete} iconRenderer={getIcon} />
       default: return null;
     }
   }
@@ -232,13 +261,15 @@ export default function ManageContentPage() {
             <TabsTrigger value="classLevels">Classes</TabsTrigger>
             <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
             <TabsTrigger value="faqs">FAQs</TabsTrigger>
+            <TabsTrigger value="events">Events</TabsTrigger>
+            <TabsTrigger value="why">Why Bharatanatyam</TabsTrigger>
           </TabsList>
           
           <Card className="mt-4">
               <CardHeader>
                   <div className="flex justify-between items-center">
                       <div>
-                          <CardTitle>{`Manage ${currentTab.charAt(0).toUpperCase() + currentTab.slice(1)}`}</CardTitle>
+                           <CardTitle>{`Manage ${currentTab === 'why' ? 'Why Bharatanatyam' : currentTab.charAt(0).toUpperCase() + currentTab.slice(1)}`}</CardTitle>
                           <CardDescription>Add, edit, or delete items for this section.</CardDescription>
                       </div>
                       <Button onClick={() => openModal('add')}>
@@ -255,7 +286,7 @@ export default function ManageContentPage() {
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{modalMode === 'add' ? 'Add New' : 'Edit'} {currentTab.slice(0, -1)}</DialogTitle>
+              <DialogTitle>{modalMode === 'add' ? 'Add New' : 'Edit'} {currentTab === 'why' ? 'Item' : currentTab.slice(0, -1)}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 pt-4">
               {renderFormFields()}
@@ -286,7 +317,10 @@ const CrudTable = ({ columns, data, onEdit, onDelete, iconRenderer }: { columns:
                 <TableRow key={item.id}>
                     {columns.map(col => (
                         <TableCell key={col} className="max-w-xs truncate">
-                            {col.toLowerCase() === 'icon' && iconRenderer ? iconRenderer(item.icon) : col.toLowerCase() === 'features' ? item.features.join(', ') : col.toLowerCase() === 'avatar' ? <img src={item.avatar} alt={item.name} className="w-10 h-10 rounded-full object-cover" /> : item[col.toLowerCase().replace(/\s/g, '')]}
+                            {col.toLowerCase() === 'icon' && iconRenderer ? iconRenderer(item.icon) : 
+                             col.toLowerCase() === 'features' ? item.features.join(', ') : 
+                             col.toLowerCase() === 'avatar' || col.toLowerCase() === 'image' ? <img src={item[col.toLowerCase()]} alt={item.name || item.title} className="w-10 h-10 rounded-full object-cover" /> : 
+                             item[col.toLowerCase().replace(/\s/g, '')]}
                         </TableCell>
                     ))}
                     <TableCell>
@@ -321,6 +355,14 @@ const FormItem = ({ label, name, value, onChange, type = 'text', options }: { la
             </div>
         );
     }
+    if (type === 'date') {
+        return(
+             <div>
+                <Label htmlFor={name}>{label}</Label>
+                <Input id={name} type="date" value={value || ''} onChange={(e) => onChange(name, e.target.value)} placeholder={label} />
+            </div>
+        )
+    }
     const Cmp = type === 'textarea' ? Textarea : Input;
     return (
         <div>
@@ -329,3 +371,5 @@ const FormItem = ({ label, name, value, onChange, type = 'text', options }: { la
         </div>
     );
 };
+
+    

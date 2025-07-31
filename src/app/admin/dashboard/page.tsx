@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, FileText } from 'lucide-react';
+import { LogOut, LayoutDashboard, GalleryHorizontal, Users, Settings, FileText, Calendar, HelpCircle } from 'lucide-react';
 import { AnimatedLogo } from '@/components/animated-logo';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
 import { app } from '@/lib/firebase'; // Ensure app is initialized
@@ -104,7 +104,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Manage Content</CardTitle>
+              <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" />Manage Content</CardTitle>
             </CardHeader>
             <CardContent>
               <p>Edit homepage sections like features, FAQs, and testimonials.</p>
@@ -115,7 +115,7 @@ export default function DashboardPage() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Manage Gallery</CardTitle>
+              <CardTitle  className="flex items-center gap-2"><GalleryHorizontal className="h-5 w-5" />Manage Gallery</CardTitle>
             </CardHeader>
             <CardContent>
               <p>Add, edit, or remove images from the website gallery.</p>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Manage Students</CardTitle>
+              <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5" />Manage Students</CardTitle>
             </CardHeader>
             <CardContent>
               <p>View and manage student registrations and information.</p>
@@ -140,3 +140,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
