@@ -89,46 +89,8 @@ export function Header() {
             </motion.div>
           </nav>
 
-          {/* Tablet Navigation */}
-          <nav className="hidden md:flex lg:hidden items-center space-x-4">
-            {navigation.slice(0, 3).map((item, index) => (
-              <motion.div
-                key={item.name}
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.4 + index * 0.1,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-              >
-                <Link
-                  href={item.href}
-                  className="text-sm font-medium transition-colors hover:text-primary relative group"
-                >
-                  {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                </Link>
-              </motion.div>
-            ))}
-            
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                duration: 0.4,
-                delay: 0.7,
-                ease: [0.25, 0.46, 0.45, 0.94],
-              }}
-            >
-              <Button asChild size="sm" className="text-sm px-3">
-                <Link href="/register">Enroll</Link>
-              </Button>
-            </motion.div>
-          </nav>
-
           {/* Mobile Navigation */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <motion.div
               initial={{ x: 50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}

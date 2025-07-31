@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Phone, Instagram, Facebook, Youtube } from "lucide-react";
+import { Mail, Phone, Instagram, Facebook, Youtube, LogIn } from "lucide-react";
 import { AnimatedLogo } from "@/components/animated-logo";
 import { Button } from "@/components/ui/button";
+import { Separator } from "../ui/separator";
 
 export function Footer() {
   return (
@@ -63,7 +64,15 @@ export function Footer() {
 
         <div className="mt-6 sm:mt-8 border-t border-border pt-4 sm:pt-6 text-center text-xs sm:text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Nithyanruthyaaradana. All rights reserved.</p>
-          <p className="mt-1">Site Developed by <Button asChild variant="link" className="p-0 h-auto text-xs sm:text-sm text-primary font-bold underline"><Link href="https://anandverse.space" target="_blank" rel="noopener noreferrer">AnandVerse Web Services</Link></Button></p>
+          <div className="flex justify-center items-center gap-2 mt-2">
+            <p>Site Developed by <Button asChild variant="link" className="p-0 h-auto text-xs sm:text-sm text-primary font-bold underline"><Link href="https://anandverse.space" target="_blank" rel="noopener noreferrer">AnandVerse Web Services</Link></Button></p>
+            <Separator orientation="vertical" className="h-4 bg-border" />
+            <Button asChild variant="link" className="p-0 h-auto text-xs sm:text-sm">
+              <Link href="/admin/login" className="flex items-center gap-1">
+                <LogIn className="h-3 w-3" /> Admin Login
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </footer>
