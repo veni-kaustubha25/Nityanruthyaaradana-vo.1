@@ -30,9 +30,8 @@ export function LiveTime() {
   }, []);
 
   return (
-    <div className="flex items-center gap-1 text-xs sm:text-sm">
-      <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
-      <span className="hidden sm:inline">IST:</span>
+    <div className="flex items-center gap-1 text-xs">
+      <Clock className="h-3 w-3" />
       <span className="font-mono font-medium">{time}</span>
     </div>
   );

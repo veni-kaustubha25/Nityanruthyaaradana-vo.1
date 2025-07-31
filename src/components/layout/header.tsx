@@ -30,45 +30,45 @@ export function Header() {
       }}
     >
       {/* Top Bar */}
-      <div className="bg-gradient-to-r from-[#8B0000] to-[#6B0000] text-white py-3 sm:py-4 border-b border-white/10">
+      <div className="bg-gradient-to-r from-[#8B0000] to-[#6B0000] text-white py-1 sm:py-2 border-b border-white/10">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
             {/* Contact Information */}
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-8">
-              <a href="tel:+911234567890" className="flex items-center gap-2 hover:text-yellow-300 transition-all duration-300 group">
-                <div className="bg-white/10 rounded-full p-1.5 group-hover:bg-white/20 transition-all duration-300">
-                  <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
-                </div>
-                <span className="hidden xs:inline font-medium">+91 123 456 7890</span>
-                <span className="xs:hidden font-medium">+91 123 456 7890</span>
-              </a>
-              <a href="mailto:info@nithyanruthyaaradana.art" className="flex items-center gap-2 hover:text-yellow-300 transition-all duration-300 group">
-                <div className="bg-white/10 rounded-full p-1.5 group-hover:bg-white/20 transition-all duration-300">
-                  <svg className="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <span className="hidden sm:inline font-medium">info@nithyanruthyaaradana.art</span>
-                <span className="sm:hidden font-medium">info@academy.art</span>
-              </a>
+                         <a href="tel:+911234567890" className="flex items-center gap-2 hover:text-yellow-300 transition-all duration-300 group">
+             <div className="bg-white/10 rounded-full p-1 group-hover:bg-white/20 transition-all duration-300">
+               <Phone className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+             </div>
+             <span className="hidden xs:inline font-medium text-xs">+91 123 456 7890</span>
+             <span className="xs:hidden font-medium text-xs">+91 123 456 7890</span>
+           </a>
+                         <a href="mailto:info@nithyanruthyaaradana.art" className="flex items-center gap-2 hover:text-yellow-300 transition-all duration-300 group">
+             <div className="bg-white/10 rounded-full p-1 group-hover:bg-white/20 transition-all duration-300">
+               <svg className="h-2.5 w-2.5 sm:h-3 sm:w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+               </svg>
+             </div>
+             <span className="hidden sm:inline font-medium text-xs">info@nithyanruthyaaradana.art</span>
+             <span className="sm:hidden font-medium text-xs">info@academy.art</span>
+           </a>
             </div>
 
             {/* Business Hours & Live Time */}
             <div className="flex items-center justify-between w-full sm:w-auto sm:gap-8">
-              <div className="hidden sm:flex items-center gap-2">
-                <div className="bg-white/10 rounded-full p-1.5">
-                  <svg className="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="hidden lg:inline font-medium">Mon-Sat: 9:00 AM - 8:00 PM</span>
-                <span className="lg:hidden font-medium">Mon-Sat: 9AM-8PM</span>
-              </div>
-              <div className="hidden md:flex items-center">
-                <div className="bg-white/10 rounded-lg px-3 py-1.5 border border-white/20">
-                  <LiveTime />
-                </div>
-              </div>
+                         <div className="hidden sm:flex items-center gap-2">
+             <div className="bg-white/10 rounded-full p-1">
+               <svg className="h-2.5 w-2.5 sm:h-3 sm:w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+               </svg>
+             </div>
+             <span className="hidden lg:inline font-medium text-xs">Mon-Sat: 9:00 AM - 8:00 PM</span>
+             <span className="lg:hidden font-medium text-xs">Mon-Sat: 9AM-8PM</span>
+           </div>
+                         <div className="hidden md:flex items-center">
+             <div className="bg-white/10 rounded-lg px-2 py-1 border border-white/20">
+               <LiveTime />
+             </div>
+           </div>
             </div>
           </div>
         </div>
