@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ interface GalleryImage {
   src: string;
   alt: string;
   category: string;
+  hint?: string;
 }
 
 // Animation variants

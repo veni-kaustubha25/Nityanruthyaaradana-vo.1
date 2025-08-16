@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,7 +8,7 @@ import { PlusCircle, MoreVertical, Trash2, Loader2, Upload } from "lucide-react"
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Badge } from "@/components/ui/badge";
 import { db, storage } from '@/lib/firebase';
-import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -48,10 +49,7 @@ export default function GalleryManagementPage() {
     setIsLoading(true);
     const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const images: GalleryImage[] = [];
-      snapshot.forEach((doc) => {
-        images.push({ id: doc.id, ...doc.data() } as GalleryImage);
-      });
+      const images: GalleryImage[] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GalleryImage));
       setGalleryImages(images);
       setIsLoading(false);
     }, (error) => {
@@ -68,6 +66,7 @@ export default function GalleryManagementPage() {
     if (!file) return;
 
     setIsUploading(true);
+    setUploadProgress(0);
     const storagePath = `gallery/${Date.now()}_${file.name}`;
     const storageRef = ref(storage, storagePath);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -87,10 +86,10 @@ export default function GalleryManagementPage() {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           await addDoc(collection(db, "gallery"), {
             src: downloadURL,
-            alt: file.name.split('.')[0] || "Uploaded image",
-            category: "Uncategorized",
+            alt: file.name.split('.').slice(0, -1).join('.') || "Uploaded image",
+            category: "Performance",
             storagePath,
-            createdAt: new Date(),
+            createdAt: serverTimestamp(),
           });
           toast({ title: "Success", description: "Image uploaded successfully." });
           setIsUploading(false);
@@ -101,17 +100,30 @@ export default function GalleryManagementPage() {
   
   const handleDelete = async (image: GalleryImage) => {
     try {
-      // Delete from Firestore
-      await deleteDoc(doc(db, "gallery", image.id));
+      if (!image.storagePath) {
+        // Handle old data that might not have storagePath
+        await deleteDoc(doc(db, "gallery", image.id));
+        toast({ title: "Success", description: "Image record deleted. No storage file path was found." });
+        return;
+      }
       
       // Delete from Storage
       const imageRef = ref(storage, image.storagePath);
       await deleteObject(imageRef);
+      
+      // Delete from Firestore
+      await deleteDoc(doc(db, "gallery", image.id));
 
       toast({ title: "Success", description: "Image deleted successfully." });
-    } catch (error) {
-      console.error("Error deleting image:", error);
-      toast({ title: "Error", description: "Could not delete image.", variant: "destructive" });
+    } catch (error: any) {
+       if (error.code === 'storage/object-not-found') {
+        // If file doesn't exist in storage, just delete from firestore
+        await deleteDoc(doc(db, "gallery", image.id));
+        toast({ title: "Warning", description: "Image file not found in storage, but record was deleted.", variant: "default" });
+      } else {
+        console.error("Error deleting image:", error);
+        toast({ title: "Error", description: "Could not delete image. " + error.message, variant: "destructive" });
+      }
     }
   };
 
@@ -158,7 +170,7 @@ export default function GalleryManagementPage() {
                       <DropdownMenuContent align="end">
                          <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive">
                                     <Trash2 className="mr-2 h-4 w-4" />
                                     Delete
                                 </DropdownMenuItem>
@@ -167,12 +179,12 @@ export default function GalleryManagementPage() {
                                 <AlertDialogHeader>
                                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the image from your gallery.
+                                    This action cannot be undone. This will permanently delete the image from your gallery and storage.
                                 </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(image)}>Delete</AlertDialogAction>
+                                <AlertDialogAction onClick={() => handleDelete(image)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
@@ -182,13 +194,13 @@ export default function GalleryManagementPage() {
                 </div>
               </CardContent>
               <CardFooter className="p-4 bg-card">
-                <p className="text-sm font-medium truncate">{image.alt}</p>
+                <p className="text-sm font-medium truncate" title={image.alt}>{image.alt}</p>
               </CardFooter>
             </Card>
           ))}
           <Card className="flex items-center justify-center border-2 border-dashed">
               <label htmlFor="image-upload-2" className="cursor-pointer w-full h-full">
-                <div className="flex flex-col h-full w-full items-center justify-center text-muted-foreground hover:bg-muted/50 transition-colors">
+                <div className="flex flex-col h-full w-full items-center justify-center text-muted-foreground hover:bg-muted/50 transition-colors p-4">
                     <Upload className="h-8 w-8 mb-2"/>
                     <span>Upload Image</span>
                 </div>
