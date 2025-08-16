@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main className="flex-1 p-4 md:p-6 lg:p-8">
           <div className="flex items-center justify-between md:hidden mb-4">
               <Logo/>
-              <SidebarTrigger asChild>
+              <SidebarTrigger>
                 <Button variant="ghost" size="icon"><User/></Button>
               </SidebarTrigger>
           </div>
