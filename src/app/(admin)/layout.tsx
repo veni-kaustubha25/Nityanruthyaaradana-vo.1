@@ -1,6 +1,6 @@
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, GalleryHorizontal, FileText, Settings, LayoutDashboard, LogOut } from 'lucide-react';
+import { Home, GalleryHorizontal, FileText, Settings, LayoutDashboard, LogOut, PanelLeft } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
