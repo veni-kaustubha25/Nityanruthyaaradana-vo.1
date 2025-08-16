@@ -7,14 +7,14 @@ import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Trash2 } from 'lucide-react';
+import { Trash2, PlusCircle } from 'lucide-react';
 
 // Schemas
 const heroSchema = z.object({
@@ -77,19 +77,25 @@ export default function ContentAdminPage() {
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Manage Website Content</h1>
+    <div className="space-y-6">
+       <div>
+            <h1 className="text-3xl font-bold">Manage Content</h1>
+            <p className="text-muted-foreground">Update the content for your public website pages.</p>
+        </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Tabs defaultValue="homepage">
-            <TabsList>
+          <Tabs defaultValue="homepage" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="homepage">Homepage</TabsTrigger>
               <TabsTrigger value="about">About Page</TabsTrigger>
             </TabsList>
             
             <TabsContent value="homepage" className="mt-6">
               <Card>
-                <CardHeader><CardTitle>Hero Section</CardTitle></CardHeader>
+                <CardHeader>
+                    <CardTitle>Hero Section</CardTitle>
+                    <CardDescription>The main headline and tagline on your homepage.</CardDescription>
+                </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
                     control={form.control}
@@ -111,7 +117,7 @@ export default function ContentAdminPage() {
                       <FormItem>
                         <FormLabel>Subheadline</FormLabel>
                         <FormControl>
-                          <Textarea {...field} />
+                          <Textarea {...field} rows={3} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -123,7 +129,10 @@ export default function ContentAdminPage() {
 
             <TabsContent value="about" className="mt-6">
               <Card>
-                <CardHeader><CardTitle>About Page Content</CardTitle></CardHeader>
+                <CardHeader>
+                    <CardTitle>About Page</CardTitle>
+                    <CardDescription>Content for your academy's story, founder, and philosophy.</CardDescription>
+                </CardHeader>
                 <CardContent className="space-y-6">
                   <FormField
                     control={form.control}
@@ -154,9 +163,15 @@ export default function ContentAdminPage() {
 
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Our Philosophy</h3>
+                    <div className="space-y-4">
                     {fields.map((item, index) => (
-                      <Card key={item.id} className="mb-4 p-4">
+                      <Card key={item.id} className="p-4 bg-muted/50">
                         <div className="space-y-4">
+                            <div className="flex justify-end">
+                                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                                    <Trash2 className="h-4 w-4 text-destructive" />
+                                </Button>
+                            </div>
                           <FormField
                             control={form.control}
                             name={`about.philosophy.${index}.title`}
@@ -179,13 +194,12 @@ export default function ContentAdminPage() {
                               </FormItem>
                             )}
                           />
-                          <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
                         </div>
                       </Card>
                     ))}
-                     <Button type="button" variant="outline" onClick={() => append({ title: '', description: '' })}>
+                    </div>
+                     <Button type="button" variant="outline" onClick={() => append({ title: '', description: '' })} className="mt-4">
+                      <PlusCircle className="mr-2 h-4 w-4" />
                       Add Philosophy Item
                     </Button>
                   </div>
@@ -193,9 +207,11 @@ export default function ContentAdminPage() {
               </Card>
             </TabsContent>
           </Tabs>
-          <Button type="submit" className="mt-6" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? 'Saving...' : 'Save All Changes'}
-          </Button>
+          <div className="mt-6 flex justify-end">
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Saving...' : 'Save All Changes'}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

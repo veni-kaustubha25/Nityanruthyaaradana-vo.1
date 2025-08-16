@@ -1,21 +1,21 @@
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, GalleryHorizontal, FileText, Settings, User } from 'lucide-react';
+import { Home, GalleryHorizontal, FileText, Settings, LayoutDashboard, LogOut } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
-    { href: '/admin/dashboard', icon: Home, label: 'Dashboard' },
-    { href: '/admin/gallery', icon: GalleryHorizontal, label: 'Gallery' },
+    { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { href: '/admin/content', icon: FileText, label: 'Content' },
+    { href: '/admin/gallery', icon: GalleryHorizontal, label: 'Gallery' },
     { href: '/admin/settings', icon: Settings, label: 'Settings' },
   ];
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen bg-muted/40">
         <Sidebar>
           <SidebarHeader>
             <Logo />
@@ -47,6 +47,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                           </Link>
                       </SidebarMenuButton>
                   </SidebarMenuItem>
+                   <SidebarMenuItem>
+                      <SidebarMenuButton tooltip="Logout">
+                          <LogOut />
+                          <span>Logout</span>
+                      </SidebarMenuButton>
+                  </SidebarMenuItem>
               </SidebarMenu>
           </SidebarFooter>
         </Sidebar>
@@ -54,10 +60,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center justify-between md:hidden mb-4">
               <Logo/>
               <SidebarTrigger>
-                <Button variant="ghost" size="icon"><User/></Button>
+                <Button variant="ghost" size="icon"><PanelLeft/></Button>
               </SidebarTrigger>
           </div>
-          {children}
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
         </main>
       </div>
     </SidebarProvider>

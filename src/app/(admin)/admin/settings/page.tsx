@@ -63,14 +63,17 @@ export default function SettingsAdminPage() {
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Site Settings</h1>
+    <div className="space-y-6">
+        <div>
+            <h1 className="text-3xl font-bold">Site Settings</h1>
+            <p className="text-muted-foreground">Manage global settings for your website.</p>
+        </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Card>
             <CardHeader>
               <CardTitle>SEO Configuration</CardTitle>
-              <CardDescription>Manage the SEO settings for your public website.</CardDescription>
+              <CardDescription>Manage the Search Engine Optimization settings for your public website.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -79,7 +82,7 @@ export default function SettingsAdminPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Site Title</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormControl><Input {...field} placeholder="e.g., Nithyanruthyaaradana Dance Academy" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -90,7 +93,7 @@ export default function SettingsAdminPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Site Description</FormLabel>
-                    <FormControl><Textarea {...field} /></FormControl>
+                    <FormControl><Textarea {...field} placeholder="A short description of your academy for search engines." /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -101,7 +104,7 @@ export default function SettingsAdminPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Keywords (comma-separated)</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormControl><Input {...field} placeholder="bharatanatyam, classical dance, india, ..." /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -123,7 +126,10 @@ export default function SettingsAdminPage() {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
-                        <FormLabel className="text-base">Enable Maintenance Mode</FormLabel>
+                        <FormLabel className="text-base font-medium">Enable Maintenance Mode</FormLabel>
+                        <CardDescription>
+                            {field.value ? "Your site is currently offline." : "Your site is live."}
+                        </CardDescription>
                         <FormMessage />
                     </div>
                     <FormControl>
@@ -138,9 +144,11 @@ export default function SettingsAdminPage() {
             </CardContent>
           </Card>
 
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? 'Saving...' : 'Save Settings'}
-          </Button>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Saving...' : 'Save All Settings'}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

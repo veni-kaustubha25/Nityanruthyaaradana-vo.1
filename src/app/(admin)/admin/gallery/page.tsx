@@ -6,7 +6,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -86,12 +86,16 @@ export default function GalleryAdminPage() {
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Manage Gallery</h1>
+    <div className="space-y-6">
+        <div>
+            <h1 className="text-3xl font-bold">Manage Gallery</h1>
+            <p className="text-muted-foreground">Add, view, and delete images from your website's gallery.</p>
+        </div>
       
-      <Card className="mb-8">
+      <Card>
         <CardHeader>
           <CardTitle>Add New Image</CardTitle>
+          <CardDescription>Upload a new image by providing its URL and details.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -146,22 +150,23 @@ export default function GalleryAdminPage() {
       <Card>
         <CardHeader>
           <CardTitle>Existing Images</CardTitle>
+          <CardDescription>Currently showing {images.length} images in the gallery.</CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
             <p>Loading images...</p>
           ) : images.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {images.map((image) => (
-                <div key={image.id} className="relative group">
+                <div key={image.id} className="relative group aspect-square">
                   <FallbackImage
                     src={image.url}
                     alt={image.alt}
                     width={200}
                     height={200}
-                    className="w-full h-auto object-cover rounded-lg"
+                    className="w-full h-full object-cover rounded-lg"
                   />
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="destructive" size="icon">
@@ -188,7 +193,10 @@ export default function GalleryAdminPage() {
               ))}
             </div>
           ) : (
-            <p>No images found in the gallery.</p>
+            <div className="text-center py-12 border-2 border-dashed rounded-lg">
+                <p className="text-muted-foreground">No images found in the gallery.</p>
+                <p className="text-sm text-muted-foreground mt-2">Add your first image using the form above.</p>
+            </div>
           )}
         </CardContent>
       </Card>
