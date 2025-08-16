@@ -23,7 +23,7 @@ export default function AdminLayout({
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-background">
         <div className="flex flex-1">
           <Sidebar>
             <SidebarHeader>
@@ -47,7 +47,7 @@ export default function AdminLayout({
             </SidebarContent>
           </Sidebar>
           <SidebarInset>
-            <main className="flex-1 p-6 bg-background">
+            <main className="flex-1 p-6">
               <div className="flex items-center mb-6">
                 <SidebarTrigger>
                   <button className="p-2 rounded-md hover:bg-accent/10 dark:hover:bg-accent/10">
@@ -58,7 +58,9 @@ export default function AdminLayout({
                   {adminNavItems.find(item => item.href === pathname)?.label || 'Dashboard'}
                 </h1>
               </div>
-              {children}
+              <div className="w-full">
+                {children}
+              </div>
             </main>
           </SidebarInset>
         </div>
