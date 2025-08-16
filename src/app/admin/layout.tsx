@@ -44,8 +44,8 @@ export default function AdminLayout({
             </SidebarMenu>
           </SidebarContent>
         </Sidebar>
-        <main className="flex-1 p-6">
-          <div className="flex items-center mb-6">
+        <div className="flex-1 flex flex-col">
+          <header className="flex items-center p-6 border-b">
             <SidebarTrigger>
               <button className="p-2 rounded-md hover:bg-accent/10 dark:hover:bg-accent/10">
                 <LayoutPanelLeft className="h-6 w-6" />
@@ -54,11 +54,11 @@ export default function AdminLayout({
             <h1 className="text-2xl font-semibold ml-4">
               {adminNavItems.find(item => item.href === pathname)?.label || 'Dashboard'}
             </h1>
-          </div>
-          <div className="w-full">
+          </header>
+          <main className="flex-1 p-6 overflow-y-auto">
             {children}
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
     </SidebarProvider>
   );
