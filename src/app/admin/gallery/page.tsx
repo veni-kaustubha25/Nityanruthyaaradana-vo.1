@@ -4,12 +4,12 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, MoreVertical, Trash2, Loader2, Upload } from "lucide-react";
+import { PlusCircle, MoreVertical, Trash2, Loader2, Link as LinkIcon } from "lucide-react";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Badge } from "@/components/ui/badge";
 import { db, storage } from '@/lib/firebase';
 import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { deleteObject, ref } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
@@ -28,21 +28,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 
 interface GalleryImage {
   id: string;
   src: string;
   alt: string;
   category: string;
-  storagePath: string;
+  storagePath?: string;
 }
 
 export default function GalleryManagementPage() {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newImageUrl, setNewImageUrl] = useState('');
+  const [newImageAlt, setNewImageAlt] = useState('');
+  const [newImageCategory, setNewImageCategory] = useState('Performance');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -61,62 +65,45 @@ export default function GalleryManagementPage() {
     return () => unsubscribe();
   }, [toast]);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleAddImage = async () => {
+    if (!newImageUrl.trim() || !newImageAlt.trim()) {
+      toast({ title: "Error", description: "Image URL and description are required.", variant: "destructive" });
+      return;
+    }
 
-    setIsUploading(true);
-    setUploadProgress(0);
-    const storagePath = `gallery/${Date.now()}_${file.name}`;
-    const storageRef = ref(storage, storagePath);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgress(progress);
-      },
-      (error) => {
-        console.error("Upload failed:", error);
-        toast({ title: "Upload Failed", description: "Could not upload image.", variant: "destructive" });
-        setIsUploading(false);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-          await addDoc(collection(db, "gallery"), {
-            src: downloadURL,
-            alt: file.name.split('.').slice(0, -1).join('.') || "Uploaded image",
-            category: "Performance",
-            storagePath,
-            createdAt: serverTimestamp(),
-          });
-          toast({ title: "Success", description: "Image uploaded successfully." });
-          setIsUploading(false);
-        });
-      }
-    );
+    try {
+      await addDoc(collection(db, "gallery"), {
+        src: newImageUrl,
+        alt: newImageAlt,
+        category: newImageCategory,
+        createdAt: serverTimestamp(),
+      });
+      toast({ title: "Success", description: "Image added successfully." });
+      // Reset form and close dialog
+      setNewImageUrl('');
+      setNewImageAlt('');
+      setNewImageCategory('Performance');
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error adding image:", error);
+      toast({ title: "Error", description: "Could not add image.", variant: "destructive" });
+    }
   };
-  
+
   const handleDelete = async (image: GalleryImage) => {
     try {
-      if (!image.storagePath) {
-        // Handle old data that might not have storagePath
-        await deleteDoc(doc(db, "gallery", image.id));
-        toast({ title: "Success", description: "Image record deleted. No storage file path was found." });
-        return;
+      // If image has a storage path, it was uploaded directly and should be deleted from storage
+      if (image.storagePath) {
+        const imageRef = ref(storage, image.storagePath);
+        await deleteObject(imageRef);
       }
       
-      // Delete from Storage
-      const imageRef = ref(storage, image.storagePath);
-      await deleteObject(imageRef);
-      
-      // Delete from Firestore
+      // Always delete from Firestore
       await deleteDoc(doc(db, "gallery", image.id));
 
       toast({ title: "Success", description: "Image deleted successfully." });
     } catch (error: any) {
-       if (error.code === 'storage/object-not-found') {
+      if (error.code === 'storage/object-not-found') {
         // If file doesn't exist in storage, just delete from firestore
         await deleteDoc(doc(db, "gallery", image.id));
         toast({ title: "Warning", description: "Image file not found in storage, but record was deleted.", variant: "default" });
@@ -127,26 +114,40 @@ export default function GalleryManagementPage() {
     }
   };
 
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Gallery Management</h1>
-        <Button asChild>
-           <label htmlFor="image-upload">
-              <PlusCircle className="mr-2 h-4 w-4" /> Add New Image
-              <input id="image-upload" type="file" className="hidden" onChange={handleImageUpload} accept="image/*" disabled={isUploading} />
-           </label>
-        </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" /> Add Image by URL
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add a New Image</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="imageUrl" className="text-right">Image URL</Label>
+                <Input id="imageUrl" value={newImageUrl} onChange={(e) => setNewImageUrl(e.target.value)} className="col-span-3" placeholder="https://..."/>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="altText" className="text-right">Description</Label>
+                <Input id="altText" value={newImageAlt} onChange={(e) => setNewImageAlt(e.target.value)} className="col-span-3" placeholder="e.g., Dancer in red costume"/>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="category" className="text-right">Category</Label>
+                <Input id="category" value={newImageCategory} onChange={(e) => setNewImageCategory(e.target.value)} className="col-span-3" placeholder="e.g., Performance"/>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" onClick={handleAddImage}>Save Image</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-
-       {isUploading && (
-          <div className="mb-4 p-4 border rounded-lg bg-card">
-              <p className="text-sm font-medium mb-2">Uploading...</p>
-              <Progress value={uploadProgress} className="w-full" />
-              <p className="text-xs text-muted-foreground mt-1">{Math.round(uploadProgress)}%</p>
-          </div>
-      )}
 
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
@@ -179,7 +180,7 @@ export default function GalleryManagementPage() {
                                 <AlertDialogHeader>
                                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the image from your gallery and storage.
+                                    This action cannot be undone. This will permanently delete the image from your gallery.
                                 </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -199,13 +200,14 @@ export default function GalleryManagementPage() {
             </Card>
           ))}
           <Card className="flex items-center justify-center border-2 border-dashed">
-              <label htmlFor="image-upload-2" className="cursor-pointer w-full h-full">
+            <DialogTrigger asChild>
+              <div className="cursor-pointer w-full h-full">
                 <div className="flex flex-col h-full w-full items-center justify-center text-muted-foreground hover:bg-muted/50 transition-colors p-4">
-                    <Upload className="h-8 w-8 mb-2"/>
-                    <span>Upload Image</span>
+                    <LinkIcon className="h-8 w-8 mb-2"/>
+                    <span>Add by URL</span>
                 </div>
-                <input id="image-upload-2" type="file" className="hidden" onChange={handleImageUpload} accept="image/*" disabled={isUploading} />
-              </label>
+              </div>
+            </DialogTrigger>
           </Card>
         </div>
       )}
