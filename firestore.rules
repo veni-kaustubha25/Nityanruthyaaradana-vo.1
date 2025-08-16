@@ -1,0 +1,27 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public read access for the website content
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow write: if request.auth != null; // Restrict writes to authenticated users
+    }
+
+    match /pages/{pageId} {
+      allow read: if true;
+      allow write: if request.auth != null; // Restrict writes to authenticated users
+    }
+
+    // Only allow authenticated users to read/write settings
+    match /settings/{settingId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
