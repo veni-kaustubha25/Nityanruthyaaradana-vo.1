@@ -47,10 +47,10 @@ export default function AdminLayout({
             </SidebarContent>
           </Sidebar>
           <SidebarInset>
-            <main className="flex-1 p-6 bg-gray-50/50 dark:bg-gray-900/50">
+            <main className="flex-1 p-6 bg-background">
               <div className="flex items-center mb-6">
                 <SidebarTrigger>
-                  <button className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+                  <button className="p-2 rounded-md hover:bg-accent/10 dark:hover:bg-accent/10">
                     <LayoutPanelLeft className="h-6 w-6" />
                   </button>
                 </SidebarTrigger>
