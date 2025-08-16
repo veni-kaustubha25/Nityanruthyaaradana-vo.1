@@ -1,14 +1,26 @@
 
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { Home, Settings, Image as ImageIcon, LayoutTemplate,LayoutPanelLeft } from 'lucide-react';
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Home, Settings, Image as ImageIcon, LayoutTemplate, LayoutPanelLeft } from 'lucide-react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarTrigger, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset } from '@/components/ui/sidebar';
+
+const adminNavItems = [
+  { href: '/admin/dashboard', label: 'Dashboard', icon: Home },
+  { href: '/admin/gallery', label: 'Gallery', icon: ImageIcon },
+  { href: '/admin/pages/home', label: 'Home Page', icon: LayoutTemplate },
+  { href: '/admin/pages/about', label: 'About Page', icon: LayoutPanelLeft },
+  { href: '/admin/settings', label: 'Site Settings', icon: Settings },
+];
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col">
@@ -19,36 +31,18 @@ export default function AdminLayout({
             </SidebarHeader>
             <SidebarContent>
               <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton href="/admin/dashboard" isActive>
-                    <Home />
-                    <span>Dashboard</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton href="/admin/gallery">
-                    <ImageIcon />
-                    <span>Gallery</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton href="/admin/pages/home">
-                    <LayoutTemplate />
-                    <span>Home Page</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton href="/admin/pages/about">
-                    <LayoutPanelLeft />
-                    <span>About Page</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton href="/admin/settings">
-                    <Settings />
-                    <span>Site Settings</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                {adminNavItems.map((item) => (
+                  <SidebarMenuItem key={item.href}>
+                    <Link href={item.href} passHref legacyBehavior>
+                      <SidebarMenuButton asChild isActive={pathname === item.href}>
+                        <a>
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))}
               </SidebarMenu>
             </SidebarContent>
           </Sidebar>
@@ -60,7 +54,9 @@ export default function AdminLayout({
                     <LayoutPanelLeft className="h-6 w-6" />
                   </button>
                 </SidebarTrigger>
-                <h1 className="text-2xl font-semibold ml-4">Dashboard</h1>
+                <h1 className="text-2xl font-semibold ml-4">
+                  {adminNavItems.find(item => item.href === pathname)?.label || 'Dashboard'}
+                </h1>
               </div>
               {children}
             </main>
