@@ -115,102 +115,102 @@ export default function GalleryManagementPage() {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Gallery Management</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <PlusCircle className="mr-2 h-4 w-4" /> Add Image by URL
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add a New Image</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="imageUrl" className="text-right">Image URL</Label>
-                <Input id="imageUrl" value={newImageUrl} onChange={(e) => setNewImageUrl(e.target.value)} className="col-span-3" placeholder="https://..."/>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="altText" className="text-right">Description</Label>
-                <Input id="altText" value={newImageAlt} onChange={(e) => setNewImageAlt(e.target.value)} className="col-span-3" placeholder="e.g., Dancer in red costume"/>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category" className="text-right">Category</Label>
-                <Input id="category" value={newImageCategory} onChange={(e) => setNewImageCategory(e.target.value)} className="col-span-3" placeholder="e.g., Performance"/>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="button" onClick={handleAddImage}>Save Image</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-semibold">Gallery Management</h1>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Image by URL
+              </Button>
+            </DialogTrigger>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {galleryImages.map((image) => (
-            <Card key={image.id} className="overflow-hidden group">
-              <CardContent className="p-0">
-                <div className="relative">
-                  <FallbackImage src={image.src} alt={image.alt} width={400} height={400} className="w-full h-48 object-cover" />
-                  <Badge variant="secondary" className="absolute top-2 left-2">{image.category}</Badge>
-                  <div className="absolute top-2 right-2">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 bg-black/30 hover:bg-black/50 text-white hover:text-white">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                         <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive">
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete
-                                </DropdownMenuItem>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the image from your gallery.
-                                </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(image)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add a New Image</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="imageUrl" className="text-right">Image URL</Label>
+              <Input id="imageUrl" value={newImageUrl} onChange={(e) => setNewImageUrl(e.target.value)} className="col-span-3" placeholder="https://..."/>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="altText" className="text-right">Description</Label>
+              <Input id="altText" value={newImageAlt} onChange={(e) => setNewImageAlt(e.target.value)} className="col-span-3" placeholder="e.g., Dancer in red costume"/>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="category" className="text-right">Category</Label>
+              <Input id="category" value={newImageCategory} onChange={(e) => setNewImageCategory(e.target.value)} className="col-span-3" placeholder="e.g., Performance"/>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" onClick={handleAddImage}>Save Image</Button>
+          </DialogFooter>
+        </DialogContent>
+
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {galleryImages.map((image) => (
+              <Card key={image.id} className="overflow-hidden group">
+                <CardContent className="p-0">
+                  <div className="relative">
+                    <FallbackImage src={image.src} alt={image.alt} width={400} height={400} className="w-full h-48 object-cover" />
+                    <Badge variant="secondary" className="absolute top-2 left-2">{image.category}</Badge>
+                    <div className="absolute top-2 right-2">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 bg-black/30 hover:bg-black/50 text-white hover:text-white">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                           <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive">
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete
+                                  </DropdownMenuItem>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                      This action cannot be undone. This will permanently delete the image from your gallery.
+                                  </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDelete(image)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                  </AlertDialogFooter>
+                              </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="p-4 bg-card">
+                  <p className="text-sm font-medium truncate" title={image.alt}>{image.alt}</p>
+                </CardFooter>
+              </Card>
+            ))}
+            <Card className="flex items-center justify-center border-2 border-dashed">
+              <DialogTrigger asChild>
+                <div className="cursor-pointer w-full h-full">
+                  <div className="flex flex-col h-full w-full items-center justify-center text-muted-foreground hover:bg-muted/50 transition-colors p-4">
+                      <LinkIcon className="h-8 w-8 mb-2"/>
+                      <span>Add by URL</span>
                   </div>
                 </div>
-              </CardContent>
-              <CardFooter className="p-4 bg-card">
-                <p className="text-sm font-medium truncate" title={image.alt}>{image.alt}</p>
-              </CardFooter>
+              </DialogTrigger>
             </Card>
-          ))}
-          <Card className="flex items-center justify-center border-2 border-dashed">
-            <DialogTrigger asChild>
-              <div className="cursor-pointer w-full h-full">
-                <div className="flex flex-col h-full w-full items-center justify-center text-muted-foreground hover:bg-muted/50 transition-colors p-4">
-                    <LinkIcon className="h-8 w-8 mb-2"/>
-                    <span>Add by URL</span>
-                </div>
-              </div>
-            </DialogTrigger>
-          </Card>
-        </div>
-      )}
-    </div>
+          </div>
+        )}
+      </div>
+    </Dialog>
   );
 }
