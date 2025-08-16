@@ -18,8 +18,10 @@ const chartData = [
 export default function DashboardPage() {
   const [studentCount, setStudentCount] = useState(0);
   const [galleryCount, setGalleryCount] = useState(0);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     // For simplicity, we'll assume a 'students' collection exists for student registrations
     const fetchCounts = async () => {
       try {
@@ -43,6 +45,10 @@ export default function DashboardPage() {
 
     return () => unsubscribe();
   }, []);
+
+  if (!isClient) {
+    return null; // or a loading skeleton
+  }
 
   return (
     <div className="space-y-6">

@@ -28,21 +28,11 @@ import {
   Crown,
   Trophy
 } from "lucide-react";
-import { replaceUnsplashUrl, getFallbackUrls } from "@/lib/image-utils";
-import { useState } from "react";
+import { replaceUnsplashUrl } from "@/lib/image-utils";
+import { useState, useEffect } from "react";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
-// Hero Section Data
-const heroContent = {
-  headline: "Discover the Divine Art of Bharatanatyam",
-  subheadline: "Experience the timeless beauty of India's classical dance form through authentic training, expert guidance, and a vibrant community of passionate artists.",
-  cta: "Begin Your Journey",
-  secondaryCta: "Watch Our Story",
-  image: {
-    src: "/images/1.jpg",
-    alt: "Traditional Bharatanatyam performance with elaborate costumes and expressive poses",
-    hint: "traditional bharatanatyam performance elaborate costumes"
-  }
-};
 
 // Features Section
 const features = [
@@ -138,10 +128,40 @@ const faqs = [
 ];
 
 
+interface HomePageContent {
+  headline: string;
+  subheadline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  heroImageUrl: string;
+}
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [pageContent, setPageContent] = useState<HomePageContent | null>(null);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      const docRef = doc(db, "pages", "home");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setPageContent(docSnap.data() as HomePageContent);
+      } else {
+        // Fallback content if nothing in Firestore
+        setPageContent({
+          headline: "Discover the Divine Art of Bharatanatyam",
+          subheadline: "Experience the timeless beauty of India's classical dance form through authentic training, expert guidance, and a vibrant community of passionate artists.",
+          ctaPrimary: "Begin Your Journey",
+          ctaSecondary: "Watch Our Story",
+          heroImageUrl: "/images/1.jpg",
+        });
+      }
+    };
+
+    fetchContent();
+  }, []);
 
   const gallerySnippets = gallerySnippetsData.map(item => {
     const processedSrc = replaceUnsplashUrl(item.originalSrc || 'https://images.unsplash.com/photo-1547153760-180fc612c570', item.category as any);
@@ -157,6 +177,10 @@ export default function HomePage() {
     setModalOpen(true);
   };
 
+  if (!pageContent) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+  
   return (
     <div className="flex flex-col">
       {/* Image Modal */}
@@ -172,8 +196,8 @@ export default function HomePage() {
         {/* Background Video/Image */}
         <div className="absolute inset-0 w-full h-full">
           <FallbackImage
-            src={heroContent.image.src}
-            alt={heroContent.image.alt}
+            src={pageContent.heroImageUrl}
+            alt="Traditional Bharatanatyam performance"
             width={1920}
             height={1080}
             className="object-cover w-full h-full"
@@ -188,27 +212,27 @@ export default function HomePage() {
           <TextAnimation type="slide" direction="up" delay={0.2}>
             <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight">
               <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
-                {heroContent.headline}
+                {pageContent.headline}
               </span>
             </h1>
           </TextAnimation>
           <TextAnimation type="slide" direction="up" delay={0.4}>
             <p className="mt-4 sm:mt-6 md:mt-8 text-base sm:text-lg md:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed text-gray-200 px-2">
-              {heroContent.subheadline}
+              {pageContent.subheadline}
             </p>
           </TextAnimation>
           <div className="mt-6 sm:mt-8 md:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
             <Scale delay={0.6}>
               <Button asChild size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 w-full sm:w-auto">
                 <Link href="/register">
-                  {heroContent.cta} <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5"/>
+                  {pageContent.ctaPrimary} <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5"/>
                 </Link>
               </Button>
             </Scale>
             <Scale delay={0.8}>
               <Button asChild size="lg" variant="outline" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 border-white text-white hover:bg-white hover:text-black w-full sm:w-auto">
                 <Link href="#about">
-                  {heroContent.secondaryCta} <Play className="ml-2 h-4 w-4 sm:h-5 sm:w-5"/>
+                  {pageContent.ctaSecondary} <Play className="ml-2 h-4 w-4 sm:h-5 sm:w-5"/>
                 </Link>
               </Button>
             </Scale>
