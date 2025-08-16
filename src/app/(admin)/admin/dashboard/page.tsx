@@ -2,10 +2,8 @@
 'use client';
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useAuth } from "@/hooks/use-auth";
 
 export default function AdminDashboard() {
-  const { user } = useAuth();
 
   return (
     <div>
@@ -15,7 +13,7 @@ export default function AdminDashboard() {
           <CardTitle>Welcome, Administrator!</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>You are logged in as: {user?.email}</p>
+          <p>This is the admin dashboard.</p>
           <p className="mt-4">Use the navigation on the left to manage your website's content and settings.</p>
         </CardContent>
       </Card>

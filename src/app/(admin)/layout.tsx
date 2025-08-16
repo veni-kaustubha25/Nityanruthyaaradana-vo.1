@@ -1,25 +1,11 @@
 
-'use client';
-
-import { AuthProvider, useRequireAuth } from '@/hooks/use-auth';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, GalleryHorizontal, FileText, Settings, LogOut, User } from 'lucide-react';
-import { auth } from '@/lib/firebase';
-import { signOut } from 'firebase/auth';
-import { useRouter, usePathname } from 'next/navigation';
+import { Home, GalleryHorizontal, FileText, Settings, User } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
-function AdminLayoutContent({ children }: { children: React.ReactNode }) {
-  useRequireAuth('/admin/login');
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const handleLogout = async () => {
-    await signOut(auth);
-    router.push('/admin/login');
-  };
-  
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: '/admin/dashboard', icon: Home, label: 'Dashboard' },
     { href: '/admin/gallery', icon: GalleryHorizontal, label: 'Gallery' },
@@ -39,12 +25,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
               {navItems.map(item => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton 
-                    onClick={() => router.push(item.href)}
-                    isActive={pathname === item.href}
+                    asChild
                     tooltip={item.label}
                   >
-                    <item.icon />
-                    <span>{item.label}</span>
+                    <Link href={item.href}>
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -53,9 +40,11 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           <SidebarFooter>
               <SidebarMenu>
                   <SidebarMenuItem>
-                      <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
-                          <LogOut />
-                          <span>Logout</span>
+                      <SidebarMenuButton asChild tooltip="Go to Site">
+                          <Link href="/">
+                            <Home />
+                            <span>Public Site</span>
+                          </Link>
                       </SidebarMenuButton>
                   </SidebarMenuItem>
               </SidebarMenu>
@@ -72,24 +61,5 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         </main>
       </div>
     </SidebarProvider>
-  );
-}
-
-
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const pathname = usePathname();
-
-  if (pathname === '/admin/login') {
-    return <AuthProvider>{children}</AuthProvider>;
-  }
-
-  return (
-    <AuthProvider>
-      <AdminLayoutContent>{children}</AdminLayoutContent>
-    </AuthProvider>
   );
 }
