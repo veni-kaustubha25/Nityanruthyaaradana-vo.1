@@ -4,7 +4,7 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { LoadingAnimation } from '@/components/ui/loading-animation';
 
 interface AuthContextType {
@@ -44,19 +44,25 @@ export const useAuth = () => {
 export const useRequireAuth = (redirectTo = '/admin/login') => {
     const { user, loading } = useAuth();
     const router = useRouter();
+    const pathname = usePathname();
   
     useEffect(() => {
       if (!loading && !user) {
-        router.push(redirectTo);
+        if (pathname !== redirectTo) {
+          router.push(redirectTo);
+        }
       }
-    }, [user, loading, router, redirectTo]);
+    }, [user, loading, router, redirectTo, pathname]);
   
     if (loading || !user) {
-      return (
-        <div className="flex items-center justify-center h-screen">
-          <LoadingAnimation />
-        </div>
-      );
+        if (pathname !== redirectTo) {
+            return (
+                <div className="flex items-center justify-center h-screen">
+                    <LoadingAnimation />
+                </div>
+            );
+        }
+        return null;
     }
   
     return user;
