@@ -1,11 +1,48 @@
+
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Mail, Phone, Instagram, Facebook, Youtube, MapPin, Clock, ArrowRight } from "lucide-react";
 import { AnimatedLogo } from "@/components/animated-logo";
 import { Button } from "@/components/ui/button";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
+
+interface SiteSettings {
+  siteName: string;
+  contactEmail: string;
+  contactPhone: string;
+  facebookUrl: string;
+  instagramUrl: string;
+  youtubeUrl: string;
+}
 
 export function Footer() {
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const docRef = doc(db, "settings", "general");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setSettings(docSnap.data() as SiteSettings);
+      } else {
+        // Fallback settings
+        setSettings({
+          siteName: "Nithyanruthyaaradana",
+          contactEmail: "info@nithyanruthyaaradana.art",
+          contactPhone: "+91 123 456 7890",
+          facebookUrl: "#",
+          instagramUrl: "#",
+          youtubeUrl: "#",
+        });
+      }
+    };
+    fetchSettings();
+  }, []);
+
   return (
     <footer className="bg-[#8B0000] text-white">
       {/* Main Footer */}
@@ -27,15 +64,21 @@ export function Footer() {
               Join our vibrant community and discover the transformative power of Bharatanatyam.
             </p>
             <div className="mt-4 sm:mt-6 flex gap-3 sm:gap-4">
-              <Link href="#" aria-label="Instagram" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
-                <Instagram className="h-4 w-4 sm:h-5 sm:w-5" />
-              </Link>
-              <Link href="#" aria-label="Facebook" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
-                <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
-              </Link>
-              <Link href="#" aria-label="YouTube" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
-                <Youtube className="h-4 w-4 sm:h-5 sm:w-5" />
-              </Link>
+              {settings?.instagramUrl && (
+                <Link href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
+                  <Instagram className="h-4 w-4 sm:h-5 sm:w-5" />
+                </Link>
+              )}
+              {settings?.facebookUrl && (
+                <Link href={settings.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
+                  <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
+                </Link>
+              )}
+              {settings?.youtubeUrl && (
+                <Link href={settings.youtubeUrl} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="bg-white text-[#8B0000] p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-all duration-300">
+                  <Youtube className="h-4 w-4 sm:h-5 sm:w-5" />
+                </Link>
+              )}
             </div>
           </div>
 
@@ -84,8 +127,8 @@ export function Footer() {
                 </div>
                 <div className="min-w-0">
                   <div className="font-medium text-gray-200 text-sm sm:text-base">Email</div>
-                  <a href="mailto:info@nithyanruthyaaradana.art" className="text-gray-200 hover:text-yellow-300 transition-colors text-xs sm:text-sm break-all">
-                    info@nithyanruthyaaradana.art
+                  <a href={`mailto:${settings?.contactEmail}`} className="text-gray-200 hover:text-yellow-300 transition-colors text-xs sm:text-sm break-all">
+                    {settings?.contactEmail || 'Loading...'}
                   </a>
                 </div>
               </li>
@@ -95,8 +138,8 @@ export function Footer() {
                 </div>
                 <div className="min-w-0">
                   <div className="font-medium text-gray-200 text-sm sm:text-base">Phone</div>
-                  <a href="tel:+911234567890" className="text-gray-200 hover:text-yellow-300 transition-colors text-xs sm:text-sm">
-                    +91 123 456 7890
+                  <a href={`tel:${settings?.contactPhone}`} className="text-gray-200 hover:text-yellow-300 transition-colors text-xs sm:text-sm">
+                    {settings?.contactPhone || 'Loading...'}
                   </a>
                 </div>
               </li>
@@ -138,7 +181,7 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
             <div className="text-center sm:text-left">
               <p className="text-gray-300 text-xs sm:text-sm">
-                &copy; {new Date().getFullYear()} Nithyanruthyaaradana. All rights reserved.
+                &copy; {new Date().getFullYear()} {settings?.siteName || 'Nithyanruthyaaradana'}. All rights reserved.
               </p>
             </div>
             <div className="text-center sm:text-right">

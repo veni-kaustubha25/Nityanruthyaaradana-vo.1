@@ -29,10 +29,9 @@ import {
   Crown,
   Trophy
 } from "lucide-react";
-import { replaceUnsplashUrl } from "@/lib/image-utils";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 
 
 // Features Section
@@ -63,15 +62,8 @@ const features = [
   }
 ];
 
-
-
-// Gallery Data
-const gallerySnippetsData: { originalSrc: string; category: string; alt: string; hint: string; }[] = [];
-
 // Testimonials
 const testimonials: { quote: string; author: string; role: string; stars: number; image: string; }[] = [];
-
-
 
 // FAQ Section
 const faqs = [
@@ -101,7 +93,6 @@ const faqs = [
   }
 ];
 
-
 interface HomePageContent {
   headline: string;
   subheadline: string;
@@ -110,20 +101,27 @@ interface HomePageContent {
   heroImageUrl: string;
 }
 
+interface GalleryImage {
+  src: string;
+  alt: string;
+  hint?: string;
+}
+
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [pageContent, setPageContent] = useState<HomePageContent | null>(null);
+  const [gallerySnippets, setGallerySnippets] = useState<GalleryImage[]>([]);
 
   useEffect(() => {
     const fetchContent = async () => {
-      const docRef = doc(db, "pages", "home");
-      const docSnap = await getDoc(docRef);
+      // Fetch home page content
+      const homeDocRef = doc(db, "pages", "home");
+      const homeDocSnap = await getDoc(homeDocRef);
 
-      if (docSnap.exists()) {
-        setPageContent(docSnap.data() as HomePageContent);
+      if (homeDocSnap.exists()) {
+        setPageContent(homeDocSnap.data() as HomePageContent);
       } else {
-        // Fallback content if nothing in Firestore
         setPageContent({
           headline: "Discover the Divine Art of Bharatanatyam",
           subheadline: "Experience the timeless beauty of India's classical dance form through authentic training, expert guidance, and a vibrant community of passionate artists.",
@@ -132,19 +130,16 @@ export default function HomePage() {
           heroImageUrl: "/images/1.jpg",
         });
       }
+
+      // Fetch gallery snippets
+      const galleryQuery = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(4));
+      const gallerySnapshot = await getDocs(galleryQuery);
+      const images = gallerySnapshot.docs.map(doc => doc.data() as GalleryImage);
+      setGallerySnippets(images);
     };
 
     fetchContent();
   }, []);
-
-  const gallerySnippets = gallerySnippetsData.map(item => {
-    const processedSrc = replaceUnsplashUrl(item.originalSrc || 'https://images.unsplash.com/photo-1547153760-180fc612c570', item.category as any);
-    return {
-      src: processedSrc || 'https://picsum.photos/600/400?random=1',
-      alt: item.alt || 'Dance performance image',
-      hint: item.hint || ''
-    };
-  });
 
   const handleImageClick = (index: number) => {
     setSelectedImageIndex(index);
@@ -220,8 +215,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-
 
       {/* About Section */}
       <section id="about" className="py-12 sm:py-16 md:py-20 bg-[#8B0000]">
