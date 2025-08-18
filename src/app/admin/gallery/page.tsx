@@ -46,7 +46,6 @@ export default function GalleryManagementPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newImageAlt, setNewImageAlt] = useState('');
-  const [newImageCategory, setNewImageCategory] = useState('Performance');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -75,14 +74,13 @@ export default function GalleryManagementPage() {
       await addDoc(collection(db, "gallery"), {
         src: newImageUrl,
         alt: newImageAlt,
-        category: newImageCategory,
+        category: "General", // Assign a default category
         createdAt: serverTimestamp(),
       });
       toast({ title: "Success", description: "Image added successfully." });
       // Reset form and close dialog
       setNewImageUrl('');
       setNewImageAlt('');
-      setNewImageCategory('Performance');
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error adding image:", error);
@@ -137,10 +135,6 @@ export default function GalleryManagementPage() {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="altText" className="text-right">Description</Label>
               <Input id="altText" value={newImageAlt} onChange={(e) => setNewImageAlt(e.target.value)} className="col-span-3" placeholder="e.g., Dancer in red costume"/>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="category" className="text-right">Category</Label>
-              <Input id="category" value={newImageCategory} onChange={(e) => setNewImageCategory(e.target.value)} className="col-span-3" placeholder="e.g., Performance"/>
             </div>
           </div>
           <DialogFooter>
