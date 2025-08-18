@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -65,37 +66,10 @@ const features = [
 
 
 // Gallery Data
-const gallerySnippetsData = [
-  { originalSrc: "https://images.unsplash.com/photo-1547153760-180fc612c570?w=600&h=800&fit=crop&crop=center", category: "performance", alt: "Bharatanatyam dancer in dramatic pose", hint: "bharatanatyam expression" },
-  { originalSrc: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&crop=center", category: "groupPractice", alt: "Group practice session", hint: "dance practice studio" },
-  { originalSrc: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop&crop=center", category: "events", alt: "Live orchestra accompaniment", hint: "live music dance" },
-  { originalSrc: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=800&fit=crop&crop=center", category: "performance", alt: "Dancer with traditional makeup", hint: "dancer portrait makeup" },
-];
+const gallerySnippetsData: { originalSrc: string; category: string; alt: string; hint: string; }[] = [];
 
 // Testimonials
-const testimonials = [
-  {
-    quote: "The teaching methodology is simply outstanding. My daughter has not only learned the dance form but also the cultural values associated with it.",
-    author: "Priya Sharma",
-    role: "Parent",
-    stars: 5,
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    quote: "A truly immersive experience. The instructors are passionate and dedicated, making every class a joy to attend. I've grown so much as a dancer here.",
-    author: "Ananya Kumar",
-    role: "Student",
-    stars: 5,
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    quote: "Nithyanruthyaaradana has a wonderful, welcoming atmosphere. It feels like a second home. The attention to detail in every aspect of training is commendable.",
-    author: "Rohan Mehta",
-    role: "Student",
-    stars: 5,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
-  },
-];
+const testimonials: { quote: string; author: string; role: string; stars: number; image: string; }[] = [];
 
 
 
@@ -184,12 +158,12 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Image Modal */}
-      <ImageModal
+      {gallerySnippets.length > 0 && <ImageModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         images={gallerySnippets}
         initialIndex={selectedImageIndex}
-      />
+      />}
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -285,7 +259,8 @@ export default function HomePage() {
               <HoverAnimation effect="lift" tapEffect="scale">
                 <div className="relative">
                   <FallbackImage
-                    src={replaceUnsplashUrl("https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&crop=center", "groupPractice")}
+                    src={"/images/group-practice.jpg"}
+                    data-ai-hint="dance practice studio"
                     alt="Students practicing Bharatanatyam in the studio"
                     width={600}
                     height={400}
@@ -349,6 +324,7 @@ export default function HomePage() {
 
 
       {/* Gallery Section */}
+      {gallerySnippets.length > 0 && (
       <section className="py-20 bg-[#8B0000]">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -409,8 +385,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Testimonials Section */}
+      {testimonials.length > 0 && (
       <section className="py-20 bg-[#8B0000]">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -470,7 +448,7 @@ export default function HomePage() {
           </Carousel>
         </div>
       </section>
-
+      )}
 
 
       {/* FAQ Section */}
