@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, MoreVertical, Trash2, Loader2, Link as LinkIcon } from "lucide-react";
+import { PlusCircle, MoreVertical, Trash2, Loader2, Link as LinkIcon, Upload } from "lucide-react";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Badge } from "@/components/ui/badge";
 import { db, storage } from '@/lib/firebase';
@@ -26,7 +26,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -74,11 +73,10 @@ export default function GalleryManagementPage() {
       await addDoc(collection(db, "gallery"), {
         src: newImageUrl,
         alt: newImageAlt,
-        category: "General", // Assign a default category
+        category: "General",
         createdAt: serverTimestamp(),
       });
       toast({ title: "Success", description: "Image added successfully." });
-      // Reset form and close dialog
       setNewImageUrl('');
       setNewImageAlt('');
       setIsDialogOpen(false);
@@ -90,19 +88,14 @@ export default function GalleryManagementPage() {
 
   const handleDelete = async (image: GalleryImage) => {
     try {
-      // If image has a storage path, it was uploaded directly and should be deleted from storage
       if (image.storagePath) {
         const imageRef = ref(storage, image.storagePath);
         await deleteObject(imageRef);
       }
-      
-      // Always delete from Firestore
       await deleteDoc(doc(db, "gallery", image.id));
-
       toast({ title: "Success", description: "Image deleted successfully." });
     } catch (error: any) {
       if (error.code === 'storage/object-not-found') {
-        // If file doesn't exist in storage, just delete from firestore
         await deleteDoc(doc(db, "gallery", image.id));
         toast({ title: "Warning", description: "Image file not found in storage, but record was deleted.", variant: "default" });
       } else {
@@ -114,27 +107,27 @@ export default function GalleryManagementPage() {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold">Gallery Management</h1>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold tracking-tight">Gallery Management</h1>
             <DialogTrigger asChild>
               <Button>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Image by URL
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Image
               </Button>
             </DialogTrigger>
         </div>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add a New Image</DialogTitle>
+            <DialogTitle>Add New Image</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="imageUrl" className="text-right">Image URL</Label>
-              <Input id="imageUrl" value={newImageUrl} onChange={(e) => setNewImageUrl(e.target.value)} className="col-span-3" placeholder="https://..."/>
+            <div className="space-y-2">
+              <Label htmlFor="imageUrl">Image URL</Label>
+              <Input id="imageUrl" value={newImageUrl} onChange={(e) => setNewImageUrl(e.target.value)} placeholder="https://..."/>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="altText" className="text-right">Description</Label>
-              <Input id="altText" value={newImageAlt} onChange={(e) => setNewImageAlt(e.target.value)} className="col-span-3" placeholder="e.g., Dancer in red costume"/>
+            <div className="space-y-2">
+              <Label htmlFor="altText">Description</Label>
+              <Input id="altText" value={newImageAlt} onChange={(e) => setNewImageAlt(e.target.value)} placeholder="e.g., Dancer in red costume"/>
             </div>
           </div>
           <DialogFooter>
@@ -149,22 +142,21 @@ export default function GalleryManagementPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {galleryImages.map((image) => (
-              <Card key={image.id} className="overflow-hidden group">
+              <Card key={image.id} className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <CardContent className="p-0">
                   <div className="relative">
-                    <FallbackImage src={image.src} alt={image.alt} width={400} height={400} className="w-full h-48 object-cover" />
-                    <Badge variant="secondary" className="absolute top-2 left-2">{image.category}</Badge>
-                    <div className="absolute top-2 right-2">
+                    <FallbackImage src={image.src} alt={image.alt} width={400} height={300} className="w-full h-48 object-cover" />
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 bg-black/30 hover:bg-black/50 text-white hover:text-white">
+                          <Button variant="secondary" size="icon" className="h-8 w-8">
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                            <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive">
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive cursor-pointer">
                                       <Trash2 className="mr-2 h-4 w-4" />
                                       Delete
                                   </DropdownMenuItem>
@@ -173,7 +165,7 @@ export default function GalleryManagementPage() {
                                   <AlertDialogHeader>
                                   <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                      This action cannot be undone. This will permanently delete the image from your gallery.
+                                      This will permanently delete the image. This action cannot be undone.
                                   </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
@@ -187,21 +179,20 @@ export default function GalleryManagementPage() {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="p-4 bg-card">
-                  <p className="text-sm font-medium truncate" title={image.alt}>{image.alt}</p>
+                <CardFooter className="p-3 bg-card flex flex-col items-start">
+                  <p className="text-sm font-medium truncate w-full" title={image.alt}>{image.alt}</p>
+                  <Badge variant="outline" className="mt-2">{image.category}</Badge>
                 </CardFooter>
               </Card>
             ))}
-            <Card className="flex items-center justify-center border-2 border-dashed">
-              <DialogTrigger asChild>
-                <div className="cursor-pointer w-full h-full">
-                  <div className="flex flex-col h-full w-full items-center justify-center text-muted-foreground hover:bg-muted/50 transition-colors p-4">
-                      <LinkIcon className="h-8 w-8 mb-2"/>
-                      <span>Add by URL</span>
+            <DialogTrigger asChild>
+              <Card className="flex items-center justify-center border-2 border-dashed hover:border-primary hover:text-primary transition-colors duration-300 cursor-pointer min-h-[268px]">
+                  <div className="text-center text-muted-foreground">
+                      <PlusCircle className="h-8 w-8 mx-auto mb-2"/>
+                      <span>Add New Image</span>
                   </div>
-                </div>
-              </DialogTrigger>
-            </Card>
+              </Card>
+            </DialogTrigger>
           </div>
         )}
       </div>

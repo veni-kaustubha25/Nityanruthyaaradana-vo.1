@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -40,7 +41,6 @@ export default function AboutPageManagement() {
       if (docSnap.exists()) {
         setContent(docSnap.data() as AboutPageContent);
       } else {
-        // Initialize with default content if it doesn't exist
         setContent({
           storyHeading: "Our Story",
           storyContent: "Founded with a deep reverence for the ancient traditions of Bharatanatyam...",
@@ -55,7 +55,6 @@ export default function AboutPageManagement() {
       }
       setIsLoading(false);
     };
-
     fetchContent();
   }, []);
 
@@ -90,7 +89,7 @@ export default function AboutPageManagement() {
       () => { // complete
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setContent({ ...content, [field]: downloadURL, [storagePathField]: storagePath });
-          toast({ id: toastId.id, title: "Success", description: "Image uploaded. Save your changes." });
+          toast({ id: toastId.id, title: "Success", description: "Image uploaded. Remember to save changes." });
         });
       }
     );
@@ -98,7 +97,7 @@ export default function AboutPageManagement() {
 
   if (isLoading || !content) {
     return (
-      <div className="flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-full pt-16">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
@@ -107,73 +106,76 @@ export default function AboutPageManagement() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">About Page Management</h1>
+        <h1 className="text-3xl font-bold tracking-tight">About Page Content</h1>
         <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Save All Changes
+            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save Changes
         </Button>
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Our Story Section</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="story-heading">Heading</Label>
-            <Input id="story-heading" value={content.storyHeading} onChange={(e) => setContent({...content, storyHeading: e.target.value})} />
-          </div>
-          <div>
-            <Label htmlFor="story-content">Content</Label>
-            <Textarea id="story-content" rows={6} value={content.storyContent} onChange={(e) => setContent({...content, storyContent: e.target.value})} />
-          </div>
-          <div className="space-y-2">
-            <Label>Image</Label>
-            <div className="flex items-center gap-4">
-                <FallbackImage src={content.storyImageUrl} alt="Founder" width={150} height={100} className="rounded-md object-cover"/>
-                <Button variant="outline" asChild>
-                    <label htmlFor="story-image-upload">
-                        <Upload className="mr-2 h-4 w-4"/> Change Image
-                        <input type="file" id="story-image-upload" className="hidden" onChange={handleImageUpload('storyImageUrl')} />
-                    </label>
-                </Button>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Our Story Section</CardTitle>
+            <CardDescription>Manage the content for the "Our Story" part of the About page.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="story-heading">Heading</Label>
+              <Input id="story-heading" value={content.storyHeading} onChange={(e) => setContent({...content, storyHeading: e.target.value})} />
             </div>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="space-y-2">
+              <Label htmlFor="story-content">Content</Label>
+              <Textarea id="story-content" rows={8} value={content.storyContent} onChange={(e) => setContent({...content, storyContent: e.target.value})} />
+            </div>
+            <div className="space-y-2">
+              <Label>Image</Label>
+              <div className="flex items-center gap-4">
+                  <FallbackImage src={content.storyImageUrl} alt="Story Image" width={150} height={100} className="rounded-md object-cover border"/>
+                  <Button variant="outline" asChild>
+                      <label htmlFor="story-image-upload" className="cursor-pointer">
+                          <Upload className="mr-2 h-4 w-4"/> Change
+                          <input type="file" id="story-image-upload" className="hidden" onChange={handleImageUpload('storyImageUrl')} accept="image/*" />
+                      </label>
+                  </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Founder & Principal Teacher Section</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="founder-heading">Heading</Label>
-            <Input id="founder-heading" value={content.founderHeading} onChange={(e) => setContent({...content, founderHeading: e.target.value})} />
-          </div>
-          <div>
-            <Label htmlFor="founder-name">Founder's Name</Label>
-            <Input id="founder-name" value={content.founderName} onChange={(e) => setContent({...content, founderName: e.target.value})} />
-          </div>
-          <div>
-            <Label htmlFor="founder-bio">Biography</Label>
-            <Textarea id="founder-bio" rows={6} value={content.founderBio} onChange={(e) => setContent({...content, founderBio: e.target.value})} />
-          </div>
-          <div className="space-y-2">
-            <Label>Image</Label>
-            <div className="flex items-center gap-4">
-                <FallbackImage src={content.founderImageUrl} alt="Founder" width={150} height={100} className="rounded-md object-cover"/>
-                <Button variant="outline" asChild>
-                    <label htmlFor="founder-image-upload">
-                        <Upload className="mr-2 h-4 w-4"/> Change Image
-                         <input type="file" id="founder-image-upload" className="hidden" onChange={handleImageUpload('founderImageUrl')} />
-                    </label>
-                </Button>
+        <Card>
+          <CardHeader>
+            <CardTitle>Founder Section</CardTitle>
+            <CardDescription>Manage the content for the Founder & Principal Teacher section.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="founder-heading">Heading</Label>
+              <Input id="founder-heading" value={content.founderHeading} onChange={(e) => setContent({...content, founderHeading: e.target.value})} />
             </div>
-          </div>
-        </CardContent>
-      </Card>
-      
+             <div className="space-y-2">
+              <Label htmlFor="founder-name">Founder's Name</Label>
+              <Input id="founder-name" value={content.founderName} onChange={(e) => setContent({...content, founderName: e.target.value})} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="founder-bio">Biography</Label>
+              <Textarea id="founder-bio" rows={8} value={content.founderBio} onChange={(e) => setContent({...content, founderBio: e.target.value})} />
+            </div>
+            <div className="space-y-2">
+              <Label>Image</Label>
+              <div className="flex items-center gap-4">
+                  <FallbackImage src={content.founderImageUrl} alt="Founder" width={150} height={100} className="rounded-md object-cover border"/>
+                  <Button variant="outline" asChild>
+                      <label htmlFor="founder-image-upload" className="cursor-pointer">
+                          <Upload className="mr-2 h-4 w-4"/> Change
+                          <input type="file" id="founder-image-upload" className="hidden" onChange={handleImageUpload('founderImageUrl')} accept="image/*" />
+                      </label>
+                  </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
