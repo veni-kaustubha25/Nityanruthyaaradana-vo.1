@@ -29,7 +29,7 @@ import {
   Crown,
   Trophy,
   Loader2,
-  Icon as LucideIcon
+  type Icon as LucideIcon
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
