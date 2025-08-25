@@ -1,36 +1,23 @@
-rules_version = '2';
 
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow public read access to content visible on the live site
-    match /pages/{pageId} {
+    // PUBLIC ACCESS: Allow anyone to read from these collections
+    match /(pages|gallery|settings)/{document=**} {
       allow read: if true;
-      allow write: if request.auth != null;
-    }
-    match /settings/{settingId} {
-      allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null; // Only authenticated users can write
     }
 
-    // Gallery can be read by public, but only created, updated, or deleted by admins
-    match /gallery/{imageId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null;
-    }
-
-    // Registrations can only be managed by authenticated admins
-    match /registrations/{registrationId} {
-      allow read, write, create, delete: if request.auth != null;
+    // REGISTRATIONS: Only authenticated users can create, read, update, delete
+    match /registrations/{docId} {
+       allow read, write: if request.auth != null;
     }
     
-    // Students collection is only for admins
-    match /students/{studentId} {
-      allow read, write, create, delete: if request.auth != null;
-    }
-
-    // Default deny all other collections for security
-    match /{path=**}/documents/{document} {
-        allow read, write: if false;
+    // STUDENTS: Only authenticated users can read, write
+    match /students/{docId} {
+       allow read, write: if request.auth != null;
     }
   }
 }
+
+    

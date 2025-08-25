@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, MoreVertical, Trash2, Loader2, Link as LinkIcon, Upload } from "lucide-react";
+import { PlusCircle, MoreVertical, Trash2, Loader2 } from "lucide-react";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Badge } from "@/components/ui/badge";
 import { db, storage } from '@/lib/firebase';
@@ -73,7 +73,7 @@ export default function GalleryManagementPage() {
       await addDoc(collection(db, "gallery"), {
         src: newImageUrl,
         alt: newImageAlt,
-        category: "General",
+        category: "General", // Default category
         createdAt: serverTimestamp(),
       });
       toast({ title: "Success", description: "Image added successfully." });
@@ -199,3 +199,5 @@ export default function GalleryManagementPage() {
     </Dialog>
   );
 }
+
+    

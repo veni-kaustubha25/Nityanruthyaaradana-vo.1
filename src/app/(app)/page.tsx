@@ -314,8 +314,6 @@ export default function HomePage() {
         </div>
       </section>
 
-
-
       {/* Gallery Section */}
       {gallerySnippets.length > 0 && (
       <section className="py-20 bg-[#8B0000]">
@@ -380,70 +378,6 @@ export default function HomePage() {
       </section>
       )}
 
-      {/* Testimonials Section */}
-      {testimonials.length > 0 && (
-      <section className="py-20 bg-[#8B0000]">
-        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <TextAnimation type="slide" direction="up" delay={0.2}>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                What Our <span className="text-yellow-300">Community</span> Says
-              </h2>
-            </TextAnimation>
-          </div>
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            className="w-full max-w-5xl mx-auto"
-          >
-            <CarouselContent>
-              {testimonials.map((testimonial, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                  <div className="p-4 h-full">
-                    <HoverAnimation effect="lift" tapEffect="scale">
-                      <Card className="h-full bg-gradient-to-br from-orange-50 to-red-50 border-0 shadow-xl">
-                        <CardContent className="pt-8 pb-6 px-6">
-                          <div className="flex items-center mb-6">
-                            <div className="flex items-center gap-2">
-                              {Array.from({ length: testimonial.stars }).map((_, i) => (
-                                <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                              ))}
-                            </div>
-                          </div>
-                          <Quote className="h-8 w-8 text-orange-500 mb-4" />
-                          <p className="text-gray-700 italic mb-6 leading-relaxed">"{testimonial.quote}"</p>
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full overflow-hidden">
-                              <FallbackImage
-                                src={testimonial.image}
-                                alt={testimonial.author}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div>
-                              <div className="font-bold text-gray-900">{testimonial.author}</div>
-                              <div className="text-sm text-gray-600">{testimonial.role}</div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </HoverAnimation>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </div>
-      </section>
-      )}
-
-
       {/* FAQ Section */}
       <section className="py-20 bg-[#8B0000]">
         <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -455,20 +389,20 @@ export default function HomePage() {
             </TextAnimation>
           </div>
           <StaggerContainer className="w-full" delay={0.4}>
-            {faqs.map((faq, index) => (
-              <StaggerItem key={index} animation="slide" direction="up">
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value={`item-${index + 1}`} className="border-2 border-gray-200 rounded-lg mb-4">
-                    <AccordionTrigger className="text-lg font-semibold text-left px-6 py-4 hover:text-orange-600">
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              {faqs.map((faq, index) => (
+                <StaggerItem key={index} animation="slide" direction="up">
+                  <AccordionItem value={`item-${index + 1}`} className="bg-white/10 border-white/20 border rounded-lg text-white">
+                    <AccordionTrigger className="text-lg font-semibold text-left px-6 py-4 hover:text-yellow-300">
                       {faq.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed px-6 pb-4">
+                    <AccordionContent className="text-gray-200 leading-relaxed px-6 pb-4">
                       {faq.answer}
                     </AccordionContent>
                   </AccordionItem>
-                </Accordion>
-              </StaggerItem>
-            ))}
+                </StaggerItem>
+              ))}
+            </Accordion>
           </StaggerContainer>
         </div>
       </section>
@@ -505,3 +439,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
