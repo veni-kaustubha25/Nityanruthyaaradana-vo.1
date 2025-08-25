@@ -4,22 +4,20 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  FadeIn, 
-  Slide, 
-  Scale, 
-  StaggerContainer, 
-  StaggerItem, 
-  HoverAnimation, 
+  PageTransition,
   TextAnimation,
-  PageTransition 
+  StaggerContainer,
+  StaggerItem,
+  HoverAnimation,
+  Scale
 } from "@/components/ui/professional-animations";
-import { FallbackImage } from "@/components/ui/fallback-image";
 import Link from "next/link";
-import { ArrowRight, Award, Users, Theater, Heart, Star, Icon as LucideIcon } from "lucide-react";
+import { ArrowRight, Award, Users, Theater, Heart, Star, type LucideIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, collection, query, orderBy, getDocs } from "firebase/firestore";
 import { Loader2 } from "lucide-react";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 const iconMap: { [key: string]: LucideIcon } = {
   Heart,
@@ -276,3 +274,5 @@ export default function AboutPage() {
     </PageTransition>
   );
 }
+
+    
