@@ -350,40 +350,42 @@ export default function HomePage() {
 
           {/* Gallery Grid */}
           <div className="max-w-5xl mx-auto mb-12">
-            <StaggerItem animation="scale">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {gallerySnippets.map((image, index) => (
-                  <HoverAnimation key={index} effect="lift" tapEffect="scale">
+            <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4" delay={0.2}>
+              {gallerySnippets.map((image, index) => (
+                <StaggerItem 
+                  key={index}
+                  animation="scale"
+                  className={index === 0 ? 'md:col-span-2 md:row-span-2' : ''}
+                >
+                  <HoverAnimation effect="lift" tapEffect="scale">
                     <div 
-                      className={`group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer ${
-                        index === 0 ? 'md:col-span-2 md:row-span-2' : ''
-                      }`}
+                      className={`group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer w-full h-full`}
                       onClick={() => handleImageClick(index)}
                     >
                       <FallbackImage
                         src={image.src}
                         alt={image.alt}
-                        width={600}
-                        height={400}
+                        width={index === 0 ? 600 : 300}
+                        height={index === 0 ? 600 : 300}
                         className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
                         <div className="absolute bottom-0 left-0 right-0 p-4">
                           <div className="flex items-center justify-between">
-                            <h5 className="text-white font-semibold">Performance</h5>
+                            <h5 className="text-white font-semibold text-sm truncate">{image.alt}</h5>
                             <Maximize2 className="h-4 w-4 text-white/80" />
                           </div>
                         </div>
                       </div>
                     </div>
                   </HoverAnimation>
-                ))}
-              </div>
-            </StaggerItem>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
           </div>
 
           <div className="text-center">
-            <Scale delay={1.0}>
+            <Scale delay={0.4}>
               <Button asChild size="lg" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
                 <Link href="/gallery">View Full Gallery</Link>
               </Button>
