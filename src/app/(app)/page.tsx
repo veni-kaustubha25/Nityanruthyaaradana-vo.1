@@ -27,71 +27,31 @@ import {
   Quote,
   Sparkles,
   Crown,
-  Trophy
+  Trophy,
+  Loader2,
+  Icon as LucideIcon
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 
 
-// Features Section
-const features = [
-  {
-    icon: Crown,
-    title: "Authentic Training",
-    description: "Learn from certified gurus following traditional guru-shishya parampara with modern pedagogical approaches.",
-    color: "from-purple-500 to-pink-500"
-  },
-  {
-    icon: Users,
-    title: "Vibrant Community",
-    description: "Join a supportive family of artists who share your passion for dance, culture, and personal growth.",
-    color: "from-blue-500 to-cyan-500"
-  },
-  {
-    icon: Theater,
-    title: "Performance Opportunities",
-    description: "Showcase your talent through regular recitals, annual productions, and prestigious cultural events.",
-    color: "from-orange-500 to-red-500"
-  },
-  {
-    icon: Trophy,
-    title: "Certification Programs",
-    description: "Earn recognized certifications and participate in competitions to validate your artistic journey.",
-    color: "from-green-500 to-emerald-500"
-  }
-];
+interface Feature {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  color: string;
+}
 
-// Testimonials
-const testimonials: { quote: string; author: string; role: string; stars: number; image: string; }[] = [];
+const iconMap: { [key: string]: LucideIcon } = {
+  Crown,
+  Users,
+  Theater,
+  Trophy,
+  Sparkles,
+};
 
-// FAQ Section
-const faqs = [
-  {
-    question: "What is the minimum age to enroll?",
-    answer: "We welcome students from the age of 5. We believe in nurturing talent from a young age, providing a strong foundation in Bharatanatyam with age-appropriate teaching methods."
-  },
-  {
-    question: "Do you provide costumes for performances?",
-    answer: "Yes, for our annual showcases and major events, the institution arranges for professionally designed costumes. For regular classes, a specific dress code is to be followed."
-  },
-  {
-    question: "Are there different batches for different skill levels?",
-    answer: "Absolutely. We have structured programs for Beginners, Intermediate, and Advanced learners. Students are assessed and placed in the appropriate batch to ensure personalized attention and growth."
-  },
-  {
-    question: "How often are classes held?",
-    answer: "Classes are typically held twice a week. We offer both weekday and weekend batches to accommodate different schedules. Detailed schedules are available upon registration."
-  },
-  {
-    question: "Do you offer online classes?",
-    answer: "Yes, we offer hybrid learning options with both in-person and online classes. This ensures continuity in training and accessibility for students who cannot attend in person."
-  },
-  {
-    question: "What are the benefits of learning Bharatanatyam?",
-    answer: "Bharatanatyam enhances physical fitness, improves concentration, develops cultural awareness, builds confidence, and provides a deep connection to Indian heritage and spirituality."
-  }
-];
 
 interface HomePageContent {
   headline: string;
@@ -107,35 +67,88 @@ interface GalleryImage {
   hint?: string;
 }
 
+interface Testimonial {
+  id: string;
+  quote: string;
+  author: string;
+  role: string;
+  stars: number;
+  image: string;
+}
+
+interface Faq {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [pageContent, setPageContent] = useState<HomePageContent | null>(null);
   const [gallerySnippets, setGallerySnippets] = useState<GalleryImage[]>([]);
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [faqs, setFaqs] = useState<Faq[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchContent = async () => {
-      // Fetch home page content
-      const homeDocRef = doc(db, "pages", "home");
-      const homeDocSnap = await getDoc(homeDocRef);
+      setIsLoading(true);
+      try {
+        // Fetch home page content
+        const homeDocRef = doc(db, "pages", "home");
+        const homeDocSnap = await getDoc(homeDocRef);
 
-      if (homeDocSnap.exists()) {
-        setPageContent(homeDocSnap.data() as HomePageContent);
-      } else {
-        setPageContent({
-          headline: "Discover the Divine Art of Bharatanatyam",
-          subheadline: "Experience the timeless beauty of India's classical dance form through authentic training, expert guidance, and a vibrant community of passionate artists.",
-          ctaPrimary: "Begin Your Journey",
-          ctaSecondary: "Watch Our Story",
-          heroImageUrl: "/images/1.jpg",
-        });
+        if (homeDocSnap.exists()) {
+          setPageContent(homeDocSnap.data() as HomePageContent);
+        } else {
+          setPageContent({
+            headline: "Discover the Divine Art of Bharatanatyam",
+            subheadline: "Experience the timeless beauty of India's classical dance form through authentic training, expert guidance, and a vibrant community of passionate artists.",
+            ctaPrimary: "Begin Your Journey",
+            ctaSecondary: "Watch Our Story",
+            heroImageUrl: "/images/1.jpg",
+          });
+        }
+
+        // Fetch features
+        const featuresQuery = query(collection(db, "features"), orderBy("order", "asc"));
+        const featuresSnapshot = await getDocs(featuresQuery);
+        const featuresData = featuresSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Feature));
+        setFeatures(featuresData.length > 0 ? featuresData : [
+          { id: '1', icon: 'Crown', title: 'Authentic Training', description: 'Learn from certified gurus following traditional guru-shishya parampara with modern pedagogical approaches.', color: 'from-purple-500 to-pink-500' },
+          { id: '2', icon: 'Users', title: 'Vibrant Community', description: 'Join a supportive family of artists who share your passion for dance, culture, and personal growth.', color: 'from-blue-500 to-cyan-500' },
+          { id: '3', icon: 'Theater', title: 'Performance Opportunities', description: 'Showcase your talent through regular recitals, annual productions, and prestigious cultural events.', color: 'from-orange-500 to-red-500' },
+          { id: '4', icon: 'Trophy', title: 'Certification Programs', description: 'Earn recognized certifications and participate in competitions to validate your artistic journey.', color: 'from-green-500 to-emerald-500' }
+        ]);
+
+        // Fetch gallery snippets
+        const galleryQuery = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(4));
+        const gallerySnapshot = await getDocs(galleryQuery);
+        const images = gallerySnapshot.docs.map(doc => doc.data() as GalleryImage);
+        setGallerySnippets(images);
+
+        // Fetch testimonials
+        const testimonialsQuery = query(collection(db, "testimonials"), orderBy("createdAt", "desc"), limit(5));
+        const testimonialsSnapshot = await getDocs(testimonialsQuery);
+        const testimonialsData = testimonialsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial));
+        setTestimonials(testimonialsData);
+        
+        // Fetch FAQs
+        const faqsQuery = query(collection(db, "faqs"), orderBy("order", "asc"));
+        const faqsSnapshot = await getDocs(faqsQuery);
+        const faqsData = faqsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Faq));
+        setFaqs(faqsData.length > 0 ? faqsData : [
+          { id: '1', question: "What is the minimum age to enroll?", answer: "We welcome students from the age of 5. We believe in nurturing talent from a young age, providing a strong foundation in Bharatanatyam with age-appropriate teaching methods." },
+          { id: '2', question: "Do you provide costumes for performances?", answer: "Yes, for our annual showcases and major events, the institution arranges for professionally designed costumes. For regular classes, a specific dress code is to be followed." },
+          { id: '3', question: "Are there different batches for different skill levels?", answer: "Absolutely. We have structured programs for Beginners, Intermediate, and Advanced learners. Students are assessed and placed in the appropriate batch to ensure personalized attention and growth." }
+        ]);
+
+      } catch (error) {
+        console.error("Error fetching homepage content:", error);
       }
-
-      // Fetch gallery snippets
-      const galleryQuery = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(4));
-      const gallerySnapshot = await getDocs(galleryQuery);
-      const images = gallerySnapshot.docs.map(doc => doc.data() as GalleryImage);
-      setGallerySnippets(images);
+      setIsLoading(false);
     };
 
     fetchContent();
@@ -146,8 +159,12 @@ export default function HomePage() {
     setModalOpen(true);
   };
 
-  if (!pageContent) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (isLoading || !pageContent) {
+    return (
+        <div className="flex justify-center items-center h-screen bg-[#8B0000]">
+            <Loader2 className="h-12 w-12 text-white animate-spin" />
+        </div>
+    );
   }
   
   return (
@@ -293,23 +310,26 @@ export default function HomePage() {
             </TextAnimation>
           </div>
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" delay={0.6}>
-            {features.map((feature, index) => (
-              <StaggerItem key={index} animation="slide" direction="up">
-                <HoverAnimation effect="lift" tapEffect="scale">
-                  <Card className="text-center h-full border-0 shadow-xl bg-white">
-                    <CardHeader className="pb-4">
-                      <div className={`mx-auto bg-gradient-to-r ${feature.color} rounded-2xl h-16 w-16 flex items-center justify-center mb-4`}>
-                        <feature.icon className="h-8 w-8 text-white" />
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
-                      <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </HoverAnimation>
-              </StaggerItem>
-            ))}
+            {features.map((feature, index) => {
+              const Icon = iconMap[feature.icon] || Sparkles;
+              return (
+                <StaggerItem key={feature.id || index} animation="slide" direction="up">
+                  <HoverAnimation effect="lift" tapEffect="scale">
+                    <Card className="text-center h-full border-0 shadow-xl bg-white">
+                      <CardHeader className="pb-4">
+                        <div className={`mx-auto bg-gradient-to-r ${feature.color} rounded-2xl h-16 w-16 flex items-center justify-center mb-4`}>
+                          <Icon className="h-8 w-8 text-white" />
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
+                        <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                      </CardContent>
+                    </Card>
+                  </HoverAnimation>
+                </StaggerItem>
+              );
+            })}
           </StaggerContainer>
         </div>
       </section>
@@ -391,7 +411,7 @@ export default function HomePage() {
           <StaggerContainer className="w-full" delay={0.4}>
             <Accordion type="single" collapsible className="w-full space-y-4">
               {faqs.map((faq, index) => (
-                <StaggerItem key={index} animation="slide" direction="up">
+                <StaggerItem key={faq.id || index} animation="slide" direction="up">
                   <AccordionItem value={`item-${index + 1}`} className="bg-white/10 border-white/20 border rounded-lg text-white">
                     <AccordionTrigger className="text-lg font-semibold text-left px-6 py-4 hover:text-yellow-300">
                       {faq.question}
@@ -439,5 +459,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
