@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import { ArrowRight, Award, Users, Theater, Heart, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { Loader2 } from "lucide-react";
 
 const philosophy = [
   {
@@ -66,11 +68,11 @@ export default function AboutPage() {
         setPageContent({
           storyHeading: "Our Story",
           storyContent: "Founded with a deep reverence for the ancient traditions of Bharatanatyam, our academy emerged from a vision to create a nurturing space where the divine art form could flourish. Our journey began with a simple yet profound mission: to preserve and promote the authentic essence of this classical dance form while making it accessible to passionate learners of all ages.",
-          storyImageUrl: "/images/teacher/9.jpg",
+          storyImageUrl: "https://placehold.co/600x400/8B0000/FFFFFF?text=Our+Story",
           founderHeading: "Our Founder & Principal Teacher",
           founderName: "Guru Smt. Priya Sharma",
           founderBio: "Guru Smt. Priya Sharma is a distinguished Bharatanatyam exponent and dedicated teacher with over two decades of experience in classical dance. A disciple of renowned gurus, she has dedicated her life to preserving and propagating the authentic traditions of Bharatanatyam.",
-          founderImageUrl: "/images/teacher/10.jpg",
+          founderImageUrl: "https://placehold.co/600x400/8B0000/FFFFFF?text=Our+Founder",
         });
       }
     };
@@ -79,7 +81,11 @@ export default function AboutPage() {
   }, []);
 
   if (!pageContent) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#8B0000]">
+        <Loader2 className="h-12 w-12 text-white animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -256,3 +262,5 @@ export default function AboutPage() {
     </PageTransition>
   );
 }
+
+    
