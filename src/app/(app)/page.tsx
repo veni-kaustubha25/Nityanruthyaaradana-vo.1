@@ -59,6 +59,7 @@ interface HomePageContent {
   ctaPrimary: string;
   ctaSecondary: string;
   heroImageUrl: string;
+  aboutSectionImageUrl: string;
 }
 
 interface GalleryImage {
@@ -88,7 +89,6 @@ export default function HomePage() {
   const [pageContent, setPageContent] = useState<HomePageContent | null>(null);
   const [gallerySnippets, setGallerySnippets] = useState<GalleryImage[]>([]);
   const [features, setFeatures] = useState<Feature[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -108,7 +108,8 @@ export default function HomePage() {
             subheadline: "Experience the timeless beauty of India's classical dance form through authentic training, expert guidance, and a vibrant community of passionate artists.",
             ctaPrimary: "Begin Your Journey",
             ctaSecondary: "Watch Our Story",
-            heroImageUrl: "/images/1.jpg",
+            heroImageUrl: "https://placehold.co/1920x1080/8B0000/FFFFFF?text=Nithyanruthyaaradana",
+            aboutSectionImageUrl: "https://placehold.co/600x400/D4A373/FFFFFF?text=Dance+Studio"
           });
         }
 
@@ -128,12 +129,6 @@ export default function HomePage() {
         const gallerySnapshot = await getDocs(galleryQuery);
         const images = gallerySnapshot.docs.map(doc => doc.data() as GalleryImage);
         setGallerySnippets(images);
-
-        // Fetch testimonials
-        const testimonialsQuery = query(collection(db, "testimonials"), orderBy("createdAt", "desc"), limit(5));
-        const testimonialsSnapshot = await getDocs(testimonialsQuery);
-        const testimonialsData = testimonialsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial));
-        setTestimonials(testimonialsData);
         
         // Fetch FAQs
         const faqsQuery = query(collection(db, "faqs"), orderBy("order", "asc"));
@@ -269,7 +264,7 @@ export default function HomePage() {
               <HoverAnimation effect="lift" tapEffect="scale">
                 <div className="relative">
                   <FallbackImage
-                    src={"/images/group-practice.jpg"}
+                    src={pageContent.aboutSectionImageUrl}
                     data-ai-hint="dance practice studio"
                     alt="Students practicing Bharatanatyam in the studio"
                     width={600}

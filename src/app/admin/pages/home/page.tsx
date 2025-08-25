@@ -2,21 +2,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FallbackImage } from "@/components/ui/fallback-image";
-import { Upload, Loader2, Trash2, PlusCircle, Edit } from 'lucide-react';
+import { Loader2, Trash2, PlusCircle, Edit } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { db, storage } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, collection, onSnapshot, addDoc, deleteDoc, updateDoc, serverTimestamp, query, orderBy } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
 
 interface HomePageContent {
   headline: string;
@@ -24,7 +22,7 @@ interface HomePageContent {
   ctaPrimary: string;
   ctaSecondary: string;
   heroImageUrl: string;
-  heroImageStoragePath: string;
+  aboutSectionImageUrl: string;
 }
 
 interface Feature {
@@ -68,8 +66,8 @@ export default function HomePageManagement() {
                     subheadline: "Experience the timeless beauty of India's classical dance form...",
                     ctaPrimary: "Begin Your Journey",
                     ctaSecondary: "Watch Our Story",
-                    heroImageUrl: "/images/1.jpg",
-                    heroImageStoragePath: "",
+                    heroImageUrl: "https://placehold.co/1920x1080",
+                    aboutSectionImageUrl: "https://placehold.co/600x400",
                 });
             }
         } catch (e) {
@@ -113,29 +111,6 @@ export default function HomePageManagement() {
     setIsSaving(false);
   };
   
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !content) return;
-
-    const toastId = toast({ title: "Uploading...", description: "Please wait." });
-    const storagePath = `pages/home/${Date.now()}_${file.name}`;
-    const storageRef = ref(storage, storagePath);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on('state_changed', 
-      () => {}, // progress
-      () => { // error
-        toast({ id: toastId.id, title: "Upload Failed", description: "Could not upload image.", variant: "destructive" });
-      }, 
-      () => { // complete
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setContent({ ...content, heroImageUrl: downloadURL, heroImageStoragePath: storagePath });
-          toast({ id: toastId.id, title: "Success", description: "Image uploaded. Remember to save your changes." });
-        });
-      }
-    );
-  };
-
   const handleFeatureSave = async () => {
       if (!currentFeature || !currentFeature.title || !currentFeature.description) {
           toast({ title: "Error", description: "All fields are required for a feature.", variant: "destructive" });
@@ -204,6 +179,11 @@ export default function HomePageManagement() {
       }
   };
 
+  const handleInputChange = (field: keyof HomePageContent) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (content) {
+      setContent({ ...content, [field]: e.target.value });
+    }
+  };
 
   if (isLoading || !content) {
     return (
@@ -228,20 +208,20 @@ export default function HomePageManagement() {
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="headline">Headline</Label>
-            <Input id="headline" value={content.headline} onChange={(e) => setContent({...content, headline: e.target.value})} />
+            <Input id="headline" value={content.headline} onChange={handleInputChange('headline')} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="subheadline">Subheadline</Label>
-            <Textarea id="subheadline" rows={3} value={content.subheadline} onChange={(e) => setContent({...content, subheadline: e.target.value})} />
+            <Textarea id="subheadline" rows={3} value={content.subheadline} onChange={handleInputChange('subheadline')} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="cta-primary">Primary Button Text</Label>
-              <Input id="cta-primary" value={content.ctaPrimary} onChange={(e) => setContent({...content, ctaPrimary: e.target.value})} />
+              <Input id="cta-primary" value={content.ctaPrimary} onChange={handleInputChange('ctaPrimary')} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="cta-secondary">Secondary Button Text</Label>
-              <Input id="cta-secondary" value={content.ctaSecondary} onChange={(e) => setContent({...content, ctaSecondary: e.target.value})} />
+              <Input id="cta-secondary" value={content.ctaSecondary} onChange={handleInputChange('ctaSecondary')} />
             </div>
           </div>
           <div className="space-y-2">
@@ -250,13 +230,20 @@ export default function HomePageManagement() {
                 <div className="flex items-start gap-4">
                     <FallbackImage src={content.heroImageUrl} alt="Hero background" width={200} height={112} className="rounded-md object-cover border"/>
                     <div className="flex-1 space-y-2">
-                        <p className="text-sm text-muted-foreground">Upload a new background image for the hero section. Recommended size: 1920x1080px.</p>
-                        <Button variant="outline" asChild>
-                            <label htmlFor="hero-image-upload" className="cursor-pointer">
-                                <Upload className="mr-2 h-4 w-4"/> Change Image
-                                <input type="file" id="hero-image-upload" className="hidden" onChange={handleImageUpload} accept="image/*" />
-                            </label>
-                        </Button>
+                        <Label htmlFor="hero-image-url">Image URL</Label>
+                        <Input id="hero-image-url" value={content.heroImageUrl} onChange={handleInputChange('heroImageUrl')} placeholder="https://example.com/image.jpg"/>
+                    </div>
+                </div>
+            </Card>
+          </div>
+           <div className="space-y-2">
+            <Label>About Section Image</Label>
+            <Card className="p-4">
+                <div className="flex items-start gap-4">
+                    <FallbackImage src={content.aboutSectionImageUrl} alt="About section image" width={200} height={112} className="rounded-md object-cover border"/>
+                    <div className="flex-1 space-y-2">
+                        <Label htmlFor="about-image-url">Image URL</Label>
+                        <Input id="about-image-url" value={content.aboutSectionImageUrl} onChange={handleInputChange('aboutSectionImageUrl')} placeholder="https://example.com/image.jpg"/>
                     </div>
                 </div>
             </Card>
@@ -436,5 +423,3 @@ export default function HomePageManagement() {
     </div>
   );
 }
-
-    
