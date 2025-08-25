@@ -26,6 +26,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -73,7 +74,7 @@ export default function GalleryManagementPage() {
       await addDoc(collection(db, "gallery"), {
         src: newImageUrl,
         alt: newImageAlt,
-        category: "General", // Default category
+        category: "General",
         createdAt: serverTimestamp(),
       });
       toast({ title: "Success", description: "Image added successfully." });
@@ -199,5 +200,3 @@ export default function GalleryManagementPage() {
     </Dialog>
   );
 }
-
-    
