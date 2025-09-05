@@ -45,6 +45,12 @@ service cloud.firestore {
       allow write: if true;
     }
 
+    // Reviews collection rules - temporarily permissive for testing
+    match /reviews/{reviewId} {
+      // Allow all operations for now (will be restricted later)
+      allow read, write: if true;
+    }
+
     // Allow logged-in users to manage their data
     // (example for future use, not currently implemented)
     match /users/{userId} {

@@ -3,12 +3,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Settings, Image as ImageIcon, LayoutTemplate, LayoutPanelLeft } from 'lucide-react';
+import { Home, Settings, Image as ImageIcon, LayoutTemplate, LayoutPanelLeft, MessageSquare } from 'lucide-react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarTrigger, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const adminNavItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: Home },
   { href: '/admin/gallery', label: 'Gallery', icon: ImageIcon },
+  { href: '/admin/reviews', label: 'Reviews', icon: MessageSquare },
   { href: '/admin/pages/home', label: 'Home Page', icon: LayoutTemplate },
   { href: '/admin/pages/about', label: 'About Page', icon: LayoutPanelLeft },
   { href: '/admin/settings', label: 'Site Settings', icon: Settings },

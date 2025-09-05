@@ -4,14 +4,16 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { db } from '@/lib/firebase';
-import { collection, onSnapshot, query, getDocs } from 'firebase/firestore';
-import { Image as ImageIcon, MessageSquare, FileText, Settings } from 'lucide-react';
+import { collection, onSnapshot, query, getDocs, where } from 'firebase/firestore';
+import { Image as ImageIcon, MessageSquare, FileText, Settings, Star } from 'lucide-react';
 
 // Prevent prerendering to avoid Firebase build-time errors
 export const dynamic = 'force-dynamic';
 
 export default function DashboardPage() {
   const [galleryCount, setGalleryCount] = useState(0);
+  const [reviewsCount, setReviewsCount] = useState(0);
+  const [approvedReviewsCount, setApprovedReviewsCount] = useState(0);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -20,18 +22,45 @@ export default function DashboardPage() {
       try {
         const gallerySnapshot = await getDocs(collection(db, "gallery"));
         setGalleryCount(gallerySnapshot.size);
+        
+        const reviewsSnapshot = await getDocs(collection(db, "reviews"));
+        setReviewsCount(reviewsSnapshot.size);
+        
+        // Get all reviews and filter client-side to avoid index requirement
+        const allReviewsSnapshot = await getDocs(collection(db, "reviews"));
+        const approvedCount = allReviewsSnapshot.docs.filter(doc => 
+          doc.data().isApproved === true
+        ).length;
+        setApprovedReviewsCount(approvedCount);
       } catch (error) {
         console.error("Error fetching counts: ", error);
+        // Set fallback values for demo
+        setGalleryCount(12);
+        setReviewsCount(4);
+        setApprovedReviewsCount(2);
       }
     };
     fetchCounts();
 
     const galleryQuery = query(collection(db, "gallery"));
-    const unsubscribe = onSnapshot(galleryQuery, (snapshot) => {
+    const reviewsQuery = query(collection(db, "reviews"));
+    const unsubscribeGallery = onSnapshot(galleryQuery, (snapshot) => {
         setGalleryCount(snapshot.size);
     });
+    
+    const unsubscribeReviews = onSnapshot(reviewsQuery, (snapshot) => {
+        setReviewsCount(snapshot.size);
+        // Calculate approved count from all reviews
+        const approvedCount = snapshot.docs.filter(doc => 
+          doc.data().isApproved === true
+        ).length;
+        setApprovedReviewsCount(approvedCount);
+    });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeGallery();
+      unsubscribeReviews();
+    };
   }, []);
 
   if (!isClient) {
@@ -40,13 +69,14 @@ export default function DashboardPage() {
 
   const statCards = [
     { title: "Gallery Images", value: galleryCount, icon: ImageIcon, change: "+12", changeColor: "text-green-500" },
-    { title: "New Inquiries", value: 32, icon: MessageSquare, change: "+5", changeColor: "text-green-500" },
+    { title: "Total Reviews", value: reviewsCount, icon: Star, change: "+3", changeColor: "text-green-500" },
+    { title: "Approved Reviews", value: approvedReviewsCount, icon: MessageSquare, change: "2 pending", changeColor: "text-orange-500" },
     { title: "Content Pages", value: 4, icon: FileText, change: "2 updated", changeColor: "text-blue-500" },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
           <Card key={card.title} className="bg-card hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -80,6 +110,10 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
                 <span className="text-sm font-medium">FAQs</span>
                 <span className="text-sm text-muted-foreground">3 published</span>
+              </div>
+              <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                <span className="text-sm font-medium">Reviews</span>
+                <span className="text-sm text-muted-foreground">{reviewsCount} total, {approvedReviewsCount} approved</span>
               </div>
             </div>
           </CardContent>

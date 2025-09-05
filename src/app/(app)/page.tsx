@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/professional-animations";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { ImageModal } from "@/components/ui/image-modal";
+import ReviewSection from "@/components/review-section";
 import Link from "next/link";
 import { 
   ArrowRight, 
@@ -418,6 +419,9 @@ export default function HomePage() {
         </div>
       </section>
       )}
+
+      {/* Reviews Section */}
+      <ReviewSection />
 
       {/* FAQ Section */}
       <section className="py-20 bg-[#8B0000]">
