@@ -29,11 +29,14 @@ import {
   Crown,
   Trophy,
   Loader2,
-  type Icon as LucideIcon
+  type LucideIcon
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+
+// Prevent prerendering to avoid Firebase build-time errors
+export const dynamic = 'force-dynamic';
 
 
 interface Feature {
@@ -114,31 +117,52 @@ export default function HomePage() {
         }
 
         // Fetch features
-        const featuresQuery = query(collection(db, "features"), orderBy("order", "asc"));
-        const featuresSnapshot = await getDocs(featuresQuery);
-        const featuresData = featuresSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Feature));
-        setFeatures(featuresData.length > 0 ? featuresData : [
-          { id: '1', icon: 'Crown', title: 'Authentic Training', description: 'Learn from certified gurus following traditional guru-shishya parampara with modern pedagogical approaches.', color: 'from-purple-500 to-pink-500' },
-          { id: '2', icon: 'Users', title: 'Vibrant Community', description: 'Join a supportive family of artists who share your passion for dance, culture, and personal growth.', color: 'from-blue-500 to-cyan-500' },
-          { id: '3', icon: 'Theater', title: 'Performance Opportunities', description: 'Showcase your talent through regular recitals, annual productions, and prestigious cultural events.', color: 'from-orange-500 to-red-500' },
-          { id: '4', icon: 'Trophy', title: 'Certification Programs', description: 'Earn recognized certifications and participate in competitions to validate your artistic journey.', color: 'from-green-500 to-emerald-500' }
-        ]);
+        try {
+          const featuresQuery = query(collection(db, "features"), orderBy("order", "asc"));
+          const featuresSnapshot = await getDocs(featuresQuery);
+          const featuresData = featuresSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return { id: doc.id, ...(data || {}) } as Feature;
+          });
+          setFeatures(featuresData);
+        } catch (error) {
+          console.warn('Failed to fetch features from Firebase, using fallback data:', error);
+          setFeatures([
+            { id: '1', icon: 'Crown', title: 'Authentic Training', description: 'Learn from certified gurus following traditional guru-shishya parampara with modern pedagogical approaches.', color: 'from-purple-500 to-pink-500' },
+            { id: '2', icon: 'Users', title: 'Vibrant Community', description: 'Join a supportive family of artists who share your passion for dance, culture, and personal growth.', color: 'from-blue-500 to-cyan-500' },
+            { id: '3', icon: 'Theater', title: 'Performance Opportunities', description: 'Showcase your talent through regular recitals, annual productions, and prestigious cultural events.', color: 'from-orange-500 to-red-500' },
+            { id: '4', icon: 'Trophy', title: 'Certification Programs', description: 'Earn recognized certifications and participate in competitions to validate your artistic journey.', color: 'from-green-500 to-emerald-500' }
+          ]);
+        }
 
         // Fetch gallery snippets
-        const galleryQuery = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(4));
-        const gallerySnapshot = await getDocs(galleryQuery);
-        const images = gallerySnapshot.docs.map(doc => doc.data() as GalleryImage);
-        setGallerySnippets(images);
+        try {
+          const galleryQuery = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(4));
+          const gallerySnapshot = await getDocs(galleryQuery);
+          const images = gallerySnapshot.docs.map(doc => doc.data() as GalleryImage);
+          setGallerySnippets(images);
+        } catch (error) {
+          console.warn('Failed to fetch gallery from Firebase, using empty array:', error);
+          setGallerySnippets([]);
+        }
         
         // Fetch FAQs
-        const faqsQuery = query(collection(db, "faqs"), orderBy("order", "asc"));
-        const faqsSnapshot = await getDocs(faqsQuery);
-        const faqsData = faqsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Faq));
-        setFaqs(faqsData.length > 0 ? faqsData : [
-          { id: '1', question: "What is the minimum age to enroll?", answer: "We welcome students from the age of 5. We believe in nurturing talent from a young age, providing a strong foundation in Bharatanatyam with age-appropriate teaching methods." },
-          { id: '2', question: "Do you provide costumes for performances?", answer: "Yes, for our annual showcases and major events, the institution arranges for professionally designed costumes. For regular classes, a specific dress code is to be followed." },
-          { id: '3', question: "Are there different batches for different skill levels?", answer: "Absolutely. We have structured programs for Beginners, Intermediate, and Advanced learners. Students are assessed and placed in the appropriate batch to ensure personalized attention and growth." }
-        ]);
+        try {
+          const faqsQuery = query(collection(db, "faqs"), orderBy("order", "asc"));
+          const faqsSnapshot = await getDocs(faqsQuery);
+          const faqsData = faqsSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return { id: doc.id, ...(data || {}) } as Faq;
+          });
+          setFaqs(faqsData);
+        } catch (error) {
+          console.warn('Failed to fetch FAQs from Firebase, using fallback data:', error);
+          setFaqs([
+            { id: '1', question: "What is the minimum age to enroll?", answer: "We welcome students from the age of 5. We believe in nurturing talent from a young age, providing a strong foundation in Bharatanatyam with age-appropriate teaching methods." },
+            { id: '2', question: "Do you provide costumes for performances?", answer: "Yes, for our annual showcases and major events, the institution arranges for professionally designed costumes. For regular classes, a specific dress code is to be followed." },
+            { id: '3', question: "Are there different batches for different skill levels?", answer: "Absolutely. We have structured programs for Beginners, Intermediate, and Advanced learners. Students are assessed and placed in the appropriate batch to ensure personalized attention and growth." }
+          ]);
+        }
 
       } catch (error) {
         console.error("Error fetching homepage content:", error);

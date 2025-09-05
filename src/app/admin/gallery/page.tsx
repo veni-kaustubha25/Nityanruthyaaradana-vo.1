@@ -32,6 +32,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 
+// Prevent prerendering to avoid Firebase build-time errors
+export const dynamic = 'force-dynamic';
+
 interface GalleryImage {
   id: string;
   src: string;

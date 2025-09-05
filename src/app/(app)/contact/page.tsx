@@ -16,6 +16,9 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
+// Prevent prerendering to avoid Firebase build-time errors
+export const dynamic = 'force-dynamic';
+
 interface SiteSettings {
   contactEmail: string;
   contactPhone: string;

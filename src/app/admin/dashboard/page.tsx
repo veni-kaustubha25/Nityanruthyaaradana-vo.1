@@ -5,20 +5,12 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { db } from '@/lib/firebase';
 import { collection, onSnapshot, query, getDocs } from 'firebase/firestore';
-import { Bar, Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart } from "recharts";
-import { Users, Image as ImageIcon, BookOpen, MessageSquare } from 'lucide-react';
+import { Image as ImageIcon, MessageSquare, FileText, Settings } from 'lucide-react';
 
-const chartData = [
-  { month: "January", registrations: 186 },
-  { month: "February", registrations: 305 },
-  { month: "March", registrations: 237 },
-  { month: "April", registrations: 273 },
-  { month: "May", registrations: 209 },
-  { month: "June", registrations: 250 },
-];
+// Prevent prerendering to avoid Firebase build-time errors
+export const dynamic = 'force-dynamic';
 
 export default function DashboardPage() {
-  const [studentCount, setStudentCount] = useState(0);
   const [galleryCount, setGalleryCount] = useState(0);
   const [isClient, setIsClient] = useState(false);
 
@@ -28,7 +20,6 @@ export default function DashboardPage() {
       try {
         const gallerySnapshot = await getDocs(collection(db, "gallery"));
         setGalleryCount(gallerySnapshot.size);
-        setStudentCount(1254); // Placeholder
       } catch (error) {
         console.error("Error fetching counts: ", error);
       }
@@ -48,15 +39,14 @@ export default function DashboardPage() {
   }
 
   const statCards = [
-    { title: "Total Students", value: studentCount, icon: Users, change: "+20.1%", changeColor: "text-green-500" },
     { title: "Gallery Images", value: galleryCount, icon: ImageIcon, change: "+12", changeColor: "text-green-500" },
     { title: "New Inquiries", value: 32, icon: MessageSquare, change: "+5", changeColor: "text-green-500" },
-    { title: "Active Courses", value: 12, icon: BookOpen, change: "3 new", changeColor: "text-blue-500" },
+    { title: "Content Pages", value: 4, icon: FileText, change: "2 updated", changeColor: "text-blue-500" },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {statCards.map((card) => (
           <Card key={card.title} className="bg-card hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -70,61 +60,51 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4 bg-card hover:shadow-lg transition-shadow duration-300">
+      
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="bg-card hover:shadow-lg transition-shadow duration-300">
           <CardHeader>
-            <CardTitle>Student Enrollment Overview</CardTitle>
-            <CardDescription>Monthly new student registrations.</CardDescription>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false}/>
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false}/>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--background))",
-                    borderColor: "hsl(var(--border))",
-                  }}
-                />
-                <Legend />
-                <Line type="monotone" dataKey="registrations" stroke="hsl(var(--primary))" strokeWidth={2} activeDot={{ r: 8 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-        <Card className="col-span-3 bg-card hover:shadow-lg transition-shadow duration-300">
-          <CardHeader>
-            <CardTitle>Course Popularity</CardTitle>
-             <CardDescription>Distribution of students across courses.</CardDescription>
+            <CardTitle>Content Overview</CardTitle>
+            <CardDescription>Current content status across the site.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={chartData}>
-                    <XAxis
-                        dataKey="month"
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                    />
-                    <YAxis
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(value) => `${value}`}
-                    />
-                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: "hsl(var(--background))",
-                        borderColor: "hsl(var(--border))",
-                      }}
-                    />
-                    <Bar dataKey="registrations" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                </BarChart>
-            </ResponsiveContainer>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                <span className="text-sm font-medium">Gallery Images</span>
+                <span className="text-sm text-muted-foreground">{galleryCount} images</span>
+              </div>
+              <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                <span className="text-sm font-medium">Features</span>
+                <span className="text-sm text-muted-foreground">4 active</span>
+              </div>
+              <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                <span className="text-sm font-medium">FAQs</span>
+                <span className="text-sm text-muted-foreground">3 published</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-card hover:shadow-lg transition-shadow duration-300">
+          <CardHeader>
+            <CardTitle>Site Activity</CardTitle>
+            <CardDescription>Recent activity and updates.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                <span className="text-sm font-medium">Last Update</span>
+                <span className="text-sm text-muted-foreground">2 hours ago</span>
+              </div>
+              <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                <span className="text-sm font-medium">New Images</span>
+                <span className="text-sm text-muted-foreground">3 added</span>
+              </div>
+              <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                <span className="text-sm font-medium">Content Changes</span>
+                <span className="text-sm text-muted-foreground">5 updates</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

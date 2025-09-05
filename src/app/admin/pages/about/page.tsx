@@ -13,6 +13,9 @@ import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
+// Prevent prerendering to avoid Firebase build-time errors
+export const dynamic = 'force-dynamic';
+
 interface AboutPageContent {
   storyHeading: string;
   storyContent: string;

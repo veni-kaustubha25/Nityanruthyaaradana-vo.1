@@ -12,6 +12,9 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Loader2, Globe, Phone, Mail, Facebook, Instagram, Youtube, ShieldAlert } from 'lucide-react';
 
+// Prevent prerendering to avoid Firebase build-time errors
+export const dynamic = 'force-dynamic';
+
 interface SiteSettings {
   siteName: string;
   contactEmail: string;
