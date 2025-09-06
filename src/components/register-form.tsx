@@ -42,17 +42,39 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setIsSubmitting(true);
-    // Simulate server action
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    console.log(values);
-    setIsSubmitting(false);
+    
+    try {
+      const response = await fetch('/api/admissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
 
-    toast({
-      title: "Registration Submitted!",
-      description: "Thank you for your interest. We will contact you shortly with further details.",
-      variant: "default",
-    });
-    form.reset();
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit registration');
+      }
+
+      toast({
+        title: "Registration Submitted!",
+        description: "Thank you for your interest. We will contact you shortly with further details.",
+        variant: "default",
+      });
+
+      form.reset();
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration Failed",
+        description: error instanceof Error ? error.message : "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (

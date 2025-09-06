@@ -1,5 +1,5 @@
-import ReviewManagement from '@/components/admin/review-management';
+import ProfessionalReviews from './professional-reviews';
 
 export default function ReviewsPage() {
-  return <ReviewManagement />;
+  return <ProfessionalReviews />;
 }

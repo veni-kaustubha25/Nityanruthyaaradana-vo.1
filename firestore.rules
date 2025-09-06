@@ -51,6 +51,16 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
+    // Admissions collection rules
+    match /admissions/{admissionId} {
+      allow read, write: if true;
+    }
+
+    // Contact messages collection rules
+    match /contact_messages/{messageId} {
+      allow read, write: if true;
+    }
+
     // Allow logged-in users to manage their data
     // (example for future use, not currently implemented)
     match /users/{userId} {

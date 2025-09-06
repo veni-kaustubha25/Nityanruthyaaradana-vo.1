@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { SecurityValidator, RateLimiter, CSRFProtection } from '@/lib/security';
 
 interface AdminUser {
   id: string;
@@ -23,8 +24,24 @@ const ADMIN_USERS: AdminUser[] = [
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    // Rate limiting
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const rateLimitKey = `login:${ip}`;
+    
+    if (!RateLimiter.checkLimit(rateLimitKey, 5, 15 * 60 * 1000)) { // 5 attempts per 15 minutes
+      return NextResponse.json(
+        { error: 'Too many login attempts. Please try again later.' },
+        { status: 429 }
+      );
+    }
 
+    // CSRF protection is handled by middleware for non-auth endpoints
+    // Login endpoint is excluded from CSRF validation
+
+    const body = await request.json();
+    const { email, password } = body;
+
+    // Validate input
     if (!email || !password) {
       return NextResponse.json(
         { error: 'Email and password are required' },
@@ -32,8 +49,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate email format
+    const emailValidation = SecurityValidator.validateEmail(email);
+    if (!emailValidation.isValid) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    // Validate password (more lenient for admin login)
+    if (password.length < 6) {
+      return NextResponse.json(
+        { error: 'Password must be at least 6 characters long' },
+        { status: 400 }
+      );
+    }
+
     // Find admin user
-    const admin = ADMIN_USERS.find(user => user.email === email && user.isActive);
+    const admin = ADMIN_USERS.find(user => user.email === emailValidation.sanitized && user.isActive);
     
     if (!admin) {
       return NextResponse.json(
@@ -63,7 +97,8 @@ export async function POST(request: NextRequest) {
       expiresIn: process.env.JWT_EXPIRES_IN || '7d'
     } as any);
 
-    return NextResponse.json({
+    // Create response with secure cookie
+    const response = NextResponse.json({
       success: true,
       token,
       user: {
@@ -73,6 +108,20 @@ export async function POST(request: NextRequest) {
       },
       expiresIn: process.env.JWT_EXPIRES_IN || '7d'
     });
+
+    // Set secure HTTP-only cookie
+    response.cookies.set('admin_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: '/',
+    });
+
+    // Clear CSRF token after successful login
+    response.cookies.delete('csrf-token');
+
+    return response;
 
   } catch (error) {
     console.error('Login error:', error);

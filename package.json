@@ -49,6 +49,7 @@
     "firebase": "^11.10.0",
     "framer-motion": "^11.18.2",
     "genkit": "^1.14.1",
+    "isomorphic-dompurify": "^2.26.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.475.0",
     "next": "^15.5.2",

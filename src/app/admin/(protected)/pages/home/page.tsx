@@ -69,8 +69,8 @@ export default function HomePageManagement() {
                     subheadline: "Experience the timeless beauty of India's classical dance form...",
                     ctaPrimary: "Begin Your Journey",
                     ctaSecondary: "Watch Our Story",
-                    heroImageUrl: "https://placehold.co/1920x1080",
-                    aboutSectionImageUrl: "https://placehold.co/600x400",
+                    heroImageUrl: "",
+                    aboutSectionImageUrl: "",
                 });
             }
         } catch (e) {

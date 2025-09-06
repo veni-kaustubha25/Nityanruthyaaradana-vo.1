@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Literata } from "next/font/google";
-import { Header } from "@/components/layout/header";
+import { ResponsiveHeader } from "@/components/layout/responsive-header";
 import { Footer } from "@/components/layout/footer";
 
 const literata = Literata({ subsets: ["latin"] });
@@ -17,7 +17,7 @@ export default function AppLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <ResponsiveHeader />
       <main className="flex-1">
         {children}
       </main>

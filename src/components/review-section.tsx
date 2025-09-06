@@ -221,6 +221,17 @@ export default function ReviewSection() {
               Only approved reviews are displayed below.
             </p>
           </TextAnimation>
+          <TextAnimation type="fade" delay={0.6}>
+            <HoverAnimation effect="lift" tapEffect="scale">
+              <Button
+                onClick={() => setShowForm(true)}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                <MessageSquare className="mr-2 h-5 w-5" />
+                Add Your Review
+              </Button>
+            </HoverAnimation>
+          </TextAnimation>
         </div>
 
         {/* Reviews Grid */}

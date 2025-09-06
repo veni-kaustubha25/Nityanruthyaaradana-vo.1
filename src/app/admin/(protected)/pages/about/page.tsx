@@ -44,11 +44,11 @@ export default function AboutPageManagement() {
         setContent({
           storyHeading: "Our Story",
           storyContent: "Founded with a deep reverence for the ancient traditions of Bharatanatyam...",
-          storyImageUrl: "https://placehold.co/600x400/8B0000/FFFFFF?text=Our+Story",
+          storyImageUrl: "",
           founderHeading: "Our Founder & Principal Teacher",
           founderName: "Guru Smt. Priya Sharma",
           founderBio: "Guru Smt. Priya Sharma is a distinguished Bharatanatyam exponent...",
-          founderImageUrl: "https://placehold.co/600x400/8B0000/FFFFFF?text=Our+Founder",
+          founderImageUrl: "",
         });
       }
       setIsLoading(false);
