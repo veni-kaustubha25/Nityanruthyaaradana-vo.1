@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
 interface JWTPayload {
   userId: string;
@@ -23,18 +23,18 @@ export async function POST(request: NextRequest) {
     const token = authHeader.replace('Bearer ', '');
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+      const jwtSecret = process.env.JWT_SECRET || 'fallback-secret-key';
+      const decoded = jwt.verify(token, jwtSecret) as JWTPayload;
       
       // Generate new token with same payload
-      const newToken = jwt.sign(
-        { 
-          userId: decoded.userId, 
-          email: decoded.email, 
-          role: decoded.role 
-        },
-        process.env.JWT_SECRET!,
-        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-      );
+      const payload = { 
+        userId: decoded.userId, 
+        email: decoded.email, 
+        role: decoded.role 
+      };
+      const newToken = jwt.sign(payload, jwtSecret, { 
+        expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+      } as any);
 
       return NextResponse.json({
         success: true,

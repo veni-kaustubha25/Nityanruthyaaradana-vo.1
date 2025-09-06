@@ -24,7 +24,8 @@ export function middleware(request: NextRequest) {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+      const jwtSecret = process.env.JWT_SECRET || 'fallback-secret-key';
+      const decoded = jwt.verify(token, jwtSecret) as JWTPayload;
       
       // Add user info to headers for API routes
       const requestHeaders = new Headers(request.headers);
@@ -58,7 +59,8 @@ export function middleware(request: NextRequest) {
     const token = authHeader.replace('Bearer ', '');
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+      const jwtSecret = process.env.JWT_SECRET || 'fallback-secret-key';
+      const decoded = jwt.verify(token, jwtSecret) as JWTPayload;
       
       // Add user info to headers
       const requestHeaders = new Headers(request.headers);

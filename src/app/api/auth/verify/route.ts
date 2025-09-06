@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 interface JWTPayload {
   userId: string;
@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
     const token = authHeader.replace('Bearer ', '');
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+      const jwtSecret = process.env.JWT_SECRET || 'fallback-secret-key';
+      const decoded = jwt.verify(token, jwtSecret) as JWTPayload;
       
       return NextResponse.json({
         valid: true,

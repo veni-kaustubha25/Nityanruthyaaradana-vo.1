@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 interface AdminUser {
@@ -54,15 +54,14 @@ export async function POST(request: NextRequest) {
 
     // Generate JWT token
     const jwtSecret = process.env.JWT_SECRET || 'fallback-secret-key';
-    const token = jwt.sign(
-      { 
-        userId: admin.id, 
-        email: admin.email, 
-        role: admin.role 
-      },
-      jwtSecret,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-    );
+    const payload = { 
+      userId: admin.id, 
+      email: admin.email, 
+      role: admin.role 
+    };
+    const token = jwt.sign(payload, jwtSecret, { 
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+    } as any);
 
     return NextResponse.json({
       success: true,
