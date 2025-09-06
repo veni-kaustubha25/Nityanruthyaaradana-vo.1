@@ -39,8 +39,8 @@ export function Header() {
              <div className="bg-white/10 rounded-full p-1 group-hover:bg-white/20 transition-all duration-300">
                <Phone className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
              </div>
-             <span className="hidden xs:inline font-medium text-xs">+91 123 456 7890</span>
-             <span className="xs:hidden font-medium text-xs">+91 123 456 7890</span>
+             <span className="hidden xs:inline font-medium text-xs">+91 8639399385</span>
+             <span className="xs:hidden font-medium text-xs">+91 8639399385</span>
            </a>
                          <a href="mailto:info@nithyanruthyaaradana.art" className="flex items-center gap-2 hover:text-yellow-300 transition-all duration-300 group">
              <div className="bg-white/10 rounded-full p-1 group-hover:bg-white/20 transition-all duration-300">

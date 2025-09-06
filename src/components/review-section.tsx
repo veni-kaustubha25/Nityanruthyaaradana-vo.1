@@ -218,19 +218,9 @@ export default function ReviewSection() {
               Hear from our students and their families about their transformative journey with Bharatanatyam.
             </p>
             <p className="text-sm text-gray-300 max-w-2xl mx-auto mb-8">
-              Only approved reviews are displayed below. Submit your review to share your experience!
+              Only approved reviews are displayed below.
             </p>
           </TextAnimation>
-          <Scale delay={0.6}>
-            <Button
-              onClick={() => setShowForm(!showForm)}
-              size="lg"
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold text-lg px-8 py-4 shadow-lg"
-            >
-              <MessageSquare className="mr-2 h-5 w-5" />
-              Share Your Experience
-            </Button>
-          </Scale>
         </div>
 
         {/* Reviews Grid */}
@@ -279,37 +269,6 @@ export default function ReviewSection() {
           </StaggerContainer>
         )}
 
-        {/* CTA Section */}
-        <div className="text-center">
-          <TextAnimation type="fade" delay={0.8}>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Share Your Experience
-              </h3>
-              <p className="text-gray-200 mb-6">
-                Have you or your child experienced the magic of Bharatanatyam with us? 
-                We'd love to hear your story! Your review will be published after admin approval.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Scale delay={1.0}>
-                  <Button
-                    onClick={() => setShowForm(!showForm)}
-                    size="lg"
-                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-lg px-8 py-4"
-                  >
-                    <MessageSquare className="mr-2 h-5 w-5" />
-                    Add Your Review
-                  </Button>
-                </Scale>
-                <Scale delay={1.2}>
-                  <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-[#8B0000] text-lg px-8 py-4">
-                    <a href="#contact">Contact Us</a>
-                  </Button>
-                </Scale>
-              </div>
-            </div>
-          </TextAnimation>
-        </div>
 
         {/* Review Form Modal */}
         {showForm && (
@@ -432,19 +391,6 @@ export default function ReviewSection() {
           </div>
         )}
 
-        {/* Floating Add Review Button */}
-        <div className="fixed bottom-6 right-6 z-40">
-          <Scale delay={1.4}>
-            <Button
-              onClick={() => setShowForm(!showForm)}
-              size="lg"
-              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300"
-            >
-              <MessageSquare className="h-5 w-5 mr-2" />
-              Add Review
-            </Button>
-          </Scale>
-        </div>
       </div>
     </section>
   );

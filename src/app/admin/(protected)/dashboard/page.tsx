@@ -18,46 +18,72 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setIsClient(true);
+    
     const fetchCounts = async () => {
       try {
+        console.log('Fetching dashboard data from Firestore...');
+        
+        // Fetch gallery count
         const gallerySnapshot = await getDocs(collection(db, "gallery"));
         setGalleryCount(gallerySnapshot.size);
+        console.log(`Gallery images count: ${gallerySnapshot.size}`);
         
+        // Fetch reviews count
         const reviewsSnapshot = await getDocs(collection(db, "reviews"));
         setReviewsCount(reviewsSnapshot.size);
+        console.log(`Total reviews count: ${reviewsSnapshot.size}`);
         
-        // Get all reviews and filter client-side to avoid index requirement
-        const allReviewsSnapshot = await getDocs(collection(db, "reviews"));
-        const approvedCount = allReviewsSnapshot.docs.filter(doc => 
+        // Calculate approved reviews count
+        const approvedCount = reviewsSnapshot.docs.filter(doc => 
           doc.data().isApproved === true
         ).length;
         setApprovedReviewsCount(approvedCount);
+        console.log(`Approved reviews count: ${approvedCount}`);
+        
       } catch (error) {
-        console.error("Error fetching counts: ", error);
-        // Set fallback values for demo
-        setGalleryCount(12);
-        setReviewsCount(4);
-        setApprovedReviewsCount(2);
+        console.error("Error fetching dashboard counts from Firestore:", error);
+        // Set fallback values only if Firestore is completely unavailable
+        setGalleryCount(0);
+        setReviewsCount(0);
+        setApprovedReviewsCount(0);
       }
     };
+
+    // Initial fetch
     fetchCounts();
 
+    // Set up real-time listeners for live updates
     const galleryQuery = query(collection(db, "gallery"));
     const reviewsQuery = query(collection(db, "reviews"));
-    const unsubscribeGallery = onSnapshot(galleryQuery, (snapshot) => {
-        setGalleryCount(snapshot.size);
-    });
     
-    const unsubscribeReviews = onSnapshot(reviewsQuery, (snapshot) => {
+    const unsubscribeGallery = onSnapshot(galleryQuery, 
+      (snapshot) => {
+        console.log('Gallery real-time update:', snapshot.size);
+        setGalleryCount(snapshot.size);
+      },
+      (error) => {
+        console.error("Gallery listener error:", error);
+      }
+    );
+    
+    const unsubscribeReviews = onSnapshot(reviewsQuery, 
+      (snapshot) => {
+        console.log('Reviews real-time update:', snapshot.size);
         setReviewsCount(snapshot.size);
+        
         // Calculate approved count from all reviews
         const approvedCount = snapshot.docs.filter(doc => 
           doc.data().isApproved === true
         ).length;
         setApprovedReviewsCount(approvedCount);
-    });
+      },
+      (error) => {
+        console.error("Reviews listener error:", error);
+      }
+    );
 
     return () => {
+      console.log('Cleaning up dashboard listeners');
       unsubscribeGallery();
       unsubscribeReviews();
     };

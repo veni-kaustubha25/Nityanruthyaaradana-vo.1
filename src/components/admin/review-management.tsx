@@ -71,18 +71,31 @@ export default function ReviewManagement() {
 
   const fetchReviews = async () => {
     try {
+      console.log('Fetching reviews from Firestore...');
       const reviewsQuery = query(
         collection(db, "reviews"),
         orderBy("createdAt", "desc")
       );
       const reviewsSnapshot = await getDocs(reviewsQuery);
-      const reviewsData = reviewsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Review[];
+      console.log(`Found ${reviewsSnapshot.size} reviews in Firestore`);
+      
+      const reviewsData = reviewsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        console.log(`Review ${doc.id}:`, { 
+          name: data.name, 
+          isApproved: data.isApproved, 
+          rating: data.rating 
+        });
+        return {
+          id: doc.id,
+          ...data
+        };
+      }) as Review[];
+      
       setReviews(reviewsData);
+      console.log('Reviews loaded successfully:', reviewsData.length);
     } catch (error) {
-      console.error("Error fetching reviews:", error);
+      console.error("Error fetching reviews from Firestore:", error);
       // Fallback data for demo purposes
       setReviews([
         {
@@ -134,10 +147,14 @@ export default function ReviewManagement() {
   const handleApprove = async (reviewId: string) => {
     setIsUpdating(true);
     try {
+      console.log('Approving review in Firestore:', reviewId);
+      
       await updateDoc(doc(db, "reviews", reviewId), {
         isApproved: true,
         updatedAt: new Date()
       });
+      
+      console.log('Review approved successfully in Firestore');
       
       setReviews(reviews.map(review => 
         review.id === reviewId 
@@ -149,11 +166,11 @@ export default function ReviewManagement() {
         title: "Review Approved",
         description: "The review has been approved and will now be visible on the website.",
       });
-    } catch (error) {
-      console.error("Error approving review:", error);
+    } catch (error: any) {
+      console.error("Error approving review in Firestore:", error);
       toast({
         title: "Error",
-        description: "Failed to approve review. Please try again.",
+        description: `Failed to approve review: ${error.message || 'Unknown error'}`,
         variant: "destructive",
       });
     } finally {
@@ -164,10 +181,14 @@ export default function ReviewManagement() {
   const handleReject = async (reviewId: string) => {
     setIsUpdating(true);
     try {
+      console.log('Rejecting review in Firestore:', reviewId);
+      
       await updateDoc(doc(db, "reviews", reviewId), {
         isApproved: false,
         updatedAt: new Date()
       });
+      
+      console.log('Review rejected successfully in Firestore');
       
       setReviews(reviews.map(review => 
         review.id === reviewId 
@@ -179,11 +200,11 @@ export default function ReviewManagement() {
         title: "Review Rejected",
         description: "The review has been rejected and will not be visible on the website.",
       });
-    } catch (error) {
-      console.error("Error rejecting review:", error);
+    } catch (error: any) {
+      console.error("Error rejecting review in Firestore:", error);
       toast({
         title: "Error",
-        description: "Failed to reject review. Please try again.",
+        description: `Failed to reject review: ${error.message || 'Unknown error'}`,
         variant: "destructive",
       });
     } finally {

@@ -34,12 +34,36 @@ export default function SettingsPage() {
   useEffect(() => {
     const fetchSettings = async () => {
       setIsLoading(true);
-      const docRef = doc(db, "settings", "general");
-      const docSnap = await getDoc(docRef);
+      try {
+        console.log('Fetching site settings from Firestore...');
+        const docRef = doc(db, "settings", "general");
+        const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        setSettings(docSnap.data() as SiteSettings);
-      } else {
+        if (docSnap.exists()) {
+          const data = docSnap.data() as SiteSettings;
+          console.log('Settings loaded from Firestore:', data);
+          setSettings(data);
+        } else {
+          console.log('No settings found in Firestore, using defaults');
+          const defaultSettings = {
+            siteName: "Nithyanruthyaaradana",
+            contactEmail: "info@nithyanruthyaaradana.art",
+            contactPhone: "+91 123 456 7890",
+            facebookUrl: "",
+            instagramUrl: "",
+            youtubeUrl: "",
+            maintenanceMode: false,
+          };
+          setSettings(defaultSettings);
+        }
+      } catch (error) {
+        console.error('Error fetching settings from Firestore:', error);
+        toast({ 
+          title: "Error", 
+          description: "Could not load settings from Firestore", 
+          variant: "destructive" 
+        });
+        // Set fallback settings
         setSettings({
           siteName: "Nithyanruthyaaradana",
           contactEmail: "info@nithyanruthyaaradana.art",
@@ -54,17 +78,23 @@ export default function SettingsPage() {
     };
 
     fetchSettings();
-  }, []);
+  }, [toast]);
 
   const handleSave = async () => {
     if (!settings) return;
     setIsSaving(true);
     try {
+      console.log('Saving settings to Firestore:', settings);
       await setDoc(doc(db, "settings", "general"), settings);
-      toast({ title: "Success", description: "Settings updated successfully." });
-    } catch (error) {
-      console.error("Error saving settings:", error);
-      toast({ title: "Error", description: "Could not save settings.", variant: "destructive" });
+      console.log('Settings saved successfully to Firestore');
+      toast({ title: "Success", description: "Settings updated successfully in Firestore." });
+    } catch (error: any) {
+      console.error("Error saving settings to Firestore:", error);
+      toast({ 
+        title: "Error", 
+        description: `Could not save settings: ${error.message || 'Unknown error'}`, 
+        variant: "destructive" 
+      });
     }
     setIsSaving(false);
   };

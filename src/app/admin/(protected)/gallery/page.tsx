@@ -53,18 +53,35 @@ export default function GalleryManagementPage() {
 
   useEffect(() => {
     setIsLoading(true);
+    console.log('Setting up gallery real-time listener...');
+    
     const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const images: GalleryImage[] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GalleryImage));
-      setGalleryImages(images);
-      setIsLoading(false);
-    }, (error) => {
-      console.error("Error fetching gallery images: ", error);
-      toast({ title: "Error", description: "Could not fetch gallery images.", variant: "destructive" });
-      setIsLoading(false);
-    });
+    const unsubscribe = onSnapshot(q, 
+      (snapshot) => {
+        console.log(`Gallery snapshot received: ${snapshot.size} images`);
+        const images: GalleryImage[] = snapshot.docs.map(doc => {
+          const data = doc.data();
+          console.log(`Gallery image: ${doc.id}`, data);
+          return { id: doc.id, ...data } as GalleryImage;
+        });
+        setGalleryImages(images);
+        setIsLoading(false);
+      }, 
+      (error) => {
+        console.error("Error fetching gallery images from Firestore:", error);
+        toast({ 
+          title: "Error", 
+          description: `Could not fetch gallery images: ${error.message}`, 
+          variant: "destructive" 
+        });
+        setIsLoading(false);
+      }
+    );
 
-    return () => unsubscribe();
+    return () => {
+      console.log('Cleaning up gallery listener');
+      unsubscribe();
+    };
   }, [toast]);
 
   const handleAddImage = async () => {
@@ -74,19 +91,27 @@ export default function GalleryManagementPage() {
     }
 
     try {
-      await addDoc(collection(db, "gallery"), {
+      console.log('Adding new image to Firestore:', { src: newImageUrl, alt: newImageAlt });
+      
+      const docRef = await addDoc(collection(db, "gallery"), {
         src: newImageUrl,
         alt: newImageAlt,
         category: "General",
         createdAt: serverTimestamp(),
       });
-      toast({ title: "Success", description: "Image added successfully." });
+      
+      console.log('Image added successfully with ID:', docRef.id);
+      toast({ title: "Success", description: "Image added successfully to gallery." });
       setNewImageUrl('');
       setNewImageAlt('');
       setIsDialogOpen(false);
-    } catch (error) {
-      console.error("Error adding image:", error);
-      toast({ title: "Error", description: "Could not add image.", variant: "destructive" });
+    } catch (error: any) {
+      console.error("Error adding image to Firestore:", error);
+      toast({ 
+        title: "Error", 
+        description: `Could not add image: ${error.message || 'Unknown error'}`, 
+        variant: "destructive" 
+      });
     }
   };
 

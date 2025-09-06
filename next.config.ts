@@ -19,87 +19,29 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
-  // Disable static generation for all pages
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  // Disable static optimization completely
   staticPageGenerationTimeout: 60,
-  // Force all pages to be dynamic
   trailingSlash: false,
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
-      },
-      {
-        source: '/images/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-    ];
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/images/:path*',
-        destination: '/api/image-proxy/:path*',
-      },
-    ];
-  },
   webpack: (config, { dev, isServer }) => {
-    // Optimize bundle size
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            enforce: true,
-          },
-        },
-      };
-    }
-
-    // Handle SVG files
+    // Fix for Node.js v23 compatibility issues
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+    
+    // Handle JSON parsing issues
     config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
+      test: /\.m?js$/,
+      resolve: {
+        fullySpecified: false,
+      },
     });
 
     return config;
