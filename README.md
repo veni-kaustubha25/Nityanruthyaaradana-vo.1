@@ -1,12 +1,12 @@
 # 🎭 Nithyanruthyaaradana - Classical Dance Academy Website
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![Firebase](https://img.shields.io/badge/Firebase-10.12.2-FFCA28?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
+[![Firebase](https://img.shields.io/badge/Firebase-11.10.0-FFCA28?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.18.2-0055FF?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
 
-> A modern, responsive website for Nithyanruthyaaradana, a premier Bharatanatyam classical dance academy. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring a comprehensive image gallery, student registration system, and admin dashboard.
+> A modern, responsive website for Nithyanruthyaaradana, a premier Bharatanatyam classical dance academy. Built with Next.js 15, TypeScript, and Tailwind CSS, featuring a comprehensive image gallery, student registration system, and secure admin dashboard.
 
 ![Nithyanruthyaaradana](https://placehold.co/1200x600/8B1A1A/FFFFFF?text=Nithyanruthyaaradana)
 
@@ -17,9 +17,11 @@
 - [🛠️ Tech Stack](#️-tech-stack)
 - [🚀 Getting Started](#-getting-started)
 - [📁 Project Structure](#-project-structure)
+- [🛣️ Complete Routing Documentation](#️-complete-routing-documentation)
 - [🎨 Design System](#-design-system)
 - [🖼️ Image Gallery Features](#️-image-gallery-features)
 - [👨‍💼 Admin Dashboard](#-admin-dashboard)
+- [🔐 Authentication System](#-authentication-system)
 - [🔥 Firebase Integration](#-firebase-integration)
 - [📱 Responsive Design](#-responsive-design)
 - [⚡ Performance](#-performance)
@@ -169,6 +171,10 @@ npm run start            # Start production server
 # Code Quality
 npm run lint             # Run ESLint
 npm run typecheck        # Run TypeScript type checking
+
+# Admin Setup
+npm run setup:auth       # Setup authentication system
+npm run generate:hash    # Generate admin password hash
 ```
 
 ## 📁 Project Structure
@@ -176,57 +182,368 @@ npm run typecheck        # Run TypeScript type checking
 ```
 src/
 ├── app/
-│   ├── (app)/              # Public pages
+│   ├── (app)/              # Public pages group
 │   │   ├── page.tsx        # Homepage with hero section
 │   │   ├── about/          # About academy page
 │   │   ├── gallery/        # Interactive image gallery
 │   │   ├── register/       # Student enrollment form
-│   │   └── contact/        # Contact page with form
+│   │   ├── contact/        # Contact page with form
+│   │   └── layout.tsx      # Public layout with header/footer
 │   ├── admin/              # Admin dashboard
-│   │   ├── dashboard/      # Admin overview
-│   │   ├── gallery/        # Gallery management
-│   │   ├── reviews/        # Review management
-│   │   ├── pages/          # Page content management
-│   │   └── settings/       # Site settings
+│   │   ├── (protected)/    # Protected admin routes
+│   │   │   ├── dashboard/  # Admin overview
+│   │   │   ├── gallery/    # Gallery management
+│   │   │   ├── reviews/    # Review management
+│   │   │   ├── admissions/ # Student applications
+│   │   │   ├── contact/    # Contact messages
+│   │   │   ├── pages/      # Page content management
+│   │   │   │   ├── home/   # Homepage content
+│   │   │   │   └── about/  # About page content
+│   │   │   ├── settings/   # Site settings
+│   │   │   └── layout.tsx  # Protected admin layout
+│   │   ├── login/          # Admin login page
+│   │   ├── page.tsx        # Admin redirect to login
+│   │   └── layout.tsx      # Admin layout wrapper
+│   ├── api/                # API routes
+│   │   ├── auth/           # Authentication endpoints
+│   │   │   ├── login/      # Admin login
+│   │   │   ├── logout/     # Admin logout
+│   │   │   ├── verify/     # Token verification
+│   │   │   └── refresh/    # Token refresh
+│   │   ├── admissions/     # Student registration
+│   │   ├── contact/        # Contact form submission
+│   │   └── storage-status/ # Storage system status
 │   ├── globals.css         # Global styles and CSS variables
-│   └── layout.tsx          # Root layout
+│   ├── layout.tsx          # Root layout
+│   └── not-found.tsx       # 404 page
 ├── components/
 │   ├── layout/             # Header and footer components
+│   │   ├── header.tsx      # Main header component
+│   │   ├── responsive-header.tsx # Mobile-responsive header
+│   │   └── footer.tsx      # Footer component
 │   ├── ui/                # Reusable UI components
 │   │   ├── button.tsx     # Button component
 │   │   ├── card.tsx       # Card component
 │   │   ├── fallback-image.tsx  # Image component with fallbacks
 │   │   ├── image-modal.tsx     # Full-screen image viewer
 │   │   ├── professional-animations.tsx # Animation system
-│   │   └── ...            # Other UI components
+│   │   └── ...            # Other UI components (50+ components)
+│   ├── admin/             # Admin-specific components
+│   │   ├── admissions-management.tsx
+│   │   ├── contact-management.tsx
+│   │   └── review-management.tsx
 │   ├── register-form.tsx  # Student registration form
 │   ├── contact-form.tsx   # Contact form
 │   ├── review-section.tsx # Reviews display
-│   └── animated-logo.tsx  # Animated academy logo
-├── lib/
-│   ├── firebase.ts        # Firebase configuration
-│   ├── image-utils.ts     # Image handling utilities
-│   └── utils.ts           # General utilities
+│   ├── animated-logo.tsx  # Animated academy logo
+│   ├── protected-route.tsx # Route protection component
+│   └── admin-header.tsx   # Admin panel header
+├── contexts/
+│   └── auth-context.tsx   # Authentication context
 ├── hooks/
 │   ├── use-toast.ts       # Toast notification hook
 │   └── use-mobile.tsx     # Mobile detection hook
+├── lib/
+│   ├── firebase.ts        # Firebase configuration
+│   ├── firestore-service.ts # Firestore utilities
+│   ├── image-utils.ts     # Image handling utilities
+│   ├── security.ts        # Security utilities
+│   ├── fallback-storage.ts # Fallback storage system
+│   └── utils.ts           # General utilities
 ├── ai/                    # AI integration
 │   ├── dev.ts            # Genkit development setup
 │   └── genkit.ts         # Genkit configuration
 └── public/
-    └── images/            # Local image assets
-        ├── 1.jpg          # Performance images
-        ├── 2.JPG          # Training images
-        ├── 3.jpg          # Event images
-        └── ...            # Additional images
+    ├── images/            # Local image assets
+    │   ├── 1.jpg          # Performance images
+    │   ├── 2.JPG          # Training images
+    │   ├── 3.jpg          # Event images
+    │   └── ...            # Additional images
+    └── manifest.json      # PWA manifest
 ```
+
+## 🛣️ Complete Routing Documentation
+
+### Public Routes (App Group)
+
+#### `/` - Homepage
+- **File**: `src/app/(app)/page.tsx`
+- **Description**: Main landing page with hero section, features, gallery preview, reviews, and FAQ
+- **Features**:
+  - Dynamic content from Firebase
+  - Interactive image gallery preview
+  - Animated components with Framer Motion
+  - Responsive design for all devices
+  - SEO optimized with structured data
+
+#### `/about` - About Page
+- **File**: `src/app/(app)/about/page.tsx`
+- **Description**: Academy information, founder details, and philosophy
+- **Features**:
+  - Academy story and mission
+  - Founder and teacher information
+  - Core philosophy and principles
+  - Responsive image galleries
+  - Call-to-action sections
+
+#### `/gallery` - Image Gallery
+- **File**: `src/app/(app)/gallery/page.tsx`
+- **Description**: Full interactive image gallery with modal viewer
+- **Features**:
+  - Grid layout with responsive design
+  - Full-screen image modal with zoom/pan
+  - Keyboard shortcuts and touch gestures
+  - Image categorization and filtering
+  - Real-time data from Firebase
+
+#### `/register` - Student Registration
+- **File**: `src/app/(app)/register/page.tsx`
+- **Description**: Student enrollment form and admission process
+- **Features**:
+  - Comprehensive registration form
+  - Form validation with Zod
+  - Admission process explanation
+  - Responsive design
+  - Success/error handling
+
+#### `/contact` - Contact Page
+- **File**: `src/app/(app)/contact/page.tsx`
+- **Description**: Contact form and academy information
+- **Features**:
+  - Contact form with validation
+  - Academy contact information
+  - Office hours and location
+  - Form submission handling
+  - Responsive layout
+
+### Admin Routes (Protected)
+
+#### `/admin` - Admin Root
+- **File**: `src/app/admin/page.tsx`
+- **Description**: Redirects to admin login
+- **Access**: Public (redirects to login)
+
+#### `/admin/login` - Admin Login
+- **File**: `src/app/admin/login/page.tsx`
+- **Description**: Secure admin authentication
+- **Features**:
+  - JWT-based authentication
+  - Form validation
+  - Security headers
+  - Responsive design
+  - Error handling
+
+#### `/admin/dashboard` - Admin Dashboard
+- **File**: `src/app/admin/(protected)/dashboard/page.tsx`
+- **Description**: Main admin overview and analytics
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - Real-time statistics
+  - Quick actions
+  - Recent activity
+  - System status
+  - Responsive admin interface
+
+#### `/admin/gallery` - Gallery Management
+- **File**: `src/app/admin/(protected)/gallery/page.tsx`
+- **Description**: Manage image gallery and media
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - Upload new images
+  - Edit image metadata
+  - Organize by categories
+  - Delete images
+  - Bulk operations
+
+#### `/admin/reviews` - Review Management
+- **File**: `src/app/admin/(protected)/reviews/page.tsx`
+- **Description**: Manage student reviews and testimonials
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - Approve/reject reviews
+  - Edit review content
+  - Moderate submissions
+  - Bulk actions
+  - Review analytics
+
+#### `/admin/admissions` - Admissions Management
+- **File**: `src/app/admin/(protected)/admissions/page.tsx`
+- **Description**: Manage student applications
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - View all applications
+  - Update application status
+  - Contact applicants
+  - Export data
+  - Application analytics
+
+#### `/admin/contact` - Contact Messages
+- **File**: `src/app/admin/(protected)/contact/page.tsx`
+- **Description**: Manage contact form submissions
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - View all messages
+  - Mark as read/replied
+  - Reply to messages
+  - Export contacts
+  - Message analytics
+
+#### `/admin/pages/home` - Homepage Content
+- **File**: `src/app/admin/(protected)/pages/home/page.tsx`
+- **Description**: Edit homepage content
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - Edit hero section
+  - Update features
+  - Manage testimonials
+  - Edit FAQ content
+  - Preview changes
+
+#### `/admin/pages/about` - About Page Content
+- **File**: `src/app/admin/(protected)/pages/about/page.tsx`
+- **Description**: Edit about page content
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - Edit academy story
+  - Update founder information
+  - Manage philosophy content
+  - Update images
+  - Preview changes
+
+#### `/admin/settings` - Site Settings
+- **File**: `src/app/admin/(protected)/settings/page.tsx`
+- **Description**: Configure site-wide settings
+- **Access**: Protected (requires admin authentication)
+- **Features**:
+  - Contact information
+  - Site configuration
+  - SEO settings
+  - Security settings
+  - Backup/restore
+
+### API Routes
+
+#### Authentication API
+
+##### `POST /api/auth/login` - Admin Login
+- **File**: `src/app/api/auth/login/route.ts`
+- **Description**: Authenticate admin users
+- **Features**:
+  - JWT token generation
+  - Password hashing with bcrypt
+  - Rate limiting
+  - Security validation
+  - Secure cookie setting
+
+##### `GET /api/auth/verify` - Token Verification
+- **File**: `src/app/api/auth/verify/route.ts`
+- **Description**: Verify JWT tokens
+- **Features**:
+  - Token validation
+  - User information extraction
+  - Error handling
+  - Security checks
+
+##### `POST /api/auth/refresh` - Token Refresh
+- **File**: `src/app/api/auth/refresh/route.ts`
+- **Description**: Refresh expired tokens
+- **Features**:
+  - Token renewal
+  - Validation
+  - Error handling
+
+##### `POST /api/auth/logout` - Admin Logout
+- **File**: `src/app/api/auth/logout/route.ts`
+- **Description**: Logout admin users
+- **Features**:
+  - Token invalidation
+  - Cookie clearing
+  - Session cleanup
+
+#### Content API
+
+##### `POST /api/admissions` - Student Registration
+- **File**: `src/app/api/admissions/route.ts`
+- **Description**: Submit student applications
+- **Features**:
+  - Form validation
+  - Firebase/Fallback storage
+  - Email validation
+  - Phone validation
+  - Error handling
+
+##### `POST /api/contact` - Contact Form
+- **File**: `src/app/api/contact/route.ts`
+- **Description**: Submit contact messages
+- **Features**:
+  - Form validation
+  - Firebase/Fallback storage
+  - Message length validation
+  - Error handling
+
+##### `GET /api/storage-status` - Storage Status
+- **File**: `src/app/api/storage-status/route.ts`
+- **Description**: Check storage system status
+- **Features**:
+  - Firebase connectivity check
+  - Fallback system status
+  - Health monitoring
+
+### Route Protection
+
+#### Middleware Protection
+- **File**: `middleware.ts`
+- **Description**: Server-side route protection
+- **Features**:
+  - JWT token validation
+  - Rate limiting
+  - CSRF protection
+  - Security headers
+  - Admin route protection
+
+#### Client-side Protection
+- **File**: `src/components/protected-route.tsx`
+- **Description**: React component for route protection
+- **Features**:
+  - Authentication checking
+  - Role-based access
+  - Loading states
+  - Redirect handling
+
+### Layout Structure
+
+#### Root Layout
+- **File**: `src/app/layout.tsx`
+- **Description**: Global layout with metadata and providers
+- **Features**:
+  - SEO metadata
+  - Font loading
+  - Global styles
+  - Toast notifications
+
+#### Public Layout
+- **File**: `src/app/(app)/layout.tsx`
+- **Description**: Public pages layout
+- **Features**:
+  - Header and footer
+  - Navigation
+  - Responsive design
+
+#### Admin Layout
+- **File**: `src/app/admin/(protected)/professional-layout.tsx`
+- **Description**: Protected admin layout
+- **Features**:
+  - Sidebar navigation
+  - Admin header
+  - Authentication wrapper
+  - Responsive admin interface
 
 ## 🎨 Design System
 
 ### Color Palette
 ```css
 :root {
-  --primary: 352 75% 44%;        /* Main Maroon */
+  --primary: 352 75% 44%;        /* Main Maroon (#8B0000) */
   --accent: 352 85% 65%;         /* Lighter Red */
   --background: 352 75% 12%;     /* Very Dark Maroon */
   --foreground: 30 20% 90%;      /* Light Text */
@@ -298,7 +615,7 @@ xl: 1280px  /* Large screens */
 - **JWT-based Authentication**: Secure token-based admin access
 - **Protected Routes**: All admin routes require valid JWT token
 - **Session Management**: Automatic token refresh and logout
-- **Role-based Access**: Admin-only access to sensitive operations
+- **Role-based Access**: Admin and super admin roles
 - **Secure Login**: Email/password authentication with JWT tokens
 
 ### Dashboard Overview
@@ -327,7 +644,7 @@ xl: 1280px  /* Large screens */
 - **Data Validation**: Comprehensive form validation
 - **Error Handling**: Graceful error handling and recovery
 
-## 🔐 JWT Authentication System
+## 🔐 Authentication System
 
 ### Overview
 The admin panel uses JWT (JSON Web Token) based authentication for secure access control. This provides stateless authentication with token-based authorization.
@@ -372,161 +689,6 @@ interface JWTPayload {
 }
 ```
 
-### Implementation Details
-
-#### Server-side (API Routes)
-```typescript
-// /api/auth/login
-export async function POST(request: Request) {
-  const { email, password } = await request.json();
-  
-  // Verify credentials
-  const user = await verifyAdminCredentials(email, password);
-  if (!user) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  }
-  
-  // Generate JWT token
-  const token = jwt.sign(
-    { userId: user.id, email: user.email, role: user.role },
-    process.env.JWT_SECRET!,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-  );
-  
-  return NextResponse.json({
-    success: true,
-    token,
-    user: { id: user.id, email: user.email, role: user.role },
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d'
-  });
-}
-```
-
-#### Client-side (React Context)
-```typescript
-// AuthContext implementation
-const AuthContext = createContext<AuthContextType | null>(null);
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      
-      const data = await response.json();
-      if (data.success) {
-        setToken(data.token);
-        setUser(data.user);
-        localStorage.setItem('admin_token', data.token);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
-    }
-  };
-
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('admin_token');
-  };
-
-  // Token refresh logic
-  const refreshToken = async () => {
-    if (!token) return false;
-    
-    try {
-      const response = await fetch('/api/auth/refresh', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      const data = await response.json();
-      if (data.success) {
-        setToken(data.token);
-        localStorage.setItem('admin_token', data.token);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      logout();
-      return false;
-    }
-  };
-
-  return (
-    <AuthContext.Provider value={{
-      user, token, login, logout, isAuthenticated: !!user,
-      isLoading, refreshToken
-    }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
-```
-
-#### Route Protection Middleware
-```typescript
-// middleware.ts
-import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-
-export function middleware(request: NextRequest) {
-  const token = request.headers.get('authorization')?.replace('Bearer ', '');
-  
-  if (!token) {
-    return NextResponse.json({ error: 'No token provided' }, { status: 401 });
-  }
-  
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
-    request.headers.set('user-id', decoded.userId);
-    request.headers.set('user-role', decoded.role);
-    return NextResponse.next();
-  } catch (error) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
-  }
-}
-
-export const config = {
-  matcher: ['/api/admin/:path*', '/admin/:path*']
-};
-```
-
-#### Protected Route Component
-```typescript
-// ProtectedRoute component
-export function ProtectedRoute({ 
-  children, 
-  requiredRole = "admin",
-  fallback = <LoginPage />
-}: ProtectedRouteProps) {
-  const { user, isAuthenticated, isLoading } = useAuth();
-  
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-  
-  if (!isAuthenticated || !user) {
-    return fallback;
-  }
-  
-  if (requiredRole === "super_admin" && user.role !== "super_admin") {
-    return <AccessDenied />;
-  }
-  
-  return <>{children}</>;
-}
-```
-
 ### Security Features
 
 #### Token Security
@@ -551,83 +713,6 @@ const securityHeaders = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
 };
-```
-
-### Usage Examples
-
-#### Login Component
-```typescript
-export function AdminLogin() {
-  const { login, isLoading } = useAuth();
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    const success = await login(formData.email, formData.password);
-    if (success) {
-      router.push('/admin/dashboard');
-    } else {
-      toast.error('Invalid credentials');
-    }
-  };
-  
-  return (
-    <form onSubmit={handleSubmit}>
-      <input 
-        type="email" 
-        value={formData.email}
-        onChange={(e) => setFormData({...formData, email: e.target.value})}
-        placeholder="Admin Email"
-        required
-      />
-      <input 
-        type="password" 
-        value={formData.password}
-        onChange={(e) => setFormData({...formData, password: e.target.value})}
-        placeholder="Password"
-        required
-      />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Logging in...' : 'Login'}
-      </button>
-    </form>
-  );
-}
-```
-
-#### Protected Admin Layout
-```typescript
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <AuthProvider>
-      <ProtectedRoute>
-        <SidebarProvider>
-          <div className="min-h-screen flex">
-            <AdminSidebar />
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
-        </SidebarProvider>
-      </ProtectedRoute>
-    </AuthProvider>
-  );
-}
-```
-
-### Environment Configuration
-```env
-# JWT Configuration
-JWT_SECRET=your_super_secure_jwt_secret_key_here
-JWT_EXPIRES_IN=7d
-
-# Admin Configuration
-ADMIN_EMAIL=admin@nithyanruthyaaradana.art
-ADMIN_PASSWORD_HASH=hashed_password_here
-
-# Security
-NEXTAUTH_URL=https://yourdomain.com
-NEXTAUTH_SECRET=your_nextauth_secret
 ```
 
 ## 🔥 Firebase Integration
@@ -660,7 +745,9 @@ firestore/
 ├── features/         # Homepage features
 ├── faqs/            # Frequently asked questions
 ├── philosophy/      # Academy philosophy
-└── testimonials/    # Student testimonials
+├── testimonials/    # Student testimonials
+├── admissions/      # Student applications
+└── contact_messages/ # Contact form submissions
 ```
 
 ### Security Rules
@@ -668,7 +755,7 @@ firestore/
 // Public read access for content
 match /gallery/{imageId} {
   allow read: if true;
-  allow write: if request.auth != null; // Admin only
+  allow write: if true; // Temporarily permissive for development
 }
 
 // Secure registrations
@@ -879,6 +966,51 @@ Authorization: Bearer <jwt_token>
 }
 ```
 
+### Content API
+
+#### Student Registration
+```typescript
+POST /api/admissions
+Content-Type: application/json
+
+{
+  "studentName": "Ananya Sharma",
+  "age": 14,
+  "guardianName": "Rajan Sharma",
+  "email": "contact@example.com",
+  "phone": "9876543210"
+}
+
+// Response
+{
+  "success": true,
+  "message": "Admission form submitted successfully",
+  "id": "admission_id",
+  "storageType": "firebase"
+}
+```
+
+#### Contact Form
+```typescript
+POST /api/contact
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "Inquiry about classes",
+  "message": "I would like to know more about your dance classes."
+}
+
+// Response
+{
+  "success": true,
+  "message": "Contact message sent successfully",
+  "id": "message_id",
+  "storageType": "firebase"
+}
+```
+
 ### Firebase Collections
 
 #### Gallery Collection
@@ -928,58 +1060,6 @@ interface AdminUser {
   createdAt: Timestamp;
   lastLogin?: Timestamp;
   isActive: boolean;
-}
-```
-
-### Component APIs
-
-#### ImageModal Props
-```typescript
-interface ImageModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  images: Array<{
-    src: string;
-    alt: string;
-    hint?: string;
-  }>;
-  initialIndex?: number;
-}
-```
-
-#### FallbackImage Props
-```typescript
-interface FallbackImageProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  className?: string;
-  priority?: boolean;
-  onLoad?: () => void;
-  onError?: () => void;
-}
-```
-
-#### AuthContext Props
-```typescript
-interface AuthContextType {
-  user: AdminUser | null;
-  token: string | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  refreshToken: () => Promise<boolean>;
-}
-```
-
-#### ProtectedRoute Props
-```typescript
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-  requiredRole?: "admin" | "super_admin";
-  fallback?: React.ReactNode;
 }
 ```
 
