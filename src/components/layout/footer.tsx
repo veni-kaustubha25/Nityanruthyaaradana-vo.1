@@ -107,9 +107,9 @@ export function Footer() {
                 <div className="min-w-0">
                   <div className="font-medium text-gray-200 text-sm sm:text-base">Address</div>
                   <div className="text-gray-200 text-xs sm:text-sm">
-                    123 Dance Street,<br />
-                    Cultural District,<br />
-                    Mumbai, Maharashtra 400001
+                    Siva Jyothi Nagar, <br />
+                    Tirupati,<br />
+                    Andhra Pradesh 517507,India
                   </div>
                 </div>
               </li>
