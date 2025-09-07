@@ -39,8 +39,8 @@ export function Header() {
              <div className="bg-white/10 rounded-full p-1 group-hover:bg-white/20 transition-all duration-300">
                <Phone className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
              </div>
-             <span className="hidden xs:inline font-medium text-xs">+91 123 456 7890</span>
-             <span className="xs:hidden font-medium text-xs">+91 123 456 7890</span>
+             <span className="hidden xs:inline font-medium text-xs">+91 8639399385</span>
+             <span className="xs:hidden font-medium text-xs">+91 8639399385</span>
            </a>
                          <a href="mailto:info@nithyanruthyaaradana.art" className="flex items-center gap-2 hover:text-yellow-300 transition-all duration-300 group">
              <div className="bg-white/10 rounded-full p-1 group-hover:bg-white/20 transition-all duration-300">
@@ -49,7 +49,7 @@ export function Header() {
                </svg>
              </div>
              <span className="hidden sm:inline font-medium text-xs">info@nithyanruthyaaradana.art</span>
-             <span className="sm:hidden font-medium text-xs">info@academy.art</span>
+             <span className="sm:hidden font-medium text-xs">info@nithyanruthyaaradana.art</span>
            </a>
             </div>
 
@@ -61,8 +61,8 @@ export function Header() {
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                </svg>
              </div>
-             <span className="hidden lg:inline font-medium text-xs">Mon-Sat: 9:00 AM - 8:00 PM</span>
-             <span className="lg:hidden font-medium text-xs">Mon-Sat: 9AM-8PM</span>
+             <span className="hidden lg:inline font-medium text-xs">Tue,Thu,Sat: 5:30 PM - 8:30 PM</span>
+             <span className="lg:hidden font-medium text-xs">Tue,Thu,Sat: 5:30 PM - 8:30 PM</span>
            </div>
                          <div className="hidden md:flex items-center">
              <div className="bg-white/10 rounded-lg px-2 py-1 border border-white/20">

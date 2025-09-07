@@ -120,8 +120,8 @@ export function Footer() {
                 <div className="min-w-0">
                   <div className="font-medium text-gray-200 text-sm sm:text-base">Hours</div>
                   <div className="text-gray-200 text-xs sm:text-sm">
-                    Mon-Sat: 9:00 AM - 8:00 PM<br />
-                    Sunday: Closed
+                    Tue,Thur,Sat: 5:30 PM - 8:30 PM<br />
+                    Sunday: open
                   </div>
                 </div>
               </li>
